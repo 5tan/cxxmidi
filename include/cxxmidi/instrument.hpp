@@ -1,0 +1,425 @@
+#ifndef CXXMIDI_INSTRUMENT_HPP
+#define CXXMIDI_INSTRUMENT_HPP
+
+#include <string>
+
+namespace CxxMidi {
+
+class Instrument
+{
+    enum
+    {
+        AcousticGrandPiano          = 0,
+        BrightAcousticPiano         = 1,
+        ElectricGrandPiano          = 2,
+        HonkytonkPiano              = 3,
+        ElectricPiano1              = 4,
+        ElectricPiano2              = 5,
+        Harpsichord                 = 6,
+        Clavi                       = 7,
+
+        Celesta                     = 8,
+        Glockenspiel                = 9,
+        MusicBox                    = 10,
+        Vibraphone                  = 11,
+        Marimba                     = 12,
+        Xylophone                   = 13,
+        TubularBells                = 14,
+        Dulcimer                    = 15,
+
+        DrawbarOrgan                = 16,
+        PercussiveOrgan             = 17,
+        RockOrgan                   = 18,
+        ChurchOrgan                 = 19,
+        ReedOrgan                   = 20,
+        Accordion                   = 21,
+        Harmonica                   = 22,
+        TangoAccordion              = 23,
+
+        AcousticGuitarNylon         = 24,
+        AcousticGuitarSteel         = 25,
+        ElectricGuitarJazz          = 26,
+        ElectricGuitarClean         = 27,
+        ElectricGuitarMuted         = 28,
+        OverdrivenGuitar            = 29,
+        DistortionGuitar            = 30,
+        GuitarHarmonics             = 31,
+        AcousticBass                = 32,
+        ElectricBassFinger          = 33,
+        ElectricBassPick            = 34,
+        FretlessBass                = 35,
+        SlapBass1                   = 36,
+        SlapBass2                   = 37,
+        SynthBass1                  = 38,
+        SynthBass2                  = 39,
+
+        Violin                      = 40,
+        Viola                       = 41,
+        Cello                       = 42,
+        Contrabass                  = 43,
+        TremoloStrings              = 44,
+        PizzacatoStrings            = 45,
+        OrchestralHarp              = 46,
+        Timpani                     = 47,
+
+        StringEnsemble1             = 48,
+        StringEnsemble2             = 49,
+        Synthstrings1               = 50,
+        Synthstrings2               = 51,
+        ChoirAahs                   = 52,
+        VoiceOohs                   = 53,
+        SynthVoice                  = 54,
+        OrchestraHit                = 55,
+
+        Trumpet                     = 56,
+        Trombone                    = 57,
+        Tuba                        = 58,
+        MutedTrumped                = 59,
+        FrenchHorn                  = 60,
+        BrassSection                = 61,
+        Synthbrass1                 = 62,
+        Synthbrass2                 = 63,
+        SopranoSax                  = 64,
+        AltoSax                     = 65,
+        TenorSax                    = 66,
+        BaritoneSax                 = 67,
+        Oboe                        = 68,
+        EnglishHorn                 = 69,
+        Bassoon                     = 70,
+        Clarinet                    = 71,
+
+        Piccolo                     = 72,
+        Flute                       = 73,
+        Recorder                    = 74,
+        PanFlute                    = 75,
+        BlownBottle                 = 76,
+        Shakuhachi                  = 77,
+        Whistle                     = 78,
+        Ocarina                     = 79,
+
+        LeadSquare                  = 80,
+        LeadSawtooth                = 81,
+        LeadCalliope                = 82,
+        LeadChiff                   = 83,
+        LeadCharang                 = 84,
+        LeadVoice                   = 85,
+        LeadFifths                  = 86,
+        LeadBass                    = 87,
+
+        PadNewAge                   = 88,
+        PadWarm                     = 89,
+        PadPolysynth                = 90,
+        PadChoir                    = 91,
+        PadBowed                    = 92,
+        PadMetallic                 = 93,
+        PadHalo                     = 94,
+        PadSweep                    = 95,
+
+        FxTrain                     = 96,
+        FxSoundtrack                = 97,
+        FxCrystal                   = 98,
+        FxAtmosphere                = 99,
+        FxBrightness                = 100,
+        FxGoblins                   = 101,
+        FxEchoes                    = 102,
+        FxScifi                     = 103,
+
+        Sitar                       = 104,
+        Banjo                       = 105,
+        Shamisen                    = 106,
+        Koto                        = 107,
+        Kalimba                     = 108,
+        Bagpipe                     = 109,
+        Fiddle                      = 110,
+        Shanai                      = 111,
+
+        TinkleBell                  = 112,
+        Agogo                       = 113,
+        SteelDrums                  = 114,
+        Woodblocks                  = 115,
+        TaikoDrum                   = 116,
+        MelodicDrum                 = 117,
+        SynthDrum                   = 118,
+        ReverseCymbal               = 119,
+
+        GuitarFretNoise             = 120,
+        BreathNoise                 = 121,
+        Seashore                    = 122,
+        BirdTweet                   = 123,
+        TelephoneRing               = 124,
+        Helicopter                  = 125,
+        Applause                    = 126,
+        Gunshot                     = 127,
+
+        AcousticBassDrum            = 35, // percussion (notes played on channel 10)
+        BassDrum1                   = 36,
+        SideStick                   = 37,
+        AcousticSnare               = 38,
+        HandClap                    = 39,
+        ElectricSnare               = 40,
+        LowFloorTom                 = 41,
+        ClosedHiHat                 = 42,
+        HighFloorTom                = 43,
+        PedalHiHat                  = 44,
+        LowTom                      = 45,
+        OpenHiHat                   = 46,
+        LowMidTom                   = 47,
+        HighMidTom                  = 48,
+        CrashCymbal1                = 49,
+        HighTom                     = 50,
+        RideCymbal1                 = 51,
+        ChineseCymbal               = 52,
+        RideBell                    = 53,
+        Tambourine                  = 54,
+        SplashCymbal                = 55,
+        Cowbell                     = 56,
+        CrashCymbal2                = 57,
+        Vibraslap                   = 58,
+        RideCymbal2                 = 59,
+        HiBongo                     = 60,
+        LowBongo                    = 61,
+        MuteHiConga                 = 62,
+        OpenHiConga                 = 63,
+        LowConga                    = 64,
+        HighTimbale                 = 65,
+        LowTimbale                  = 66,
+        HighAgogo                   = 67,
+        LowAgogo                    = 68,
+        Cabasa                      = 69,
+        Maracas                     = 70,
+        ShortWhistle                = 71,
+        LongWhistle                 = 72,
+        ShortGuiro                  = 73,
+        LongGuiro                   = 74,
+        Claves                      = 75,
+        HiWoodBlock                 = 76,
+        LowWoodBlock                = 77,
+        MuteCuica                   = 78,
+        OpenCuica                   = 79,
+        MuteTriangle                = 80,
+        OpenTriangle                = 81,
+
+        Undefined                   = 128
+    };
+
+public:
+    inline Instrument();
+    inline Instrument(int val_);
+
+    inline operator int() const;
+
+    inline static std::string name(int instrument_);
+
+protected:
+    int _val; // 0 ... 127
+
+};
+
+} // namespace CxxMidi
+
+namespace  CxxMidi {
+
+Instrument::Instrument()
+    : _val(Undefined)
+{
+
+}
+
+Instrument::Instrument(int val_)
+    : _val(val_)
+{
+
+}
+
+Instrument::operator int() const
+{
+    return _val;
+}
+
+std::string Instrument::name(int instrument_)
+{
+    switch(instrument_)
+    {
+    case AcousticGrandPiano  : return "Acoustic Grand Piano";
+    case BrightAcousticPiano : return "Bright Acoustic Piano";
+    case ElectricGrandPiano  : return "Electric Grand Piano";
+    case HonkytonkPiano      : return "Honkytonk Piano";
+    case ElectricPiano1      : return "Electric Piano 1";
+    case ElectricPiano2      : return "Electric Piano 2";
+    case Harpsichord         : return "Harpsichord";
+    case Clavi               : return "Clavi";
+    case Celesta             : return "Celesta";
+    case Glockenspiel        : return "Glockenspiel";
+    case MusicBox            : return "Music Box";
+    case Vibraphone          : return "Vibraphone";
+    case Marimba             : return "Marimba";
+    case Xylophone           : return "Xylophone";
+    case TubularBells        : return "Tubular Bells";
+    case Dulcimer            : return "Dulcimer";
+    case DrawbarOrgan        : return "Drawbar Organ";
+    case PercussiveOrgan     : return "Percussive Organ";
+    case RockOrgan           : return "Rock Organ";
+    case ChurchOrgan         : return "Church Organ";
+    case ReedOrgan           : return "Reed Organ";
+    case Accordion           : return "Accordion";
+    case Harmonica           : return "Harmonica";
+    case TangoAccordion      : return "Tango Accordion";
+    case AcousticGuitarNylon : return "Acoustic Guitar Nylon";
+    case AcousticGuitarSteel : return "Acoustic Guitar Steel";
+    case ElectricGuitarJazz  : return "Electric Guitar Jazz";
+    case ElectricGuitarClean : return "Electric Guitar Clean";
+    case ElectricGuitarMuted : return "Electric Guitar Muted";
+    case OverdrivenGuitar    : return "Overdriven Guitar";
+    case DistortionGuitar    : return "Distortion Guitar";
+    case GuitarHarmonics     : return "Guitar Harmonics";
+    case AcousticBass        : return "Acoustic Bass";
+    case ElectricBassFinger  : return "Electric Bass Finger";
+    case ElectricBassPick    : return "Electric Bass Pick";
+    case FretlessBass        : return "Fretless Bass / AcousticBassDrum";
+    case SlapBass1           : return "Slap Bass 1 / BassDrum1";
+    case SlapBass2           : return "Slap Bass 2 / SideStick";
+    case SynthBass1          : return "Synth Bass 1 / AcousticSnare";
+    case SynthBass2          : return "Synth Bass 2 / HandClap";
+    case Violin              : return "Violin / ElectricSnare";
+    case Viola               : return "Viola / LowFloorTom";
+    case Cello               : return "Cello / ClosedHiHat";
+    case Contrabass          : return "Contrabass / HighFloorTom";
+    case TremoloStrings      : return "Tremolo Strings / PedalHiHat";
+    case PizzacatoStrings    : return "Pizzacato Strings / LowTom";
+    case OrchestralHarp      : return "Orchestral Harp / OpenHiHat";
+    case Timpani             : return "Timpani / LowMidTom";
+    case StringEnsemble1     : return "String Ensemble 1 / HighMidTom";
+    case StringEnsemble2     : return "String Ensemble 2 / CrashCymbal1";
+    case Synthstrings1       : return "Synthstrings 1 / HighTom";
+    case Synthstrings2       : return "Synthstrings 2 / RideCymbal1";
+    case ChoirAahs           : return "Choir Aahs / ChineseCymbal";
+    case VoiceOohs           : return "Voice Oohs / RideBell";
+    case SynthVoice          : return "Synth Voice / Tambourine";
+    case OrchestraHit        : return "Orchestra Hit / SplashCymbal";
+    case Trumpet             : return "Trumpet / Cowbell";
+    case Trombone            : return "Trombone / CrashCymbal2";
+    case Tuba                : return "Tuba / Vibraslap";
+    case MutedTrumped        : return "Muted Trumped / RideCymbal2";
+    case FrenchHorn          : return "French Horn / HiBongo";
+    case BrassSection        : return "Brass Section / LowBongo";
+    case Synthbrass1         : return "Synthbrass 1 / MuteHiConga";
+    case Synthbrass2         : return "Synthbrass 2 / OpenHiConga";
+    case SopranoSax          : return "Soprano Sax / LowConga";
+    case AltoSax             : return "Alto Sax / HighTimbale";
+    case TenorSax            : return "Tenor Sax / LowTimbale";
+    case BaritoneSax         : return "Baritone Sax / HighAgogo";
+    case Oboe                : return "Oboe / LowAgogo";
+    case EnglishHorn         : return "English Horn / Cabasa";
+    case Bassoon             : return "Bassoon / Maracas";
+    case Clarinet            : return "Clarinet / ShortWhistle";
+    case Piccolo             : return "Piccolo / LongWhistle";
+    case Flute               : return "Flute / ShortGuiro";
+    case Recorder            : return "Recorder / LongGuiro";
+    case PanFlute            : return "Pan Flute / Claves";
+    case BlownBottle         : return "Blown Bottle / HiWoodBlock";
+    case Shakuhachi          : return "Shakuhachi / LowWoodBlock";
+    case Whistle             : return "Whistle / MuteCuica";
+    case Ocarina             : return "Ocarina / OpenCuica";
+    case LeadSquare          : return "Lead Square / MuteTriangle";
+    case LeadSawtooth        : return "Lead Sawtooth / OpenTriangle";
+    case LeadCalliope        : return "Lead Calliope";
+    case LeadChiff           : return "Lead Chiff";
+    case LeadCharang         : return "Lead Charang";
+    case LeadVoice           : return "Lead Voice";
+    case LeadFifths          : return "Lead Fifths";
+    case LeadBass            : return "Lead Bass";
+    case PadNewAge           : return "Pad New Age";
+    case PadWarm             : return "Pad Warm";
+    case PadPolysynth        : return "Pad Polysynth";
+    case PadChoir            : return "Pad Choir";
+    case PadBowed            : return "Pad Bowed";
+    case PadMetallic         : return "Pad Metallic";
+    case PadHalo             : return "Pad Halo";
+    case PadSweep            : return "Pad Sweep";
+    case FxTrain             : return "Fx Train";
+    case FxSoundtrack        : return "Fx Soundtrack";
+    case FxCrystal           : return "Fx Crystal";
+    case FxAtmosphere        : return "Fx Atmosphere";
+    case FxBrightness        : return "Fx Brightness";
+    case FxGoblins           : return "Fx Goblins";
+    case FxEchoes            : return "Fx Echoes";
+    case FxScifi             : return "Fx Sci fi";
+    case Sitar               : return "Sitar";
+    case Banjo               : return "Banjo";
+    case Shamisen            : return "Shamisen";
+    case Koto                : return "Koto";
+    case Kalimba             : return "Kalimba";
+    case Bagpipe             : return "Bagpipe";
+    case Fiddle              : return "Fiddle";
+    case Shanai              : return "Shanai";
+    case TinkleBell          : return "Tinkle Bell";
+    case Agogo               : return "Agogo";
+    case SteelDrums          : return "Steel Drums";
+    case Woodblocks          : return "Woodblocks";
+    case TaikoDrum           : return "Taiko Drum";
+    case MelodicDrum         : return "Melodic Drum";
+    case SynthDrum           : return "Synth Drum";
+    case ReverseCymbal       : return "Reverse Cymbal";
+    case GuitarFretNoise     : return "Guitar Fret Noise";
+    case BreathNoise         : return "Breath Noise";
+    case Seashore            : return "Seashore";
+    case BirdTweet           : return "Bird Tweet";
+    case TelephoneRing       : return "Telephone Ring";
+    case Helicopter          : return "Helicopter";
+    case Applause            : return "Applause";
+    case Gunshot             : return "Gunshot    ";
+//    case AcousticBassDrum    : return "Acoustic Bass Drum";
+//    case BassDrum1           : return "Bass Drum 1";
+//    case SideStick           : return "Side Stick";
+//    case AcousticSnare       : return "Acoustic Snare";
+//    case HandClap            : return "Hand Clap";
+//    case ElectricSnare       : return "Electric Snare";
+//    case LowFloorTom         : return "Low Floor Tom";
+//    case ClosedHiHat         : return "Closed Hi Hat";
+//    case HighFloorTom        : return "High Floor Tom";
+//    case PedalHiHat          : return "Pedal Hi Hat";
+//    case LowTom              : return "Low Tom";
+//    case OpenHiHat           : return "Open Hi Hat";
+//    case LowMidTom           : return "Low Mid Tom";
+//    case HighMidTom          : return "High Mid Tom";
+//    case CrashCymbal1        : return "Crash Cymbal 1";
+//    case HighTom             : return "High Tom";
+//    case RideCymbal1         : return "Ride Cymbal 1";
+//    case ChineseCymbal       : return "Chinese Cymbal";
+//    case RideBell            : return "Ride Bell";
+//    case Tambourine          : return "Tambourine";
+//    case SplashCymbal        : return "Splash Cymbal";
+//    case Cowbell             : return "Cowbell";
+//    case CrashCymbal2        : return "Crash Cymbal 2";
+//    case Vibraslap           : return "Vibraslap";
+//    case RideCymbal2         : return "Ride Cymbal 2";
+//    case HiBongo             : return "Hi Bongo";
+//    case LowBongo            : return "Low Bongo";
+//    case MuteHiConga         : return "Mute Hi Conga";
+//    case OpenHiConga         : return "Open Hi Conga";
+//    case LowConga            : return "Low Conga";
+//    case HighTimbale         : return "High Timbale";
+//    case LowTimbale          : return "Low Timbale";
+//    case HighAgogo           : return "High Agogo";
+//    case LowAgogo            : return "Low Agogo";
+//    case Cabasa              : return "Cabasa";
+//    case Maracas             : return "Maracas";
+//    case ShortWhistle        : return "Short Whistle";
+//    case LongWhistle         : return "Long Whistle";
+//    case ShortGuiro          : return "Short Guiro";
+//    case LongGuiro           : return "Long Guiro";
+//    case Claves              : return "Claves";
+//    case HiWoodBlock         : return "Hi Wood Block";
+//    case LowWoodBlock        : return "Low Wood Block";
+//    case MuteCuica           : return "Mute Cuica";
+//    case OpenCuica           : return "Open Cuica";
+//    case MuteTriangle        : return "Mute Triangle";
+//    case OpenTriangle        : return "Open Triangle";
+    case Undefined           : return "Undefined";
+    default: return "";
+    }
+}
+
+} // CxxMidi
+
+#endif // CXXMIDI_INSTRUMENT_HPP
