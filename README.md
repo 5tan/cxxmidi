@@ -38,3 +38,7 @@ int main(int /*argc*/, char ** /*argv*/)
 }
 
 ```
+
+## License
+* CxxMidi: GPLv3
+* RtMidi: https://www.music.mcgill.ca/~gary/rtmidi/index.html#license 
