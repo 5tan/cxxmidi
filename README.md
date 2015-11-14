@@ -9,6 +9,7 @@ CxxMidi is a C++ MIDI library.
 
 ## Key features
 * MIDI files read/write
+* MIDI files parsing, editing, sequencing
 * MIDI outputs
   * ALSA on Linux
   * WinMM on Windows
