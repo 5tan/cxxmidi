@@ -40,7 +40,7 @@ T readBE(std::fstream &file_)
     static uint32_t num = 1;
     static bool littleEndian = *(uint8_t *)&num == 1;
     if(littleEndian)
-        r = swapE<T>(r);
+        r = fix<T>(r);
 #endif
 #endif
 
@@ -59,7 +59,7 @@ size_t writeBE(std::ofstream &file_, T val_)
     static uint32_t num = 1;
     static bool littleEndian = *(uint8_t *)&num == 1;
     if(littleEndian)
-        r = swapE<T>(r);
+        r = fix<T>(r);
 #endif
 #endif
   file_.write(reinterpret_cast<char*>(&val_),size);
