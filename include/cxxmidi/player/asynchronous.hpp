@@ -111,8 +111,8 @@ void *Asynchronous::playerLoop(void * caller_)
     uint32_t dt = 0;
     unsigned int us = 0;
     float speed = 0;
-    Callback<Player::Abstract>* callbackHeartbeat;
-    Callback<Player::Abstract>* callbackFinished;
+    Callback<Player::Abstract>* callbackHeartbeat=0;
+    Callback<Player::Abstract>* callbackFinished=0;
 
     while(true)
     {
