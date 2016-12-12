@@ -126,9 +126,11 @@ void MainWindow::openFile()
 {
     QString fileName = QFileDialog::getOpenFileName(this,
                                                     tr("Open file"), ".", tr("MIDI files (*.mid *.midi);;Any files (*)"));
-
-    this->openFile(fileName);
-    _midiPlayer->play();
+    if( fileName.size() )
+    {
+        this->openFile(fileName);
+        _midiPlayer->play();
+    }
 }
 
 void MainWindow::openFile(const QString& path_)
