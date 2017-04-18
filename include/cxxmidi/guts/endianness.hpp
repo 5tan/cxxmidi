@@ -9,6 +9,15 @@ namespace CxxMidi {
 namespace Guts {
 namespace Endianness {
 
+bool machineIsLittleEndian()
+{
+    static const uint32_t num = 1;
+    static const bool r = *(uint8_t *)&num == 1;
+    return r;
+    // note: we don't want constexpr here. Library should detect endianness
+    // in runtime so cross compilation is possible.
+}
+
 template <typename T>
 T fix(const T & v_)
 {
@@ -32,17 +41,8 @@ T readBE(std::fstream &file_)
     T r;
     file_.read(reinterpret_cast<char*>(&r), sizeof(T));
 
-#ifdef CXXMIDI_LIL_ENDIAN
-    r = fix<T>(r);
-#else
-#ifndef CXXMIDI_BIG_ENDIAN
-#warning "Undefined endianness will be tested in runtime. Please define CXXMIDI_LIL_ENDIAN or CXXMIDI_BIG_ENDIAN."
-    static uint32_t num = 1;
-    static bool littleEndian = *(uint8_t *)&num == 1;
-    if(littleEndian)
+    if(machineIsLittleEndian())
         r = fix<T>(r);
-#endif
-#endif
 
     return r;
 }
@@ -51,17 +51,10 @@ template <typename T>
 size_t writeBE(std::ofstream &file_, T val_)
 {
   size_t size = sizeof(val_);
-#ifdef CXXMIDI_LIL_ENDIAN
-  val_ = fix<T>(val_);
-#else
-#ifndef CXXMIDI_BIG_ENDIAN
-#warning "Undefined endianness will be tested in runtime. Please define CXXMIDI_LIL_ENDIAN or CXXMIDI_BIG_ENDIAN."
-    static uint32_t num = 1;
-    static bool littleEndian = *(uint8_t *)&num == 1;
-    if(littleEndian)
-        r = fix<T>(r);
-#endif
-#endif
+
+  if(machineIsLittleEndian())
+      val_ = fix<T>(val_);
+
   file_.write(reinterpret_cast<char*>(&val_),size);
 
   if(file_.bad())

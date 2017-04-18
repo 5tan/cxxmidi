@@ -27,11 +27,9 @@ FORMS += \
 
 unix:!macx {
     LIBS += /usr/lib/x86_64-linux-gnu/libasound.so
-    DEFINES += CXXMIDI_LIL_ENDIAN
 }
 win32 {
     LIBS += winmm.lib
-    DEFINES += CXXMIDI_LIL_ENDIAN
 }
 
 
