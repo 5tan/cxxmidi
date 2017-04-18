@@ -2,14 +2,28 @@
 #define CXXMIDI_GUTS_SSCANF_HPP
 
 #include <cstdio>
+#include <cstdarg>
+#include <cxxmidi/guts/unused.hpp>
 
-#ifndef CXXMIDI_SSCANF
+namespace CxxMidi {
+namespace Guts {
+
+void portable_sscanf_s(const char * str_, size_t size_, const char* fmt_, ...)
+{
+    va_list args;
+    va_start(args,fmt_);
+
 #ifdef _WIN32
-#define CXXMIDI_SSCANF(cstr,size,fmt,...) sscanf_s(cstr,fmt,__VA_ARGS__,size)
+    sscanf_s(str_,fmt_,args,size);
 #endif // _WIN32
 #ifdef __unix
-#define CXXMIDI_SSCANF(cstr,size,fmt,...) std::sscanf(cstr,fmt,__VA_ARGS__)
+    CXXMIDI_UNUSED(size_);
+    std::sscanf(str_,fmt_,args);
 #endif // __unix
-#endif
+    va_end(args);
+}
+
+} // namespace Guts
+} // namespace CxxMidi
 
 #endif // CXXMIDI_GUTS_SSCANF_HPP

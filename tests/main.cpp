@@ -31,8 +31,12 @@ int main(int /*argc*/, char ** /*argv*/)
     CxxMidi::Output::Default output(0);
     CxxMidi::Player::Synchronous player(&output);
 
+#ifdef _WIN32
     CxxMidi::File file("C:\\sample.mid");
-    std::cerr << file.tracks() << std::endl;
+#endif // _WIN32
+#ifdef __unix
+    CxxMidi::File file("/home/sch/sample.mid");
+#endif // __unix
     player.setFile(&file);
 
     PlayerHeartbeatCallback playerHeartbeatCallback;

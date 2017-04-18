@@ -51,7 +51,8 @@ class Alsa : public Output::Abstract
         unsigned int bufferSize;
         unsigned char *buffer;
         pthread_t thread;
-        unsigned long long lastTime;
+        // unsigned long long lastTime;
+        unsigned long lastTime;
         int queue_id; // an input queue is needed to get timestamped events
     };
 

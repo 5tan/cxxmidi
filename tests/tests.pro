@@ -33,6 +33,7 @@ HEADERS += \
     ../include/cxxmidi/guts/endianness.hpp\
     ../include/cxxmidi/guts/simulator.hpp\
     ../include/cxxmidi/guts/sscanf.hpp\
+    ../include/cxxmidi/guts/unused.hpp\
     ../include/cxxmidi/utils.hpp\
     ../include/cxxmidi/sleep.hpp\
     ../include/cxxmidi/guts/thread.hpp\

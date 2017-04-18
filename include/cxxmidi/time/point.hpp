@@ -62,6 +62,8 @@ private:
 #include <complex>
 #include <limits>
 
+#include <cxxmidi/guts/sscanf.hpp>
+
 inline std::ostream& operator<<(std::ostream& os_,
                                 const CxxMidi::Time::Point& tp_)
 {
@@ -102,20 +104,18 @@ Point Point::zero()
     return Point();
 }
 
-#ifndef CXXMIDI_SSCANF
-#define CXXMIDI_SSCANF(cstr,size,fmt,...) sscanf_s(cstr,fmt,__VA_ARGS__,size)
-#endif
-
 Point Point::createFromTimecode(const std::string& tc_)
 {
     Point r;
     int hh,mm,ss,us=0;
 
     if(tc_.find('&')==std::string::npos)
-        CXXMIDI_SSCANF(tc_.c_str(), tc_.size(), "%d:%d:%d", &hh,&mm,&ss);
+        Guts::portable_sscanf_s(tc_.c_str(), tc_.size(),
+                                "%d:%d:%d", &hh,&mm,&ss);
     else
     {
-        CXXMIDI_SSCANF(tc_.c_str(), tc_.size(), "%d:%d:%d&%d", &hh,&mm,&ss,&us);
+        Guts::portable_sscanf_s(tc_.c_str(), tc_.size(),
+                                "%d:%d:%d&%d", &hh,&mm,&ss,&us);
         r._us = us;
     }
 

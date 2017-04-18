@@ -260,6 +260,14 @@ void File::load(const char *path_)
     // open file
     std::fstream file(path_,std::fstream::in | std::fstream::binary);
 
+    if(!file.is_open())
+    {
+#ifndef CXXMIDI_QUIET
+        std::cerr << "CxxMidi: couldn't open: " << path_ << std::endl;
+#endif
+        return;
+    }
+
     // calculate file length
     file.seekg (0, std::fstream::end);
     std::fstream::streampos fileLength = file.tellg();
