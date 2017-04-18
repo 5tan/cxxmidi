@@ -13,7 +13,7 @@ public:
     inline static Point createFromUs(int us_);
     inline static Point createFromMs(int ms_);
     inline static Point createFromS(int s_);
-    inline static Point createFromTimecode(const std::string& timecode_);
+    inline static Point createFromTimecode(const std::string& tc_);
     inline static Point zero();
 
     inline std::string toTimecode(bool includeUs_=false) const;
@@ -59,7 +59,6 @@ private:
 #include <sstream>
 #include <iomanip>
 #include <cassert>
-#include <cstdio>
 #include <complex>
 #include <limits>
 
@@ -103,16 +102,20 @@ Point Point::zero()
     return Point();
 }
 
-Point Point::createFromTimecode(const std::string& timecode_)
+#ifndef CXXMIDI_SSCANF
+#define CXXMIDI_SSCANF(cstr,size,fmt,...) sscanf_s(cstr,fmt,__VA_ARGS__,size)
+#endif
+
+Point Point::createFromTimecode(const std::string& tc_)
 {
     Point r;
     int hh,mm,ss,us=0;
 
-    if(timecode_.find('&')==std::string::npos)
-        std::sscanf(timecode_.c_str(), "%d:%d:%d", &hh,&mm,&ss);
+    if(tc_.find('&')==std::string::npos)
+        CXXMIDI_SSCANF(tc_.c_str(), tc_.size(), "%d:%d:%d", &hh,&mm,&ss);
     else
     {
-        std::sscanf(timecode_.c_str(), "%d:%d:%d&%d", &hh,&mm,&ss,&us);
+        CXXMIDI_SSCANF(tc_.c_str(), tc_.size(), "%d:%d:%d&%d", &hh,&mm,&ss,&us);
         r._us = us;
     }
 
@@ -424,7 +427,7 @@ Point Point::operator*=(double factor_)
 {
     double tmp = (1000000. * _s + _us ) * factor_ ;
 
-    _s = (tmp / 1000000.);
+    _s = static_cast<uint32_t>(tmp / 1000000.);
     _us = static_cast<int32_t>(tmp) % 1000000;
 
     this->fixZeroSign();
