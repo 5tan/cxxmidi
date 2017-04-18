@@ -8,7 +8,7 @@
 #define CXXMIDI_SSCANF(cstr,size,fmt,...) sscanf_s(cstr,fmt,__VA_ARGS__,size)
 #endif // _WIN32
 #ifdef __unix
-#define CXXMIDI_SSCANF(cstr,size,fmt,...) std::sscanf(cstr,fmt,__VA_ARGS__,size)
+#define CXXMIDI_SSCANF(cstr,size,fmt,...) std::sscanf(cstr,fmt,__VA_ARGS__)
 #endif // __unix
 #endif
 
