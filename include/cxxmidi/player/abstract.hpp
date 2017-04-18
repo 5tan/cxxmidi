@@ -238,7 +238,7 @@ unsigned int Abstract::trackPending() const
                 r = i;
             }
 
-    return r;
+    return static_cast<unsigned int>(r);
 }
 
 void Abstract::updatePlayerState(unsigned int trackNum_,

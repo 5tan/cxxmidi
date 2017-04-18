@@ -116,7 +116,8 @@ void File::saveTrackChunk(std::ofstream & outputFile_,
     for(size_t i=0; i<track.size() ; i++)
     {
         const Event & event = track.at(i);
-        chunkSize += this->saveEvent(outputFile_,event,lastCmd);
+        chunkSize += static_cast<uint32_t>(
+                    this->saveEvent(outputFile_,event,lastCmd));
     }
 
     // go back to chunk size
@@ -142,7 +143,7 @@ size_t File::saveEvent(std::ofstream & outputFile_,
         File::putc(outputFile_,event_.at(0)); // SysEx type
         r++;
 
-        uint8_t dataSize = event_.size() - 1;
+        uint8_t dataSize = static_cast<uint8_t>(event_.size()) - 1;
         r += Utils::saveVlq(outputFile_,dataSize);
 
         //! @TODO check it
@@ -166,7 +167,7 @@ size_t File::saveEvent(std::ofstream & outputFile_,
         File::putc(outputFile_,event_.at(1)); // byte 1, meta event type
         r+=2;
 
-        uint8_t dataSize = event_.size() - 2;
+        uint8_t dataSize = static_cast<uint8_t>(event_.size()) - 2;
         File::putc(outputFile_,dataSize); // save length
         r++;
 
@@ -216,7 +217,8 @@ void File::saveHeaderChunk(std::ofstream &outputFile_) const
     Guts::Endianness::writeBE<uint16_t>(outputFile_,fileType);
 
     // save tracks numer (dummy, real value saved later)
-    Guts::Endianness::writeBE<uint16_t>(outputFile_,this->tracks());
+    Guts::Endianness::writeBE<uint16_t>(outputFile_,
+                                        static_cast<uint16_t>(this->tracks()));
 
     // save time division
     Guts::Endianness::writeBE<uint16_t>(outputFile_,_timeDivision);
@@ -282,7 +284,7 @@ void File::load(const char *path_)
             break;
 
         default:
-            std::cerr << "ignoring unknown chunk: " << (int) chunkId;
+            std::cerr << "ignoring unknown chunk: " << (int) chunkId << std::endl;
             this->readUnknownChunk(file);
             break;
         }

@@ -25,9 +25,12 @@ T fix(const T & v_)
 
     for (size_t i = 0; i<sizeof(v_); i++)
     {
+        const T size = static_cast<T>(sizeof(v_));
+        const T it = static_cast<T>(i);
+
         T mask1 = 0xff << 8*i;
         T byte = ( v_ & mask1 ) >> 8*i ;
-        T offset = (sizeof(v_)-i-1)*8;
+        T offset = (size-it-1)*8;
         T mask2 = 0xff << offset;
         r |= ((( byte ) << offset) & mask2);
     }
