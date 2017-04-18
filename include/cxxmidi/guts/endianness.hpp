@@ -53,17 +53,19 @@ T readBE(std::fstream &file_)
 template <typename T>
 size_t writeBE(std::ofstream &file_, T val_)
 {
-  size_t size = sizeof(val_);
+    size_t size = sizeof(val_);
 
-  if(machineIsLittleEndian())
-      val_ = fix<T>(val_);
+    if(machineIsLittleEndian())
+        val_ = fix<T>(val_);
 
-  file_.write(reinterpret_cast<char*>(&val_),size);
+    file_.write(reinterpret_cast<char*>(&val_),size);
 
-  if(file_.bad())
-    std::cerr << "CxxMidi: file write error" << std::endl;
+#ifndef CXXMIDI_QUIET
+    if(file_.bad())
+        std::cerr << "CxxMidi: file write error" << std::endl;
+#endif
 
-  return size;
+    return size;
 }
 
 } // namespace Endianness

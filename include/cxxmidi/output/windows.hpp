@@ -54,10 +54,10 @@ class Windows : public Output::Abstract
     // A structure to hold variables related to the CoreMIDI API
     // implementation.
     struct WinMidiData {
-      HMIDIIN inHandle;    // Handle to Midi Input Device
-      HMIDIOUT outHandle;  // Handle to Midi Output Device
-      DWORD lastTime;
-      LPMIDIHDR sysexBuffer[RT_SYSEX_BUFFER_COUNT];
+        HMIDIIN inHandle;    // Handle to Midi Input Device
+        HMIDIOUT outHandle;  // Handle to Midi Output Device
+        DWORD lastTime;
+        LPMIDIHDR sysexBuffer[RT_SYSEX_BUFFER_COUNT];
     };
 
 
@@ -110,16 +110,19 @@ Windows::~Windows()
 
 size_t Windows::getPortCount()
 {
-  return midiOutGetNumDevs();
+    return midiOutGetNumDevs();
 }
 
 std::string Windows::getPortName(unsigned int portNumber_ )
 {
     std::string stringName;
     unsigned int nDevices = midiOutGetNumDevs();
-    if ( portNumber_ >= nDevices ) {
-      std::cerr << "CxxMidi::Output::Windows::getPortName: the 'portNumber' argument (" << portNumber_ << ") is invalid." << std::endl;
-      return stringName;
+    if ( portNumber_ >= nDevices )
+    {
+#ifndef CXXMIDI_QUIET
+        std::cerr << "CxxMidi: invalid port number" << portNumber_ << std::endl;
+#endif
+        return stringName;
     }
 
     MIDIOUTCAPS deviceCaps;
@@ -130,7 +133,7 @@ std::string Windows::getPortName(unsigned int portNumber_ )
     //std::string stringName = std::string( deviceCaps.szPname );
     char nameString[MAXPNAMELEN];
     for( int i=0; i<MAXPNAMELEN; ++i )
-      nameString[i] = (char)( deviceCaps.szPname[i] );
+        nameString[i] = (char)( deviceCaps.szPname[i] );
 
     stringName = nameString;
     return stringName;
@@ -141,8 +144,10 @@ void Windows::initialize()
     // We'll issue a warning here if no devices are available but not
     // throw an error since the user can plug something in later.
     size_t nDevices = this->getPortCount();
+#ifndef CXXMIDI_QUIET
     if ( nDevices == 0 )
-      std::cerr << "CxxMidi::Output::Windows::initialize: no MIDI output devices currently available." << std::endl;
+        std::cerr << "CxxMidi: no devices available" << std::endl;
+#endif
 
     // Save our api-specific connection information.
     WinMidiData *data = (WinMidiData *) new WinMidiData;
@@ -151,19 +156,22 @@ void Windows::initialize()
 
 void Windows::openPort(unsigned int portNumber_)
 {
-    if ( _connected ) {
-      std::cerr<<  "CxxMidi::Output::Windows::openPort: a valid connection already exists!"<< std::endl;
-      return;
+    if ( _connected )
+    {
+#ifndef CXXMIDI_QUIET
+        std::cerr << "CxxMidi: a valid connection already exists"<< std::endl;
+#endif
+        return;
     }
 
     size_t nDevices = this->getPortCount();
-    if (nDevices < 1) {
-      std::cerr<<  "CxxMidi::Output::Windows::openPort: no MIDI output destinations found!"<< std::endl;
-    }
+#ifndef CXXMIDI_QUIET
+    if (nDevices < 1)
+        std::cerr<<  "CxxMidi: no MIDI output destinations found" << std::endl;
+    if ( portNumber_ >= nDevices )
+        std::cerr<< "CxxMidi: invalid port number " << portNumber_ << std::endl;
+#endif
 
-    if ( portNumber_ >= nDevices ) {
-      std::cerr<< "CxxMidi::Output::Windows::openPort: the 'portNumber' argument (" << portNumber_ << ") is invalid."<< std::endl;
-    }
 
     WinMidiData *data = static_cast<WinMidiData *> (_apiData);
     MMRESULT result = midiOutOpen( &data->outHandle,
@@ -171,9 +179,10 @@ void Windows::openPort(unsigned int portNumber_)
                                    (DWORD)NULL,
                                    (DWORD)NULL,
                                    CALLBACK_NULL );
-    if ( result != MMSYSERR_NOERROR ) {
-      std::cerr<<  "CxxMidi::Output::Windows::openPort: error creating Windows MM MIDI output port."<< std::endl;
-    }
+#ifndef CXXMIDI_QUIET
+    if ( result != MMSYSERR_NOERROR )
+        std::cerr<<  "CxxMidi: Windows MM output port init error"<< std::endl;
+#endif
 
     _connected = true;
 }
@@ -185,75 +194,92 @@ void Windows::closePort()
 
 void Windows::openVirtualPort( const std::string& /*portName_ */)
 {
-    // This function cannot be implemented for the Windows MM MIDI API.
-    std::cerr<<  "CxxMidi::Output::Windows::openVirtualPort: cannot be implemented in Windows MM MIDI API!" << std::endl;
+    // This function cannot be implemented for the Windows MM MIDI API
+
+#ifndef CXXMIDI_QUIET
+    std::cerr<<  "CxxMidi: Windows MM MIDI virtual ports can't be implemented" << std::endl;
+#endif
 }
 
 void Windows::sendMessage(const std::vector<uint8_t> *msg_ )
 {
     unsigned int nBytes = static_cast<unsigned int>(msg_->size());
-    if ( nBytes == 0 ) {
-      std::cerr<<  "CxxMidi::sendMessage: message argument is empty!"<< std::endl;
-      return;
+    if ( nBytes == 0 )
+    {
+#ifndef CXXMIDI_QUIET
+        std::cerr<<  "CxxMidi: message argument is empty" << std::endl;
+#endif
+        return;
     }
 
     MMRESULT result;
     WinMidiData *data = static_cast<WinMidiData *> (_apiData);
     if ( msg_->at(0) == 0xF0 ) { // Sysex message
 
-      // Allocate buffer for sysex data.
-      char *buffer = (char *) malloc( nBytes );
-      if ( buffer == NULL ) {
-        std::cerr<<  "CxxMidi::sendMessage: error allocating sysex message memory!"<< std::endl;
-      }
+        // Allocate buffer for sysex data.
+        char *buffer = (char *) malloc( nBytes );
+#ifndef CXXMIDI_QUIET
+        if ( buffer == NULL )
+            std::cerr <<  "CxxMidi: message malloc error "<< std::endl;
+#endif
 
-      // Copy data to buffer.
-      for ( unsigned int i=0; i<nBytes; ++i ) buffer[i] = msg_->at(i);
+        // Copy data to buffer
+        for ( unsigned int i=0; i<nBytes; ++i ) buffer[i] = msg_->at(i);
 
-      // Create and prepare MIDIHDR structure.
-      MIDIHDR sysex;
-      sysex.lpData = (LPSTR) buffer;
-      sysex.dwBufferLength = nBytes;
-      sysex.dwFlags = 0;
-      result = midiOutPrepareHeader( data->outHandle,  &sysex, sizeof(MIDIHDR) );
-      if ( result != MMSYSERR_NOERROR ) {
+        // Create and prepare MIDIHDR structure
+        MIDIHDR sysex;
+        sysex.lpData = (LPSTR) buffer;
+        sysex.dwBufferLength = nBytes;
+        sysex.dwFlags = 0;
+        result = midiOutPrepareHeader( data->outHandle,  &sysex, sizeof(MIDIHDR) );
+        if ( result != MMSYSERR_NOERROR )
+        {
+            free( buffer );
+#ifndef CXXMIDI_QUIET
+            std::cerr<<  "CxxMidi: error preparing sysex header"<< std::endl;
+#endif
+        }
+
+        // Send the message.
+        result = midiOutLongMsg( data->outHandle, &sysex, sizeof(MIDIHDR) );
+        if ( result != MMSYSERR_NOERROR ) {
+            free( buffer );
+#ifndef CXXMIDI_QUIET
+            std::cerr<<  "CxxMidi: error sending sysex message"<< std::endl;
+#endif
+        }
+
+        // Unprepare the buffer and MIDIHDR
+        while ( MIDIERR_STILLPLAYING == midiOutUnprepareHeader( data->outHandle, &sysex, sizeof (MIDIHDR) ) ) Sleep( 1 );
         free( buffer );
-        std::cerr<<  "CxxMidi::sendMessage: error preparing sysex header."<< std::endl;
-      }
-
-      // Send the message.
-      result = midiOutLongMsg( data->outHandle, &sysex, sizeof(MIDIHDR) );
-      if ( result != MMSYSERR_NOERROR ) {
-        free( buffer );
-        std::cerr<<  "CxxMidi::sendMessage: error sending sysex message."<< std::endl;
-      }
-
-      // Unprepare the buffer and MIDIHDR.
-      while ( MIDIERR_STILLPLAYING == midiOutUnprepareHeader( data->outHandle, &sysex, sizeof (MIDIHDR) ) ) Sleep( 1 );
-      free( buffer );
 
     }
-    else { // Channel or system message.
+    else { // Channel or system message
 
-      // Make sure the message size isn't too big.
-      if ( nBytes > 3 ) {
-        std::cerr<<  "CxxMidi::sendMessage: message size is greater than 3 bytes (and not sysex)!"<< std::endl;
-        return;
-      }
+        // Make sure the message size isn't too big
+        if ( nBytes > 3 )
+        {
+#ifndef CXXMIDI_QUIET
+            std::cerr<<  "CxxMidi: message size is greater than 3 bytes (and not sysex)"<< std::endl;
+#endif
+            return;
+        }
 
-      // Pack MIDI bytes into double word.
-      DWORD packet;
-      unsigned char *ptr = (unsigned char *) &packet;
-      for ( unsigned int i=0; i<nBytes; ++i ) {
-        *ptr = msg_->at(i);
-        ++ptr;
-      }
+        // Pack MIDI bytes into double word
+        DWORD packet;
+        unsigned char *ptr = (unsigned char *) &packet;
+        for ( unsigned int i=0; i<nBytes; ++i ) {
+            *ptr = msg_->at(i);
+            ++ptr;
+        }
 
-      // Send the message immediately.
-      result = midiOutShortMsg( data->outHandle, packet );
-      if ( result != MMSYSERR_NOERROR ) {
-        std::cerr<<   "CxxMidi::sendMessage: error sending MIDI message." << std::endl;
-      }
+        // Send the message immediately
+        result = midiOutShortMsg( data->outHandle, packet );
+#ifndef CXXMIDI_QUIET
+        if ( result != MMSYSERR_NOERROR )
+            std::cerr<<   "CxxMidi: error sending MIDI message" << std::endl;
+#endif
+
     }
 }
 

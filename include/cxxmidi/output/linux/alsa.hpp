@@ -167,18 +167,21 @@ std::string Alsa::getPortName(unsigned int portNumber_ )
         return stringName;
     }
 
-    std::cerr << "error: CxxMidi::Output::Alsa::getPortName: error looking for port name" << std::endl;
+#ifndef CXXMIDI_QUIET
+    std::cerr << "CxxMidi: get port name error" << std::endl;
+#endif
     return stringName;
 }
 
 void Alsa::initialize()
 {
-    // Set up the ALSA sequencer client.
+    // Set up the ALSA sequencer client
     snd_seq_t *seq;
     int result = snd_seq_open( &seq, "default", SND_SEQ_OPEN_OUTPUT, SND_SEQ_NONBLOCK );
-    if ( result < 0 ) {
-        std::cerr << "error: CxxMidi::Output::Alsa::initialize: error creating ALSA sequencer client object" << std::endl;
-    }
+#ifndef CXXMIDI_QUIET
+    if ( result < 0 )
+        std::cerr << "CxxMidi: ALSA sequencer client init error" << std::endl;
+#endif
 
     // Set client name.
     snd_seq_set_client_name( seq, "CxxMidi (RtMidi) output" );
@@ -191,36 +194,44 @@ void Alsa::initialize()
     _apiData->coder = 0;
     _apiData->buffer = 0;
     result = snd_midi_event_new( _apiData->bufferSize, &_apiData->coder );
-    if ( result < 0 ) {
+    if ( result < 0 )
+    {
         delete _apiData;
-        std::cerr << "error: CxxMidi::Output::Alsa::initialize: error initializing MIDI event parser" << std::endl;
+#ifndef CXXMIDI_QUIET
+        std::cerr << "CxxMidi: MIDI event parser init error" << std::endl;
+#endif
         return;
     }
     _apiData->buffer = (unsigned char *) malloc( _apiData->bufferSize );
-    if ( _apiData->buffer == NULL ) {
+    if ( _apiData->buffer == NULL )
+    {
         delete _apiData;
-        std::cerr << "error: CxxMidi::Output::Alsa::initialize: error allocating buffer memory" << std::endl;
+#ifndef CXXMIDI_QUIET
+        std::cerr << "CxxMidi: ALSA malloc error" << std::endl;
+#endif
     }
     snd_midi_event_init( _apiData->coder );
 }
 
 void Alsa::openPort(unsigned int portNumber_)
 {
-    if ( _connected ) {
+    if ( _connected )
         this->closePort();
-    }
 
     unsigned int nSrc = this->getPortCount();
-    if (nSrc < 1) {
-        std::cerr << "error: CxxMidi::Output::Alsa::openPort: no MIDI output sources found" << std::endl;
-    }
+#ifndef CXXMIDI_QUIET
+    if (nSrc < 1)
+        std::cerr << "CxxMidi: no MIDI output sources" << std::endl;
+#endif
 
     snd_seq_port_info_t *pinfo;
     snd_seq_port_info_alloca( &pinfo );
-    std::ostringstream ost;
+
     if ( portInfo( _apiData->seq, pinfo, SND_SEQ_PORT_CAP_WRITE|SND_SEQ_PORT_CAP_SUBS_WRITE, (int) portNumber_ ) == 0 )
     {
-        std::cerr << "error: CxxMidi::Output::Alsa::openPort: port " << portNumber_ << " is invalid" << std::endl;
+#ifndef CXXMIDI_QUIET
+        std::cerr << "CxxMidi: invalid port port: " << portNumber_ << std::endl;
+#endif
     }
 
     snd_seq_addr_t sender, receiver;
@@ -232,9 +243,10 @@ void Alsa::openPort(unsigned int portNumber_)
         _apiData->vport = snd_seq_create_simple_port( _apiData->seq, "CxxMidi (RtMidi) output",
                                                       SND_SEQ_PORT_CAP_READ|SND_SEQ_PORT_CAP_SUBS_READ,
                                                       SND_SEQ_PORT_TYPE_MIDI_GENERIC|SND_SEQ_PORT_TYPE_APPLICATION );
-        if ( _apiData->vport < 0 ) {
-            std::cerr << "error: CxxMidi::Output::Alsa::openPort: error creating output port" << std::endl;
-        }
+#ifndef CXXMIDI_QUIET
+        if ( _apiData->vport < 0 )
+            std::cerr << "CxxMidi: output port init error" << std::endl;
+#endif
     }
 
     sender.port = _apiData->vport;
@@ -245,9 +257,14 @@ void Alsa::openPort(unsigned int portNumber_)
     snd_seq_port_subscribe_set_dest(_apiData->subscription, &receiver);
     snd_seq_port_subscribe_set_time_update(_apiData->subscription, 1);
     snd_seq_port_subscribe_set_time_real(_apiData->subscription, 1);
-    if ( snd_seq_subscribe_port(_apiData->seq, _apiData->subscription) ) {
-        std::cerr << "error: CxxMidi::Output::Alsa::openPort: error making port connection" << std::endl;
+
+    if ( snd_seq_subscribe_port(_apiData->seq, _apiData->subscription) )
+    {
+#ifndef CXXMIDI_QUIET
+        std::cerr << "CxxMidi: ports connect error" << std::endl;
+#endif
     }
+
 
     _connected = true;
 }
@@ -267,10 +284,11 @@ void Alsa::openVirtualPort( const std::string& portName_ )
         _apiData->vport = snd_seq_create_simple_port( _apiData->seq, portName_.c_str(),
                                                       SND_SEQ_PORT_CAP_READ|SND_SEQ_PORT_CAP_SUBS_READ,
                                                       SND_SEQ_PORT_TYPE_MIDI_GENERIC|SND_SEQ_PORT_TYPE_APPLICATION );
-
-        if ( _apiData->vport < 0 ) {
-            std::cerr << "error: CxxMidi::Output::Alsa::openVirtualPort: ALSA error creating virtual port: " << portName_ << std::endl;
-        }
+#ifndef CXXMIDI_QUIET
+        if ( _apiData->vport < 0 )
+            std::cerr << "CxxMidi: ALSA virtual port init error: "
+                      << portName_ << std::endl;
+#endif
     }
 }
 
@@ -278,16 +296,22 @@ void Alsa::sendMessage(const std::vector<uint8_t> *msg_ )
 {
     int result;
     unsigned int nBytes = msg_->size();
-    if ( nBytes > _apiData->bufferSize ) {
+    if ( nBytes > _apiData->bufferSize )
+    {
         _apiData->bufferSize = nBytes;
         result = snd_midi_event_resize_buffer ( _apiData->coder, nBytes);
-        if ( result != 0 ) {
-            std::cerr << "error: CxxMidi::Output::Alsa::sendMessage: ALSA error resizing MIDI event buffer" << std::endl;
-        }
+#ifndef CXXMIDI_QUIET
+        if ( result != 0 )
+            std::cerr << "CxxMidi: ALSA resizee buffer error" << std::endl;
+#endif
         free (_apiData->buffer);
         _apiData->buffer = (unsigned char *) malloc( _apiData->bufferSize );
-        if ( _apiData->buffer == NULL ) {
-            std::cerr << "error: CxxMidi::Output::Alsa::sendMessage: error allocating buffer memory" << std::endl;
+        if ( _apiData->buffer == NULL )
+        {
+#ifndef CXXMIDI_QUIET
+            std::cerr << "CxxMidi: error allocating buffer memory" << std::endl;
+#endif
+            return;
         }
     }
 
@@ -298,16 +322,20 @@ void Alsa::sendMessage(const std::vector<uint8_t> *msg_ )
     snd_seq_ev_set_direct(&ev);
     for ( unsigned int i=0; i<nBytes; ++i ) _apiData->buffer[i] = msg_->at(i);
     result = snd_midi_event_encode( _apiData->coder, _apiData->buffer, (long)nBytes, &ev );
-    if ( result < (int)nBytes ) {
-        std::cerr << "error: CxxMidi::Output::Alsa::sendMessage: event parsing error" << std::endl;
+    if ( result < (int)nBytes )
+    {
+#ifndef CXXMIDI_QUIET
+        std::cerr << "CxxMidi: event parsing error" << std::endl;
+#endif
         return;
     }
 
-    // Send the event.
+    // Send the event
     result = snd_seq_event_output(_apiData->seq, &ev);
-    if ( result < 0 ) {
-        std::cerr << "error: CxxMidi::Output::Alsa::sendMessage: error sending MIDI message to port" << std::endl;
-    }
+#ifndef CXXMIDI_QUIET
+    if ( result < 0 )
+        std::cerr << "CxxMidi: error sending MIDI message to port" << std::endl;
+#endif
     snd_seq_drain_output(_apiData->seq);
 }
 

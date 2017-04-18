@@ -44,10 +44,10 @@ private:
 
     inline void saveHeaderChunk(std::ofstream &outputFile_) const;
     inline void saveTrackChunk(std::ofstream & outputFile_,
-                        size_t num_) const;
+                               size_t num_) const;
     inline size_t saveEvent(std::ofstream & outputFile_,
-                     const Event & event_,
-                     uint8_t & lastCmd_) const;
+                            const Event & event_,
+                            uint8_t & lastCmd_) const;
 
     inline static void putc(std::ofstream& file_, uint8_t c_);
 
@@ -84,7 +84,9 @@ void File::saveAs(const char * path_) const
 
     if(!outputFile.good())
     {
+#ifndef CXXMIDI_QUIET
         std::cerr << "CxxMidi: could not open file " << path_ << std::endl;
+#endif
         return;
     }
 
@@ -284,14 +286,20 @@ void File::load(const char *path_)
             break;
 
         default:
-            std::cerr << "ignoring unknown chunk: " << (int) chunkId << std::endl;
+#ifndef CXXMIDI_QUIET
+            std::cerr << "CxxMidi: ignoring unknown chunk: 0x"
+                      << std::hex << (int)chunkId << std::endl;
+#endif
             this->readUnknownChunk(file);
             break;
         }
 
         if(!i++ && !headers)
         {
-            std::cerr << "header chunks is not first chunk (probably not a MIDI file)" << std::endl;
+#ifndef CXXMIDI_QUIET
+            std::cerr << "CxxMidi: no header chunk "
+                         "(probably not a MIDI file)" << std::endl;
+#endif
             break;
         }
     }
@@ -301,14 +309,21 @@ void File::readHeaderChunk(std::fstream & file_)
 {
     // read and check header size
     if( Guts::Endianness::readBE<uint32_t>(file_) != 6)
-        std::cerr << "warning: unsupported MIDI file type" << std::endl;
+    {
+#ifndef CXXMIDI_QUIET
+        std::cerr << "CxxMidi: warning: unsupported MIDI file type" << std::endl;
+#endif
+    }
 
     // read file type
     uint16_t type = Guts::Endianness::readBE<uint16_t>(file_);
 
+#ifndef CXXMIDI_QUIET
     // check file type
     if( (type != 0) && (type != 1) )
-        std::cerr << "warning: unsupported MIDI file type " << type << std::endl;
+        std::cerr << "CxxMidi: warning: unsupported MIDI file type: "
+                  << type << std::endl;
+#endif
     // type 0: single track
     // type 1: multi track
 
@@ -321,9 +336,11 @@ void File::readHeaderChunk(std::fstream & file_)
     // read time division
     _timeDivision = Guts::Endianness::readBE<uint16_t>(file_);
 
+#ifndef CXXMIDI_QUIET
     // check time division
     if (_timeDivision & 0x8000)
-        std::cerr << "warning: unsupported MIDI file time division" << std::endl;
+        std::cerr << "CxxMidi: warning: unsupported MIDI file time division" << std::endl;
+#endif
 }
 
 void File::readUnknownChunk(std::fstream & file_)
@@ -364,8 +381,10 @@ void File::readTrackChunk(std::fstream & file_)
         this->readEvent(file_,event,trackContinue,runningStatus);
     }
 
+#ifndef CXXMIDI_QUIET
     if(chunkSize != (file_.tellg()-begin))
-        std::cerr << "warning: track data and track chunk size mismatch" << std::endl;
+        std::cerr << "CxxMidi: warning: track data and track chunk size mismatch" << std::endl;
+#endif
 }
 
 void File::readEvent(std::fstream & file_,
@@ -430,7 +449,10 @@ void File::readEvent(std::fstream & file_,
             {
             default:
             {
-                std::cerr << "0x%x is unknown meta event type " << metaEventType << std::endl;
+#ifndef CXXMIDI_QUIET
+                std::cerr << "CxxMidi: unknown meta event 0x"
+                          << std::hex << metaEventType << std::endl;
+#endif
             }
             case Event::SequenceNumber: // size always 2
             case Event::Text:
@@ -452,30 +474,34 @@ void File::readEvent(std::fstream & file_,
                 uint8_t strLength = Guts::Endianness::readBE<uint8_t>(file_);
                 //event_.push_back(strLength);
 
+#ifndef CXXMIDI_QUIET
                 if((metaEventType == Event::SequenceNumber)
                         && (strLength != 2))
-                    std::cerr << "sequence number event size is not 2 but " << strLength << std::endl;
+                    std::cerr << "CxxMidi: sequence number event size is not 2 but " << strLength << std::endl;
 
                 if((metaEventType == Event::ChannelPrefix)
                         && (strLength != 1))
-                    std::cerr << "channel prefix event size is not 1 but" <<  strLength << std::endl;
+                    std::cerr << "CxxMidi: channel prefix event size is not 1 but" <<  strLength << std::endl;
 
                 if((metaEventType == Event::OutputCable)
                         && (strLength != 1))
-                    std::cerr << "output cable event size is not 1 but" << strLength << std::endl;
+                    std::cerr << "CxxMidi: output cable event size is not 1 but" << strLength << std::endl;
 
                 if((metaEventType == Event::Tempo)
                         && (strLength != 3))
-                    std::cerr << "tempo event size is not 3 but" << strLength << std::endl;
+                    std::cerr << "CxxMidi: tempo event size is not 3 but" << strLength << std::endl;
 
                 if((metaEventType == Event::SmpteOffset)
                         && (strLength != 5))
-                    std::cerr << "SMPTE offset event size is not 5 but " << strLength << std::endl;
+                    std::cerr << "CxxMidi: SMPTE offset event size is not 5 but " << strLength << std::endl;
+#endif
 
                 if(metaEventType == 0x2f)
                 {
+#ifndef CXXMIDI_QUIET
                     if (strLength !=0)
-                        std::cerr << "end of track event size is not 0 but " << strLength << std::endl;
+                        std::cerr << "CxxMidi: end of track event size is not 0 but " << strLength << std::endl;
+#endif
                     trackContinue_ = false;
                 }
 
@@ -501,7 +527,9 @@ void File::readEvent(std::fstream & file_,
     } // case 0xf0
         break;
     default:
+#ifndef CXXMIDI_QUIET
         std::cerr << "warning: unknown event " << (int)cmd << std::endl;
+#endif
         break;
     }
 }
