@@ -14,25 +14,9 @@ inline uint32_t extractTempo(uint8_t v0_, uint8_t v1_, uint8_t v2_)
         uint32_t oneTempo;
         uint8_t tabTempo[3];
     };
-
     oneTempo = 0;
 
-#ifdef CXXMIDI_BIG_ENDIAN
-    tabTempo[0] = v0_;
-    tabTempo[1] = v1_;
-    tabTempo[2] = v2_;
-#else
-#ifdef CXXMIDI_LIL_ENDIAN
-    tabTempo[0] = v2_;
-    tabTempo[1] = v1_;
-    tabTempo[2] = v0_;
-#else
-#warning "Undefined endianness will be tested in runtime. Please define CXXMIDI_LIL_ENDIAN or CXXMIDI_BIG_ENDIAN."
-
-    static uint32_t num = 1;
-    static bool littleEndian = *(uint8_t *)&num == 1;
-
-    if(littleEndian)
+    if(Guts::Endianness::machineIsLittleEndian())
     {
         tabTempo[0] = v2_;
         tabTempo[1] = v1_;
@@ -44,8 +28,7 @@ inline uint32_t extractTempo(uint8_t v0_, uint8_t v1_, uint8_t v2_)
         tabTempo[1] = v1_;
         tabTempo[2] = v2_;
     }
-#endif
-#endif
+
 
     return oneTempo;
 }
