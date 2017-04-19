@@ -11,7 +11,7 @@ class Message : public std::vector<uint8_t>
 {
 public:
     
-    typedef enum
+    enum Type
     {
         Undefined           = 0x00,
         
@@ -40,9 +40,9 @@ public:
         Stop                = 0xfc,
         ActiveSense         = 0xfe,
         Reset               = 0xff
-    } Type;
+    };
     
-    typedef enum
+    enum MetaType
     {
         SequenceNumber      = 0x00, // size 2
         Text                = 0x01,
@@ -60,7 +60,7 @@ public:
         TimeSignature       = 0x58,
         KeySignature        = 0x59
         
-    } MetaType;
+    };
     
     inline Message();
     inline Message(uint8_t b1_);
