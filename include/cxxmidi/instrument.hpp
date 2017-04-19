@@ -208,7 +208,7 @@ public:
 
     inline operator int() const;
 
-    inline static std::string name(int instrument_);
+    inline static std::string name(int instrument_, int channel_=-1);
 
 protected:
     int _val; // 0 ... 127
@@ -236,8 +236,114 @@ Instrument::operator int() const
     return _val;
 }
 
-std::string Instrument::name(int instrument_)
+std::string Instrument::name(int instrument_, int channel_)
 {
+    if(channel_ == 10)
+        switch(instrument_)
+        {
+        case AcousticBassDrum    : return "Acoustic Bass Drum";
+        case BassDrum1           : return "Bass Drum 1";
+        case SideStick           : return "Side Stick";
+        case AcousticSnare       : return "Acoustic Snare";
+        case HandClap            : return "Hand Clap";
+        case ElectricSnare       : return "Electric Snare";
+        case LowFloorTom         : return "Low Floor Tom";
+        case ClosedHiHat         : return "Closed Hi Hat";
+        case HighFloorTom        : return "High Floor Tom";
+        case PedalHiHat          : return "Pedal Hi Hat";
+        case LowTom              : return "Low Tom";
+        case OpenHiHat           : return "Open Hi Hat";
+        case LowMidTom           : return "Low Mid Tom";
+        case HighMidTom          : return "High Mid Tom";
+        case CrashCymbal1        : return "Crash Cymbal 1";
+        case HighTom             : return "High Tom";
+        case RideCymbal1         : return "Ride Cymbal 1";
+        case ChineseCymbal       : return "Chinese Cymbal";
+        case RideBell            : return "Ride Bell";
+        case Tambourine          : return "Tambourine";
+        case SplashCymbal        : return "Splash Cymbal";
+        case Cowbell             : return "Cowbell";
+        case CrashCymbal2        : return "Crash Cymbal 2";
+        case Vibraslap           : return "Vibraslap";
+        case RideCymbal2         : return "Ride Cymbal 2";
+        case HiBongo             : return "Hi Bongo";
+        case LowBongo            : return "Low Bongo";
+        case MuteHiConga         : return "Mute Hi Conga";
+        case OpenHiConga         : return "Open Hi Conga";
+        case LowConga            : return "Low Conga";
+        case HighTimbale         : return "High Timbale";
+        case LowTimbale          : return "Low Timbale";
+        case HighAgogo           : return "High Agogo";
+        case LowAgogo            : return "Low Agogo";
+        case Cabasa              : return "Cabasa";
+        case Maracas             : return "Maracas";
+        case ShortWhistle        : return "Short Whistle";
+        case LongWhistle         : return "Long Whistle";
+        case ShortGuiro          : return "Short Guiro";
+        case LongGuiro           : return "Long Guiro";
+        case Claves              : return "Claves";
+        case HiWoodBlock         : return "Hi Wood Block";
+        case LowWoodBlock        : return "Low Wood Block";
+        case MuteCuica           : return "Mute Cuica";
+        case OpenCuica           : return "Open Cuica";
+        case MuteTriangle        : return "Mute Triangle";
+        case OpenTriangle        : return "Open Triangle";
+        default: break;
+        }
+
+    if(channel_==-1) // undefined channel
+        switch(instrument_)
+        {
+        case FretlessBass        : return "Fretless Bass";
+        case SlapBass1           : return "Slap Bass 1";
+        case SlapBass2           : return "Slap Bass 2";
+        case SynthBass1          : return "Synth Bass 1";
+        case SynthBass2          : return "Synth Bass 2";
+        case Violin              : return "Violin";
+        case Viola               : return "Viola";
+        case Cello               : return "Cello";
+        case Contrabass          : return "Contrabass";
+        case TremoloStrings      : return "Tremolo Strings";
+        case PizzacatoStrings    : return "Pizzacato Strings";
+        case OrchestralHarp      : return "Orchestral Harp";
+        case Timpani             : return "Timpani";
+        case StringEnsemble1     : return "String Ensemble 1";
+        case StringEnsemble2     : return "String Ensemble 2";
+        case Synthstrings1       : return "Synthstrings 1";
+        case Synthstrings2       : return "Synthstrings 2";
+        case ChoirAahs           : return "Choir Aahs";
+        case VoiceOohs           : return "Voice Oohs";
+        case SynthVoice          : return "Synth Voice";
+        case OrchestraHit        : return "Orchestra Hit";
+        case Trumpet             : return "Trumpet";
+        case Trombone            : return "Trombone";
+        case Tuba                : return "Tuba";
+        case MutedTrumped        : return "Muted Trumped";
+        case FrenchHorn          : return "French Horn";
+        case BrassSection        : return "Brass Section";
+        case Synthbrass1         : return "Synthbrass 1";
+        case Synthbrass2         : return "Synthbrass 2";
+        case SopranoSax          : return "Soprano Sax";
+        case AltoSax             : return "Alto Sax";
+        case TenorSax            : return "Tenor Sax";
+        case BaritoneSax         : return "Baritone Sax";
+        case Oboe                : return "Oboe";
+        case EnglishHorn         : return "English Horn";
+        case Bassoon             : return "Bassoon";
+        case Clarinet            : return "Clarinet";
+        case Piccolo             : return "Piccolo";
+        case Flute               : return "Flute";
+        case Recorder            : return "Recorder";
+        case PanFlute            : return "Pan Flute";
+        case BlownBottle         : return "Blown Bottle";
+        case Shakuhachi          : return "Shakuhachi";
+        case Whistle             : return "Whistle";
+        case Ocarina             : return "Ocarina";
+        case LeadSquare          : return "Lead Square";
+        case LeadSawtooth        : return "Lead Sawtooth";
+        default: break;
+        }
+
     switch(instrument_)
     {
     case AcousticGrandPiano  : return "Acoustic Grand Piano";
@@ -367,54 +473,7 @@ std::string Instrument::name(int instrument_)
     case TelephoneRing       : return "Telephone Ring";
     case Helicopter          : return "Helicopter";
     case Applause            : return "Applause";
-    case Gunshot             : return "Gunshot    ";
-//    case AcousticBassDrum    : return "Acoustic Bass Drum";
-//    case BassDrum1           : return "Bass Drum 1";
-//    case SideStick           : return "Side Stick";
-//    case AcousticSnare       : return "Acoustic Snare";
-//    case HandClap            : return "Hand Clap";
-//    case ElectricSnare       : return "Electric Snare";
-//    case LowFloorTom         : return "Low Floor Tom";
-//    case ClosedHiHat         : return "Closed Hi Hat";
-//    case HighFloorTom        : return "High Floor Tom";
-//    case PedalHiHat          : return "Pedal Hi Hat";
-//    case LowTom              : return "Low Tom";
-//    case OpenHiHat           : return "Open Hi Hat";
-//    case LowMidTom           : return "Low Mid Tom";
-//    case HighMidTom          : return "High Mid Tom";
-//    case CrashCymbal1        : return "Crash Cymbal 1";
-//    case HighTom             : return "High Tom";
-//    case RideCymbal1         : return "Ride Cymbal 1";
-//    case ChineseCymbal       : return "Chinese Cymbal";
-//    case RideBell            : return "Ride Bell";
-//    case Tambourine          : return "Tambourine";
-//    case SplashCymbal        : return "Splash Cymbal";
-//    case Cowbell             : return "Cowbell";
-//    case CrashCymbal2        : return "Crash Cymbal 2";
-//    case Vibraslap           : return "Vibraslap";
-//    case RideCymbal2         : return "Ride Cymbal 2";
-//    case HiBongo             : return "Hi Bongo";
-//    case LowBongo            : return "Low Bongo";
-//    case MuteHiConga         : return "Mute Hi Conga";
-//    case OpenHiConga         : return "Open Hi Conga";
-//    case LowConga            : return "Low Conga";
-//    case HighTimbale         : return "High Timbale";
-//    case LowTimbale          : return "Low Timbale";
-//    case HighAgogo           : return "High Agogo";
-//    case LowAgogo            : return "Low Agogo";
-//    case Cabasa              : return "Cabasa";
-//    case Maracas             : return "Maracas";
-//    case ShortWhistle        : return "Short Whistle";
-//    case LongWhistle         : return "Long Whistle";
-//    case ShortGuiro          : return "Short Guiro";
-//    case LongGuiro           : return "Long Guiro";
-//    case Claves              : return "Claves";
-//    case HiWoodBlock         : return "Hi Wood Block";
-//    case LowWoodBlock        : return "Low Wood Block";
-//    case MuteCuica           : return "Mute Cuica";
-//    case OpenCuica           : return "Open Cuica";
-//    case MuteTriangle        : return "Mute Triangle";
-//    case OpenTriangle        : return "Open Triangle";
+    case Gunshot             : return "Gunshot";
     case Undefined           : return "Undefined";
     default: return "";
     }
