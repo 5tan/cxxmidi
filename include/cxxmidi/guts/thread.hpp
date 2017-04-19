@@ -3,12 +3,12 @@
 
 #ifdef _WIN32
 #include <windows.h>
-typedef HANDLE NativThreadType;
+typedef HANDLE NativeThread;
 #endif // _WIN32
 
 #ifdef __unix
 #include <pthread.h>
-typedef pthread_t NativThreadType;
+typedef pthread_t NativeThread;
 #endif // __unix
 
 namespace CxxMidi {
@@ -19,14 +19,14 @@ class Thread
 public:
 
     inline Thread();
-    inline Thread( void* (*fun_)(void *), void* caller_ );
+    inline Thread( void* (*fun_)(void *), void* ctx_);
     inline ~Thread();
 
     inline void join();
 
 private:
 
-    NativThreadType _nativeThread;
+    NativeThread _nativeThread;
 };
 
 } // namespace Guts
@@ -36,7 +36,7 @@ private:
 namespace CxxMidi {
 namespace Guts {
 
-Thread::Thread( void* (*fun_)(void *), void* caller_ )
+Thread::Thread( void* (*fun_)(void *), void* ctx_)
 {
 
 #ifdef _WIN32
@@ -44,12 +44,12 @@ Thread::Thread( void* (*fun_)(void *), void* caller_ )
                 NULL,                         // default security attributes
                 0,                            // use default stack size
                 (LPTHREAD_START_ROUTINE)fun_, // thread function name
-                caller_,                      // argument to thread function
+                ctx_,                      // argument to thread function
                 0,                            // use default creation flags
                 NULL);                        // returns the thread identifier
 #endif // _WIN32
 #ifdef __unix
-    pthread_create(&_nativeThread,0,fun_,caller_);
+    pthread_create(&_nativeThread,0,fun_,ctx_);
 #endif // __unix
 
 }
@@ -61,12 +61,14 @@ Thread::Thread()
 
 Thread::~Thread()
 {
+    this->join();
 }
 
 void Thread::join()
 {
 #ifdef _WIN32
     WaitForSingleObject(_nativeThread, INFINITE);
+    CloseHandle(_nativeThread)
 #endif // _WIN32
 #ifdef __unix
     pthread_join(_nativeThread, NULL);
