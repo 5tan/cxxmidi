@@ -2,6 +2,7 @@
 #include <cxxmidi/output/default.hpp>
 #include <cxxmidi/player/synchronous.hpp>
 #include <cxxmidi/callback.hpp>
+#include <cxxmidi/guts/compiler.hpp>
 
 class PlayerHeartbeatCallback : public CxxMidi::Callback<CxxMidi::Player::Abstract>
 {
