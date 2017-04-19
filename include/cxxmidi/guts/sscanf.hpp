@@ -8,13 +8,13 @@
 namespace CxxMidi {
 namespace Guts {
 
-void portable_sscanf_s(const char * str_, size_t size_, const char* fmt_, ...)
+void sscanfWrapper(const char * str_, size_t size_, const char* fmt_, ...)
 {
     va_list args;
     va_start(args,fmt_);
 
 #ifdef _WIN32
-    sscanf_s(str_,fmt_,args,size);
+    sscanf_s(str_,fmt_,args,size_);
 #endif // _WIN32
 #ifdef __unix
     CXXMIDI_UNUSED(size_);
