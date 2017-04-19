@@ -3,11 +3,14 @@
 
 #include <cxxmidi/guts/3rdparty/pstdint.h>
 #include <cxxmidi/guts/endianness.hpp>
+#include <cxxmidi/guts/compiler.hpp>
 
 namespace CxxMidi {
 namespace Utils {
 
-inline uint32_t extractTempo(uint8_t v0_, uint8_t v1_, uint8_t v2_)
+inline uint32_t extractTempo(uint8_t v0_,
+                             uint8_t v1_,
+                             uint8_t v2_)
 {
     union
     {
@@ -33,7 +36,8 @@ inline uint32_t extractTempo(uint8_t v0_, uint8_t v1_, uint8_t v2_)
     return oneTempo;
 }
 
-inline unsigned int usPerTick(unsigned int tempo_uspq_, uint16_t timeDiv_)
+inline CXXMIDI_CONSTEXPR unsigned int usPerTick(unsigned int tempo_uspq_,
+                                                uint16_t timeDiv_)
 {
     return tempo_uspq_/timeDiv_;
 }
