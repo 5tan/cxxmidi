@@ -110,12 +110,12 @@ Point Point::createFromTimecode(const std::string& tc_)
     int hh,mm,ss,us=0;
 
     if(tc_.find('&')==std::string::npos)
-        Guts::portable_sscanf_s(tc_.c_str(), tc_.size(),
-                                "%d:%d:%d", &hh,&mm,&ss);
+        Guts::sscanfWrapper(tc_.c_str(), tc_.size(),
+                            "%d:%d:%d", &hh,&mm,&ss);
     else
     {
-        Guts::portable_sscanf_s(tc_.c_str(), tc_.size(),
-                                "%d:%d:%d&%d", &hh,&mm,&ss,&us);
+        Guts::sscanfWrapper(tc_.c_str(), tc_.size(),
+                            "%d:%d:%d&%d", &hh,&mm,&ss,&us);
         r._us = us;
     }
 
