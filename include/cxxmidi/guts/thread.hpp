@@ -2,12 +2,12 @@
 #define CXXMIDI_GUTS_THREAD_HPP
 
 #ifdef _WIN32
-#include <windows.h>
+#   include <windows.h>
 typedef HANDLE NativeThread;
 #endif // _WIN32
 
 #ifdef __unix
-#include <pthread.h>
+#   include <pthread.h>
 typedef pthread_t NativeThread;
 #endif // __unix
 

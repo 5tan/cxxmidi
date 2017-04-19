@@ -40,7 +40,8 @@ HEADERS += \
     ../include/cxxmidi/guts/mutex.hpp\
     ../include/cxxmidi/event.hpp \
     ../include/cxxmidi/instrument.hpp \
-    ../include/cxxmidi/note.hpp
+    ../include/cxxmidi/note.hpp \
+    ../include/cxxmidi/guts/compiler.hpp
 
 FORMS += 
 
