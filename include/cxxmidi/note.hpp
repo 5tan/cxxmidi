@@ -9,7 +9,7 @@ class Note
 {
 public:
 
-    enum
+    enum Name
     {
         Undefined = 128,
 

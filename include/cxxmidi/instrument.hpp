@@ -7,7 +7,7 @@ namespace CxxMidi {
 
 class Instrument
 {
-    enum
+    enum Name
     {
         AcousticGrandPiano          = 0,
         BrightAcousticPiano         = 1,
