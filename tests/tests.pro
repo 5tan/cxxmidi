@@ -4,15 +4,12 @@
 #
 #-------------------------------------------------
 
-QT       += gui widgets
-
-TARGET = tests
-
-TEMPLATE = app
+QT += widgets testlib
 
 INCLUDEPATH += "../include"
 
-SOURCES += main.cpp 
+SOURCES += \ 
+    testsizeof.cpp
 
 HEADERS += \
     ../include/cxxmidi/time/duration.hpp\
@@ -52,5 +49,3 @@ unix:!macx {
 win32 {
     LIBS += winmm.lib
 }
-
-
