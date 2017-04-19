@@ -28,10 +28,10 @@ public:
 
 int main(int /*argc*/, char ** /*argv*/)
 {
-    CxxMidi::Output::Default output(1);
+    CxxMidi::Output::Default output(0);
     CxxMidi::Player::Asynchronous player(&output);
 
-    CxxMidi::File file("music/chopin.mid");
+    CxxMidi::File file("/home/sch/sample.mid");
     player.setFile(&file);
 
     PlayerHeartbeatCallback playerHeartbeatCallback;
@@ -41,6 +41,6 @@ int main(int /*argc*/, char ** /*argv*/)
     player.setCallbackFinished(&playerFinishedCallback);
 
     player.play();
-    CxxMidi::Sleep::us(1000 * 1000 * 10); // 10 sec
+    CxxMidi::Sleep::us(1000 * 1000 * 5); // 5 sec
     player.pause();
 }

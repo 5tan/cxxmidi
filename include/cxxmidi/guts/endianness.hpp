@@ -9,7 +9,7 @@ namespace CxxMidi {
 namespace Guts {
 namespace Endianness {
 
-bool machineIsLittleEndian()
+inline bool machineIsLittleEndian()
 {
     static const uint32_t num = 1;
     static const bool r = *(uint8_t *)&num == 1;

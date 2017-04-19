@@ -3,9 +3,6 @@
 
 #include <cxxmidi/guts/compiler.hpp>
 
-namespace CxxMidi {
-namespace Guts {
-
 #ifdef CXXMIDI_CPP11
 #    include <thread>
 typedef std::thread NativeThread;
@@ -19,6 +16,9 @@ typedef HANDLE NativeThread;
 typedef pthread_t NativeThread;
 #   endif // __unix
 #endif // CXXMIDI_CPP11
+
+namespace CxxMidi {
+namespace Guts {
 
 class Thread
 {
@@ -69,14 +69,15 @@ Thread::Thread()
 
 Thread::~Thread()
 {
-    this->join();
+
 }
 
 void Thread::join()
 {
 #ifdef CXXMIDI_CPP11
 #    include <thread>
-    _nativeThread.join();
+    if(_nativeThread.joinable())
+        _nativeThread.join();
 #else
 #   ifdef _WIN32
     WaitForSingleObject(_nativeThread, INFINITE);

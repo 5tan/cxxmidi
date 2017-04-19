@@ -13,7 +13,6 @@ class Asynchronous : private Player::Abstract
 {
 
 public:
-    inline Asynchronous();
     inline Asynchronous(Output::Abstract *output_);
     inline virtual ~Asynchronous();
 
@@ -45,7 +44,7 @@ private:
     inline static void* playerLoop(void *caller_);
 
     CxxMidi::Guts::Mutex _mutex;
-    CxxMidi::Guts::Thread _thread;
+    CxxMidi::Guts::Thread* _thread;
 };
 
 } // Player
@@ -64,11 +63,14 @@ namespace Player {
 Asynchronous::Asynchronous(Output::Abstract* output_)
     : Abstract(output_)
     , _pauseRequest(false)
+    , _thread(0)
 {
 }
 
 Asynchronous::~Asynchronous()
 {
+    if(_thread)
+        delete _thread;
 }
 
 void Asynchronous::play()
@@ -87,7 +89,9 @@ void Asynchronous::play()
     if(reject)
         return;
 
-    _thread = CxxMidi::Guts::Thread(Asynchronous::playerLoop,this);
+    if(_thread)
+        delete _thread;
+    _thread = new CxxMidi::Guts::Thread(Asynchronous::playerLoop,this);
 }
 
 void Asynchronous::pause()
@@ -96,7 +100,9 @@ void Asynchronous::pause()
     _pauseRequest = true;
     _mutex.unlock();
 
-    _thread.join();
+    _thread->join();
+    delete _thread;
+    _thread = 0;
 }
 
 
