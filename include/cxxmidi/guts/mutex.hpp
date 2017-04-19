@@ -6,12 +6,12 @@ namespace Guts {
 
 #ifdef _WIN32
 #include <windows.h>
-typedef CRITICAL_SECTION NativeMutexType;
+typedef CRITICAL_SECTION NativeMutex;
 #endif // _WIN32
 
 #ifdef __unix
 #include <pthread.h>
-typedef pthread_mutex_t NativeMutexType;
+typedef pthread_mutex_t NativeMutex;
 #endif // __unix
 
 class Mutex
@@ -23,7 +23,7 @@ public:
     inline void unlock();
 
 private:
-    NativeMutexType _nativeMutex;
+    NativeMutex _nativeMutex;
 };
 
 } // namespace Guts
