@@ -1,8 +1,7 @@
 #ifndef CXXMIDI_GUTS_MUTEX_HPP
 #define CXXMIDI_GUTS_MUTEX_HPP
 
-namespace CxxMidi {
-namespace Guts {
+#include <cxxmidi/guts/compiler.hpp>
 
 #ifdef CXXMIDI_CPP11
 #    include <mutex>
@@ -17,6 +16,9 @@ typedef CRITICAL_SECTION NativeMutex;
 typedef pthread_mutex_t NativeMutex;
 #   endif // __unix
 #endif // CXXMIDI_CPP11
+
+namespace CxxMidi {
+namespace Guts {
 
 class Mutex
 {
@@ -67,7 +69,7 @@ Mutex::~Mutex()
 void Mutex::lock()
 {
 #ifdef CXXMIDI_CPP11
-    _nativeMutex.lock()
+    _nativeMutex.lock();
 #else
 #   ifdef _WIN32
     EnterCriticalSection(&_nativeMutex);
@@ -81,7 +83,7 @@ void Mutex::lock()
 void Mutex::unlock()
 {
 #ifdef CXXMIDI_CPP11
-    _nativeMutex.unlock()
+    _nativeMutex.unlock();
 #else
 #   ifdef _WIN32
     LeaveCriticalSection(&_nativeMutex);

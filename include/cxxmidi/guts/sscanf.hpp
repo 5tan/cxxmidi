@@ -8,7 +8,9 @@
 namespace CxxMidi {
 namespace Guts {
 
-void sscanfWrapper(const char * str_, size_t size_, const char* fmt_, ...)
+inline void sscanfWrapper(const char * str_,
+                          size_t size_,
+                          const char* fmt_, ...)
 {
     va_list args;
     va_start(args,fmt_);

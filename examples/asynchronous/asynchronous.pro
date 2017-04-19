@@ -8,6 +8,8 @@ QT       -= core
 
 TARGET = asynchronous
 
+#CONFIG += c++11
+
 TEMPLATE = app
 
 INCLUDEPATH += "../../include"
