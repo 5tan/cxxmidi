@@ -1,18 +1,24 @@
 #ifndef CXXMIDI_GUTS_THREAD_HPP
 #define CXXMIDI_GUTS_THREAD_HPP
 
-#ifdef _WIN32
-#   include <windows.h>
-typedef HANDLE NativeThread;
-#endif // _WIN32
-
-#ifdef __unix
-#   include <pthread.h>
-typedef pthread_t NativeThread;
-#endif // __unix
+#include <cxxmidi/guts/compiler.hpp>
 
 namespace CxxMidi {
 namespace Guts {
+
+#ifdef CXXMIDI_CPP11
+#    include <thread>
+typedef std::thread NativeThread;
+#else
+#   ifdef _WIN32
+#     include <windows.h>
+typedef HANDLE NativeThread;
+#   endif // _WIN32
+#   ifdef __unix
+#      include <pthread.h>
+typedef pthread_t NativeThread;
+#   endif // __unix
+#endif // CXXMIDI_CPP11
 
 class Thread
 {
@@ -38,20 +44,22 @@ namespace Guts {
 
 Thread::Thread( void* (*fun_)(void *), void* ctx_)
 {
-
-#ifdef _WIN32
+#ifdef CXXMIDI_CPP11
+    _nativeThread = std::thread(fun_,ctx_);
+#else
+#   ifdef _WIN32
     _nativeThread = CreateThread(
                 NULL,                         // default security attributes
                 0,                            // use default stack size
                 (LPTHREAD_START_ROUTINE)fun_, // thread function name
-                ctx_,                      // argument to thread function
+                ctx_,                         // argument to thread function
                 0,                            // use default creation flags
                 NULL);                        // returns the thread identifier
-#endif // _WIN32
-#ifdef __unix
+#   endif // _WIN32
+#   ifdef __unix
     pthread_create(&_nativeThread,0,fun_,ctx_);
-#endif // __unix
-
+#   endif // __unix
+#endif // CXXMIDI_CPP11
 }
 
 Thread::Thread()
@@ -66,13 +74,18 @@ Thread::~Thread()
 
 void Thread::join()
 {
-#ifdef _WIN32
+#ifdef CXXMIDI_CPP11
+#    include <thread>
+    _nativeThread.join();
+#else
+#   ifdef _WIN32
     WaitForSingleObject(_nativeThread, INFINITE);
-    CloseHandle(_nativeThread)
-#endif // _WIN32
-#ifdef __unix
+    CloseHandle(_nativeThread);
+#   endif // _WIN32
+#   ifdef __unix
     pthread_join(_nativeThread, NULL);
-#endif // __unix
+#   endif // __unix
+#endif // CXXMIDI_CPP11
 }
 
 } // namespace Guts
