@@ -1,7 +1,7 @@
 #ifndef CXXMIDI_TIME_POINT_HPP
 #define CXXMIDI_TIME_POINT_HPP
 
-#include <cxxmidi/guts/3rdparty/pstdint.h>
+#include <cxxmidi/guts/stdint.hpp>
 
 namespace CxxMidi {
 namespace Time {

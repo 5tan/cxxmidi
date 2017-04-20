@@ -4,7 +4,7 @@
 #include <vector>
 #include <fstream>
 #include <iostream>
-#include <cxxmidi/guts/3rdparty/pstdint.h>
+#include <cxxmidi/guts/stdint.hpp>
 
 #include <cxxmidi/track.hpp>
 

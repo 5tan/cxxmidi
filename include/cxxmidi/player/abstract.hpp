@@ -2,7 +2,7 @@
 #define CXXMIDI_PLAYER_ABSTRACT_HPP
 
 #include <vector>
-#include <cxxmidi/guts/3rdparty/pstdint.h>
+#include <cxxmidi/guts/stdint.hpp>
 #include <cxxmidi/time/point.hpp>
 #include <cxxmidi/callback.hpp>
 
