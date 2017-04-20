@@ -9,7 +9,8 @@ QT += widgets testlib
 INCLUDEPATH += "../include"
 
 SOURCES += \ 
-    testsizeof.cpp
+    testsizeof.cpp \
+    utils.cpp
 
 HEADERS += \
     ../include/cxxmidi/time/duration.hpp\
@@ -39,7 +40,8 @@ HEADERS += \
     ../include/cxxmidi/instrument.hpp \
     ../include/cxxmidi/note.hpp \
     ../include/cxxmidi/guts/compiler.hpp \
-    ../include/cxxmidi/sysex.hpp
+    ../include/cxxmidi/sysex.hpp \
+    utils.h
 
 FORMS += 
 
