@@ -1,35 +1,30 @@
-```
-          @ @@@                                       @@@@@   @@    @@                @@
-        @  @@@@  @                                 @@@@@@  @@@@@ @@@@@     @           @@     @
-       @  @  @@@@                                 @@   @  @  @@@@@ @@@@@  @@@          @@    @@@
-      @  @@   @@                                 @    @  @   @ @@  @ @@    @           @@     @
-     @  @@@         @@@    @@@     @@@    @@@        @  @    @     @                   @@
-    @@   @@        @ @@@  @@@@ @  @ @@@  @@@@ @     @@ @@    @     @     @@@       @@@ @@   @@@
-    @@   @@           @@@ @@@@@      @@@ @@@@@      @@ @@    @     @      @@@     @@@@@@@@@  @@@
-    @@   @@            @@@  @@        @@@  @@       @@ @@    @     @       @@    @@   @@@@    @@
-    @@   @@             @@@            @@@          @@ @@    @     @       @@    @@    @@     @@
-    @@   @@            @ @@@          @ @@@         @@ @@    @     @@      @@    @@    @@     @@
-     @@  @@           @   @@@        @   @@@        @  @@    @     @@      @@    @@    @@     @@
-      @@ @      @    @     @@@      @     @@@          @     @      @@     @@    @@    @@     @@
-       @@@     @    @       @@@ @  @       @@@ @   @@@@      @      @@     @@    @@    @@     @@
-        @@@@@@@    @         @@@  @         @@@   @  @@@@@           @@    @@@ @  @@@@@       @@@ @
-          @@@                                    @     @@                   @@@    @@@         @@@
-                                                 @
-                                                  @@
+
+       @ @@@                                       @@@@@   @@    @@                @@
+     @  @@@@  @                                 @@@@@@  @@@@@ @@@@@     @           @@     @
+    @  @  @@@@                                 @@   @  @  @@@@@ @@@@@  @@@          @@    @@@
+   @  @@   @@                                 @    @  @   @ @@  @ @@    @           @@     @
+  @  @@@         @@@    @@@     @@@    @@@        @  @    @     @                   @@
+ @@   @@        @ @@@  @@@@ @  @ @@@  @@@@ @     @@ @@    @     @     @@@       @@@ @@   @@@
+ @@   @@           @@@ @@@@@      @@@ @@@@@      @@ @@    @     @      @@@     @@@@@@@@@  @@@
+ @@   @@            @@@  @@        @@@  @@       @@ @@    @     @       @@    @@   @@@@    @@
+ @@   @@             @@@            @@@          @@ @@    @     @       @@    @@    @@     @@
+ @@   @@            @ @@@          @ @@@         @@ @@    @     @@      @@    @@    @@     @@
+  @@  @@           @   @@@        @   @@@        @  @@    @     @@      @@    @@    @@     @@
+   @@ @      @    @     @@@      @     @@@          @     @      @@     @@    @@    @@     @@
+    @@@     @    @       @@@ @  @       @@@ @   @@@@      @      @@     @@    @@    @@     @@
+     @@@@@@@    @         @@@  @         @@@   @  @@@@@           @@    @@@ @  @@@@@       @@@ @
+       @@@                                    @     @@                   @@@    @@@         @@@
+                                              @
+                                               @@
 ```
 
 # CxxMidi v0.2
 
 Modern C++ MIDI library.
 
-## Design
-* Multiplatform (Linux, Windows)
-* Endian safe
-* hpp header-only library
-
 ## Key features
 * MIDI files read/write
-* MIDI files parsing, editing, sequencing
+* MIDI files parsing, editing, sequencing (composition)
 * MIDI outputs
   * ALSA on Linux
   * WinMM on Windows
@@ -37,9 +32,13 @@ Modern C++ MIDI library.
   * synchronous
   * asynchronous
 
-## Examples
+## Design
+* Multiplatform (Linux, Windows)
+* Endian safe
+* Boost-like HPP header files only library
 
-Here is a CxxMidi "Hello World".
+## Hello World
+
 ``` cpp
 #include <cxxmidi/file.hpp>
 #include <cxxmidi/output/default.hpp>
@@ -62,4 +61,5 @@ int main(int /*argc*/, char ** /*argv*/)
 
 ## License
 * CxxMidi: GPLv3
+* pstdint: BSD
 * RtMidi: https://www.music.mcgill.ca/~gary/rtmidi/index.html#license 
