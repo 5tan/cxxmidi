@@ -38,7 +38,8 @@ HEADERS += \
     ../include/cxxmidi/event.hpp \
     ../include/cxxmidi/instrument.hpp \
     ../include/cxxmidi/note.hpp \
-    ../include/cxxmidi/guts/compiler.hpp
+    ../include/cxxmidi/guts/compiler.hpp \
+    ../include/cxxmidi/sysex.hpp
 
 FORMS += 
 
