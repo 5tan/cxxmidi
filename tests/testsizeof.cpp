@@ -1,6 +1,6 @@
 #include <QtTest/QtTest>
 
-#include <cxxmidi/guts/3rdparty/pstdint.h>
+#include <cxxmidi/guts/stdint.hpp>
 
 class TestSizeof: public QObject
 {

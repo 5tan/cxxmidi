@@ -1,7 +1,7 @@
 #ifndef CXXMIDI_EVENT_HPP
 #define CXXMIDI_EVENT_HPP
 
-#include <cxxmidi/guts/3rdparty/pstdint.h>
+#include <cxxmidi/guts/stdint.hpp>
 
 #include <cxxmidi/message.hpp>
 

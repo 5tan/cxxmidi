@@ -39,7 +39,7 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
-#include <cxxmidi/guts/3rdparty/pstdint.h>
+#include <cxxmidi/guts/stdint.hpp>
 
 #include <cxxmidi/output/abstract.hpp>
 
