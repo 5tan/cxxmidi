@@ -220,6 +220,9 @@ public:
     inline Note();
     inline Note(int val_);
 
+    inline static Note MiddleC();
+    inline static Note A440Hz();
+
     inline operator int() const;
 
     inline static std::string name(int note_);
@@ -242,6 +245,16 @@ Note::Note(int val_)
     : _val(val_)
 {
 
+}
+
+Note Note::MiddleC()
+{
+    return Note(C4);
+}
+
+Note Note::A440Hz()
+{
+    return Note(A4);
 }
 
 Note::operator int() const
