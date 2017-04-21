@@ -8,7 +8,7 @@ FileModel::~FileModel() {}
 int FileModel::rowCount(const QModelIndex & /* index_ */) const
 {
   if(_file)
-    return _file->tracks();
+    return static_cast<int>(_file->tracks());
 
   return 0;
 }

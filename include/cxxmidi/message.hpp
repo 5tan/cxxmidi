@@ -39,7 +39,10 @@ public:
         Continue            = 0xfb,
         Stop                = 0xfc,
         ActiveSense         = 0xfe,
-        Reset               = 0xff
+        Reset               = 0xff,
+
+        // Meta events
+        Meta                = 0xff
     };
     
     enum MetaType

@@ -34,7 +34,7 @@ Qt::ItemFlags TrackModel::flags(const QModelIndex & index_) const
 int TrackModel::rowCount(const QModelIndex & /*index_*/) const
 {
     if(_track)
-        return _track->size();
+        return static_cast<int>(_track->size());
 
     return 0;
 }

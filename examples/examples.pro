@@ -2,4 +2,5 @@ TEMPLATE = subdirs
 SUBDIRS = synchronous \
 asynchronous \
 qtmidiplayer \
-qtmidieditor
+qtmidieditor \
+sequencing
