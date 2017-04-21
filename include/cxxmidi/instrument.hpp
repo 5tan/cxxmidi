@@ -7,6 +7,8 @@ namespace CxxMidi {
 
 class Instrument
 {
+public:
+
     enum Name
     {
         AcousticGrandPiano          = 0,
@@ -202,7 +204,6 @@ class Instrument
         Undefined                   = 128
     };
 
-public:
     inline Instrument();
     inline Instrument(int val_);
 
@@ -211,7 +212,7 @@ public:
     inline static std::string name(int instrument_, int channel_=-1);
 
 protected:
-    int _val; // 0 ... 127
+    int _val; // 0 ... 128
 
 };
 
@@ -294,54 +295,54 @@ std::string Instrument::name(int instrument_, int channel_)
     if(channel_==-1) // undefined channel
         switch(instrument_)
         {
-        case FretlessBass        : return "Fretless Bass";
-        case SlapBass1           : return "Slap Bass 1";
-        case SlapBass2           : return "Slap Bass 2";
-        case SynthBass1          : return "Synth Bass 1";
-        case SynthBass2          : return "Synth Bass 2";
-        case Violin              : return "Violin";
-        case Viola               : return "Viola";
-        case Cello               : return "Cello";
-        case Contrabass          : return "Contrabass";
-        case TremoloStrings      : return "Tremolo Strings";
-        case PizzacatoStrings    : return "Pizzacato Strings";
-        case OrchestralHarp      : return "Orchestral Harp";
-        case Timpani             : return "Timpani";
-        case StringEnsemble1     : return "String Ensemble 1";
-        case StringEnsemble2     : return "String Ensemble 2";
-        case Synthstrings1       : return "Synthstrings 1";
-        case Synthstrings2       : return "Synthstrings 2";
-        case ChoirAahs           : return "Choir Aahs";
-        case VoiceOohs           : return "Voice Oohs";
-        case SynthVoice          : return "Synth Voice";
-        case OrchestraHit        : return "Orchestra Hit";
-        case Trumpet             : return "Trumpet";
-        case Trombone            : return "Trombone";
-        case Tuba                : return "Tuba";
-        case MutedTrumped        : return "Muted Trumped";
-        case FrenchHorn          : return "French Horn";
-        case BrassSection        : return "Brass Section";
-        case Synthbrass1         : return "Synthbrass 1";
-        case Synthbrass2         : return "Synthbrass 2";
-        case SopranoSax          : return "Soprano Sax";
-        case AltoSax             : return "Alto Sax";
-        case TenorSax            : return "Tenor Sax";
-        case BaritoneSax         : return "Baritone Sax";
-        case Oboe                : return "Oboe";
-        case EnglishHorn         : return "English Horn";
-        case Bassoon             : return "Bassoon";
-        case Clarinet            : return "Clarinet";
-        case Piccolo             : return "Piccolo";
-        case Flute               : return "Flute";
-        case Recorder            : return "Recorder";
-        case PanFlute            : return "Pan Flute";
-        case BlownBottle         : return "Blown Bottle";
-        case Shakuhachi          : return "Shakuhachi";
-        case Whistle             : return "Whistle";
-        case Ocarina             : return "Ocarina";
-        case LeadSquare          : return "Lead Square";
-        case LeadSawtooth        : return "Lead Sawtooth";
-        default: break;
+        case FretlessBass        : return "Fretless Bass / Acoustic Bass Drum";
+        case SlapBass1           : return "Slap Bass 1 / Bass Drum1";
+        case SlapBass2           : return "Slap Bass 2 / Side Stick";
+        case SynthBass1          : return "Synth Bass 1 / Acoustic Snare";
+        case SynthBass2          : return "Synth Bass 2 / Hand Clap";
+        case Violin              : return "Violin / Electric Snare";
+        case Viola               : return "Viola / Low Floor Tom";
+        case Cello               : return "Cello / Closed Hi Hat";
+        case Contrabass          : return "Contrabass / High Floor Tom";
+        case TremoloStrings      : return "Tremolo Strings / Pedal HiHat";
+        case PizzacatoStrings    : return "Pizzacato Strings / Low Tom";
+        case OrchestralHarp      : return "Orchestral Harp / Open Hi Hat";
+        case Timpani             : return "Timpani / Low Mid Tom";
+        case StringEnsemble1     : return "String Ensemble 1 / High Mid Tom";
+        case StringEnsemble2     : return "String Ensemble 2 / Crash Cymbal1";
+        case Synthstrings1       : return "Synthstrings 1 / High Tom";
+        case Synthstrings2       : return "Synthstrings 2 / Ride Cymbal1";
+        case ChoirAahs           : return "Choir Aahs / Chinese Cymbal";
+        case VoiceOohs           : return "Voice Oohs / Ride Bell";
+        case SynthVoice          : return "Synth Voice / Tambourine";
+        case OrchestraHit        : return "Orchestra Hit / Splash Cymbal";
+        case Trumpet             : return "Trumpet / Cowbell";
+        case Trombone            : return "Trombone / Crash Cymbal2";
+        case Tuba                : return "Tuba / Vibraslap";
+        case MutedTrumped        : return "Muted Trumped / Ride Cymbal2";
+        case FrenchHorn          : return "French Horn / Hi Bongo";
+        case BrassSection        : return "Brass Section / Low Bongo";
+        case Synthbrass1         : return "Synthbrass 1 / Mute Hi Conga";
+        case Synthbrass2         : return "Synthbrass 2 / Open Hi Conga";
+        case SopranoSax          : return "Soprano Sax / Low Conga";
+        case AltoSax             : return "Alto Sax / High Timbale";
+        case TenorSax            : return "Tenor Sax / Low Timbale";
+        case BaritoneSax         : return "Baritone Sax / High Agogo";
+        case Oboe                : return "Oboe / Low Agogo";
+        case EnglishHorn         : return "English Horn / Cabasa";
+        case Bassoon             : return "Bassoon / Maracas";
+        case Clarinet            : return "Clarinet / Short Whistle";
+        case Piccolo             : return "Piccolo / Long Whistle";
+        case Flute               : return "Flute / Short Guiro";
+        case Recorder            : return "Recorder / Long Guiro";
+        case PanFlute            : return "Pan Flute / Claves";
+        case BlownBottle         : return "Blown Bottle / Hi Wood Block";
+        case Shakuhachi          : return "Shakuhachi / Low Wood Block";
+        case Whistle             : return "Whistle / Mute Cuica";
+        case Ocarina             : return "Ocarina / Open Cuica";
+        case LeadSquare          : return "Lead Square / Mute Triangle";
+        case LeadSawtooth        : return "Lead Sawtooth / Open Triangle";
+        default:break;
         }
 
     switch(instrument_)
@@ -381,53 +382,53 @@ std::string Instrument::name(int instrument_, int channel_)
     case AcousticBass        : return "Acoustic Bass";
     case ElectricBassFinger  : return "Electric Bass Finger";
     case ElectricBassPick    : return "Electric Bass Pick";
-    case FretlessBass        : return "Fretless Bass / AcousticBassDrum";
-    case SlapBass1           : return "Slap Bass 1 / BassDrum1";
-    case SlapBass2           : return "Slap Bass 2 / SideStick";
-    case SynthBass1          : return "Synth Bass 1 / AcousticSnare";
-    case SynthBass2          : return "Synth Bass 2 / HandClap";
-    case Violin              : return "Violin / ElectricSnare";
-    case Viola               : return "Viola / LowFloorTom";
-    case Cello               : return "Cello / ClosedHiHat";
-    case Contrabass          : return "Contrabass / HighFloorTom";
-    case TremoloStrings      : return "Tremolo Strings / PedalHiHat";
-    case PizzacatoStrings    : return "Pizzacato Strings / LowTom";
-    case OrchestralHarp      : return "Orchestral Harp / OpenHiHat";
-    case Timpani             : return "Timpani / LowMidTom";
-    case StringEnsemble1     : return "String Ensemble 1 / HighMidTom";
-    case StringEnsemble2     : return "String Ensemble 2 / CrashCymbal1";
-    case Synthstrings1       : return "Synthstrings 1 / HighTom";
-    case Synthstrings2       : return "Synthstrings 2 / RideCymbal1";
-    case ChoirAahs           : return "Choir Aahs / ChineseCymbal";
-    case VoiceOohs           : return "Voice Oohs / RideBell";
-    case SynthVoice          : return "Synth Voice / Tambourine";
-    case OrchestraHit        : return "Orchestra Hit / SplashCymbal";
-    case Trumpet             : return "Trumpet / Cowbell";
-    case Trombone            : return "Trombone / CrashCymbal2";
-    case Tuba                : return "Tuba / Vibraslap";
-    case MutedTrumped        : return "Muted Trumped / RideCymbal2";
-    case FrenchHorn          : return "French Horn / HiBongo";
-    case BrassSection        : return "Brass Section / LowBongo";
-    case Synthbrass1         : return "Synthbrass 1 / MuteHiConga";
-    case Synthbrass2         : return "Synthbrass 2 / OpenHiConga";
-    case SopranoSax          : return "Soprano Sax / LowConga";
-    case AltoSax             : return "Alto Sax / HighTimbale";
-    case TenorSax            : return "Tenor Sax / LowTimbale";
-    case BaritoneSax         : return "Baritone Sax / HighAgogo";
-    case Oboe                : return "Oboe / LowAgogo";
-    case EnglishHorn         : return "English Horn / Cabasa";
-    case Bassoon             : return "Bassoon / Maracas";
-    case Clarinet            : return "Clarinet / ShortWhistle";
-    case Piccolo             : return "Piccolo / LongWhistle";
-    case Flute               : return "Flute / ShortGuiro";
-    case Recorder            : return "Recorder / LongGuiro";
-    case PanFlute            : return "Pan Flute / Claves";
-    case BlownBottle         : return "Blown Bottle / HiWoodBlock";
-    case Shakuhachi          : return "Shakuhachi / LowWoodBlock";
-    case Whistle             : return "Whistle / MuteCuica";
-    case Ocarina             : return "Ocarina / OpenCuica";
-    case LeadSquare          : return "Lead Square / MuteTriangle";
-    case LeadSawtooth        : return "Lead Sawtooth / OpenTriangle";
+    case FretlessBass        : return "Fretless Bass";
+    case SlapBass1           : return "Slap Bass 1";
+    case SlapBass2           : return "Slap Bass 2";
+    case SynthBass1          : return "Synth Bass 1";
+    case SynthBass2          : return "Synth Bass 2";
+    case Violin              : return "Violin";
+    case Viola               : return "Viola";
+    case Cello               : return "Cello";
+    case Contrabass          : return "Contrabass";
+    case TremoloStrings      : return "Tremolo Strings";
+    case PizzacatoStrings    : return "Pizzacato Strings";
+    case OrchestralHarp      : return "Orchestral Harp";
+    case Timpani             : return "Timpani";
+    case StringEnsemble1     : return "String Ensemble 1";
+    case StringEnsemble2     : return "String Ensemble 2";
+    case Synthstrings1       : return "Synthstrings 1";
+    case Synthstrings2       : return "Synthstrings 2";
+    case ChoirAahs           : return "Choir Aahs";
+    case VoiceOohs           : return "Voice Oohs";
+    case SynthVoice          : return "Synth Voice";
+    case OrchestraHit        : return "Orchestra Hit";
+    case Trumpet             : return "Trumpet";
+    case Trombone            : return "Trombone";
+    case Tuba                : return "Tuba";
+    case MutedTrumped        : return "Muted Trumped";
+    case FrenchHorn          : return "French Horn";
+    case BrassSection        : return "Brass Section";
+    case Synthbrass1         : return "Synthbrass 1";
+    case Synthbrass2         : return "Synthbrass 2";
+    case SopranoSax          : return "Soprano Sax";
+    case AltoSax             : return "Alto Sax";
+    case TenorSax            : return "Tenor Sax";
+    case BaritoneSax         : return "Baritone Sax";
+    case Oboe                : return "Oboe";
+    case EnglishHorn         : return "English Horn";
+    case Bassoon             : return "Bassoon";
+    case Clarinet            : return "Clarinet";
+    case Piccolo             : return "Piccolo";
+    case Flute               : return "Flute";
+    case Recorder            : return "Recorder";
+    case PanFlute            : return "Pan Flute";
+    case BlownBottle         : return "Blown Bottle";
+    case Shakuhachi          : return "Shakuhachi";
+    case Whistle             : return "Whistle";
+    case Ocarina             : return "Ocarina";
+    case LeadSquare          : return "Lead Square";
+    case LeadSawtooth        : return "Lead Sawtooth";
     case LeadCalliope        : return "Lead Calliope";
     case LeadChiff           : return "Lead Chiff";
     case LeadCharang         : return "Lead Charang";
