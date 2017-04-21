@@ -4,6 +4,7 @@
 #include <cxxmidi/guts/stdint.hpp>
 #include <cxxmidi/file.hpp>
 #include <cxxmidi/note.hpp>
+#include <cxxmidi/instrument.hpp>
 
 class Tests: public QObject
 {
@@ -14,6 +15,7 @@ class Tests: public QObject
 private slots:
     void stdint();
     void file();
+    void instrument();
 };
 
 CxxMidi::File Tests::buildTestFile()
@@ -67,8 +69,24 @@ void Tests::stdint()
 void Tests::file()
 {
     CxxMidi::File file = Tests::buildTestFile();
-    QCOMPARE(QString(file.duration().toTimecode().c_str()),QString("00:00:01"));
+    QCOMPARE(file.duration().toTimecode().c_str(),"00:00:01");
     QCOMPARE(file.tracks(),static_cast<size_t>(3));
+}
+
+void Tests::instrument()
+{
+    QCOMPARE(CxxMidi::Instrument::name(0).c_str(),
+             "Acoustic Grand Piano");
+    QCOMPARE(CxxMidi::Instrument::name(35).c_str(),
+             "Fretless Bass / Acoustic Bass Drum");
+    QCOMPARE(CxxMidi::Instrument::name(35,0).c_str(),
+             "Fretless Bass");
+    QCOMPARE(CxxMidi::Instrument::name(35,10).c_str(),
+             "Acoustic Bass Drum");
+    QCOMPARE(CxxMidi::Instrument::name(127).c_str(),
+             "Gunshot");
+    QCOMPARE((int)CxxMidi::Instrument(CxxMidi::Instrument::Gunshot),
+             127);
 }
 
 QTEST_MAIN(Tests)
