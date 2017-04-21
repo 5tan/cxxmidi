@@ -87,7 +87,7 @@ void MainWindow::createMenuBar()
     _outputsActionGroup->setExclusive(true);
 
     QString name;
-    for(size_t i=0; i<_midiOutput->getPortCount();i++)
+    for(int i=0; i<_midiOutput->getPortCount();i++)
     {
         name=QString("%1. %2").arg(i).arg(_midiOutput->getPortName(i).c_str());
         action = _outputsActionGroup->addAction(name);
