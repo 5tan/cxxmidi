@@ -73,17 +73,17 @@ std::string Duration::toTimecode(bool includeUs_) const
 
 void Duration::addS(int s_)
 {
-    _point += Point::createFromS(s_);
+    _point += Point::fromS(s_);
 }
 
 void Duration::addMs(int ms_)
 {
-    _point += Point::createFromMs(ms_);
+    _point += Point::fromMs(ms_);
 }
 
 void Duration::addUs(int us_)
 {
-    _point += Point::createFromUs(us_);
+    _point += Point::fromUs(us_);
 }
 
 } // namespace Time

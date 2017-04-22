@@ -14,6 +14,7 @@ class Tests: public QObject
 
 private slots:
     void stdint();
+    void time();
     void file();
     void instrument();
 };
@@ -64,6 +65,17 @@ void Tests::stdint()
     QCOMPARE(sizeof(uint32_t), static_cast<std::size_t>(4));
     QCOMPARE(sizeof(int64_t), static_cast<std::size_t>(8));
     QCOMPARE(sizeof(uint64_t), static_cast<std::size_t>(8));
+}
+
+void Tests::time()
+{
+    CxxMidi::Time::Point p1 = CxxMidi::Time::Point::fromTimecode("00:00:00");
+    CxxMidi::Time::Point p2 = CxxMidi::Time::Point::fromS(1);
+    QCOMPARE((p1+p2).toTimecode().c_str(),"00:00:01");
+    QCOMPARE((p1-p2).toTimecode().c_str(),"-00:00:01");
+    QCOMPARE((p2*2.).toTimecode().c_str(),"00:00:02");
+    QCOMPARE((3.*p2).toTimecode().c_str(),"00:00:03");
+
 }
 
 void Tests::file()
