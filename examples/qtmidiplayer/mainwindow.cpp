@@ -9,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent)
     , _midiOutput(new CxxMidi::Output::Default(0))
     , _midiPlayer(new CxxMidi::Player::Asynchronous(_midiOutput))
     , _midiFile(0)
+    , _playerHeartbeatCallback(_midiPlayer)
     , _sliderLocked(false)
 {
     _ui->setupUi(this);

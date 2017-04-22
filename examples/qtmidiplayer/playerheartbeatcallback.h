@@ -9,16 +9,19 @@
 
 class PlayerHeartbeatCallback
         : public QObject
-        , public CxxMidi::Callback<CxxMidi::Player::Abstract>
+        , public CxxMidi::Callback
 {
     Q_OBJECT
 
 public:
-    PlayerHeartbeatCallback(QObject *parent_=0);
-    virtual void operator ()(CxxMidi::Player::Abstract *player_);
+    PlayerHeartbeatCallback(CxxMidi::Player::Abstract *player_,QObject *parent_=0);
+    virtual void operator ()();
 
 signals:
     void playerTimeChanged(CxxMidi::Time::Point time_);
+
+private:
+    CxxMidi::Player::Abstract *_player;
 };
 
 #endif // PLAYERHEARTBEATCALLBACK_H

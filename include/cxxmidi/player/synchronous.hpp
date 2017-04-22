@@ -71,8 +71,16 @@ void Synchronous::playerLoop()
             Sleep::us(partial/_speed);
             _currentTimePos.addUs(partial);
 
+            if(_callbackHeartbeatPtr)
+                (*_callbackHeartbeatPtr)(_callbackHeartbeatContext);
+
             if(_callbackHeartbeat)
-                (*_callbackHeartbeat)(this);
+                (*_callbackHeartbeat)();
+
+#if __cplusplus > 199711L
+            if(_functorHeartbeat)
+                _functorHeartbeat();
+#endif // __cplusplus > 199711L
         }
 
         Sleep::us(us/_speed);
@@ -80,12 +88,18 @@ void Synchronous::playerLoop()
         _currentTimePos.addUs(us);
         this->execEvent((*_file)[trackNum][eventNum]);
         this->updatePlayerState(trackNum,dt);
-
     }
 
-    if(_callbackFinished)
-        (*_callbackFinished)(this);
+    if(_callbackFinishedPtr)
+        (*_callbackFinishedPtr)(_callbackFinishedContext);
 
+    if(_callbackFinished)
+        (*_callbackFinished)();
+
+#if __cplusplus > 199711L
+            if(_functorFinished)
+                _functorFinished();
+#endif // __cplusplus > 199711L
 }
 
 } // Player

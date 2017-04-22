@@ -3,7 +3,7 @@
 
 #include <cxxmidi/guts/compiler.hpp>
 
-#ifdef CXXMIDI_CPP11
+#if __cplusplus > 199711L
 #    include <thread>
 typedef std::thread NativeThread;
 #else
@@ -15,7 +15,7 @@ typedef HANDLE NativeThread;
 #      include <pthread.h>
 typedef pthread_t NativeThread;
 #   endif // __unix
-#endif // CXXMIDI_CPP11
+#endif // __cplusplus > 199711L
 
 namespace CxxMidi {
 namespace Guts {
@@ -44,7 +44,7 @@ namespace Guts {
 
 Thread::Thread( void* (*fun_)(void *), void* ctx_)
 {
-#ifdef CXXMIDI_CPP11
+#if __cplusplus > 199711L
     _nativeThread = std::thread(fun_,ctx_);
 #else
 #   ifdef _WIN32
@@ -59,7 +59,7 @@ Thread::Thread( void* (*fun_)(void *), void* ctx_)
 #   ifdef __unix
     pthread_create(&_nativeThread,0,fun_,ctx_);
 #   endif // __unix
-#endif // CXXMIDI_CPP11
+#endif // __cplusplus > 199711L
 }
 
 Thread::Thread()
@@ -74,7 +74,7 @@ Thread::~Thread()
 
 void Thread::join()
 {
-#ifdef CXXMIDI_CPP11
+#if __cplusplus > 199711L
 #    include <thread>
     if(_nativeThread.joinable())
         _nativeThread.join();
@@ -86,7 +86,7 @@ void Thread::join()
 #   ifdef __unix
     pthread_join(_nativeThread, NULL);
 #   endif // __unix
-#endif // CXXMIDI_CPP11
+#endif // __cplusplus > 199711L
 }
 
 } // namespace Guts

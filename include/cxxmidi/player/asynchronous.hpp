@@ -9,7 +9,7 @@ namespace CxxMidi {
 class File;
 namespace Player {
 
-class Asynchronous : private Player::Abstract
+class Asynchronous : public Player::Abstract
 {
 
 public:
@@ -34,8 +34,8 @@ public:
     inline void setSpeed(float speed_);
     inline float speed();
 
-    inline void setCallbackHeartbeat(Callback<Player::Abstract> *callbackHeartbeat_);
-    inline void setCallbackFinished(Callback<Player::Abstract> *callbackFinished_);
+    inline void setCallbackHeartbeat(Callback *callbackHeartbeat_);
+    inline void setCallbackFinished(Callback*callbackFinished_);
 
 private:
 
@@ -117,8 +117,8 @@ void *Asynchronous::playerLoop(void * caller_)
     uint32_t dt = 0;
     unsigned int us = 0;
     float speed = 0;
-    Callback<Player::Abstract>* callbackHeartbeat=0;
-    Callback<Player::Abstract>* callbackFinished=0;
+    Callback* callbackHeartbeat=0;
+    Callback* callbackFinished=0;
 
     while(true)
     {
@@ -148,7 +148,7 @@ void *Asynchronous::playerLoop(void * caller_)
 
             if(finished)
                 if(callbackFinished)
-                    (*callbackFinished)(that);
+                    (*callbackFinished)();
 
             return 0;
         }
@@ -185,7 +185,7 @@ void *Asynchronous::playerLoop(void * caller_)
             that->_mutex.unlock();
 
             if(callbackHeartbeat)
-                (*callbackHeartbeat)(that);
+                (*callbackHeartbeat)();
         }
 
         Sleep::us(us/speed);
@@ -294,14 +294,14 @@ float Asynchronous::speed()
     return r;
 }
 
-void Asynchronous::setCallbackHeartbeat(Callback<Player::Abstract>* callbackHeartbeat_)
+void Asynchronous::setCallbackHeartbeat(Callback* callbackHeartbeat_)
 {
     _mutex.lock();
     _callbackHeartbeat = callbackHeartbeat_;
     _mutex.unlock();
 }
 
-void Asynchronous::setCallbackFinished(Callback<Player::Abstract> *callbackFinished_)
+void Asynchronous::setCallbackFinished(Callback *callbackFinished_)
 {
     _mutex.lock();
     _callbackFinished = callbackFinished_;

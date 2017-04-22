@@ -8,14 +8,14 @@
 
 class PlayerFinishedCallback
         : public QObject
-        , public CxxMidi::Callback<CxxMidi::Player::Abstract>
+        , public CxxMidi::Callback
 {
     Q_OBJECT
 
 public:
     PlayerFinishedCallback(QObject *parent_=0);
 
-    virtual void operator()(CxxMidi::Player::Abstract * player_);
+    virtual void operator()();
 
 signals:
     void playerFinished();

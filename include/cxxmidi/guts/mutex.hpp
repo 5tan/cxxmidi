@@ -3,7 +3,7 @@
 
 #include <cxxmidi/guts/compiler.hpp>
 
-#ifdef CXXMIDI_CPP11
+#if __cplusplus > 199711L
 #    include <mutex>
 typedef std::mutex NativeMutex;
 #else
@@ -15,7 +15,7 @@ typedef CRITICAL_SECTION NativeMutex;
 #       include <pthread.h>
 typedef pthread_mutex_t NativeMutex;
 #   endif // __unix
-#endif // CXXMIDI_CPP11
+#endif // __cplusplus > 199711L
 
 namespace CxxMidi {
 namespace Guts {
@@ -40,7 +40,7 @@ namespace Guts {
 
 Mutex::Mutex()
 {    
-#ifdef CXXMIDI_CPP11
+#if __cplusplus > 199711L
     // no init
 #else
 #   ifdef _WIN32
@@ -49,12 +49,12 @@ Mutex::Mutex()
 #   ifdef __unix
     pthread_mutex_init(&_nativeMutex,0);
 #   endif // __unix
-#endif // CXXMIDI_CPP11
+#endif // __cplusplus > 199711L
 }
 
 Mutex::~Mutex()
 {
-#ifdef CXXMIDI_CPP11
+#if __cplusplus > 199711L
     // nothing to do
 #else
 #   ifdef _WIN32
@@ -63,12 +63,12 @@ Mutex::~Mutex()
 #   ifdef __unix
     pthread_mutex_destroy(&_nativeMutex);
 #   endif // __unix
-#endif // CXXMIDI_CPP11
+#endif // __cplusplus > 199711L
 }
 
 void Mutex::lock()
 {
-#ifdef CXXMIDI_CPP11
+#if __cplusplus > 199711L
     _nativeMutex.lock();
 #else
 #   ifdef _WIN32
@@ -77,12 +77,12 @@ void Mutex::lock()
 #   ifdef __unix
     pthread_mutex_lock(&_nativeMutex);
 #   endif // __unix
-#endif // CXXMIDI_CPP11
+#endif // __cplusplus > 199711L
 }
 
 void Mutex::unlock()
 {
-#ifdef CXXMIDI_CPP11
+#if __cplusplus > 199711L
     _nativeMutex.unlock();
 #else
 #   ifdef _WIN32
@@ -91,7 +91,7 @@ void Mutex::unlock()
 #   ifdef __unix
     pthread_mutex_unlock(&_nativeMutex);
 #   endif // __unix
-#endif // CXXMIDI_CPP11
+#endif // __cplusplus > 199711L
 }
 
 } // namespace Guts

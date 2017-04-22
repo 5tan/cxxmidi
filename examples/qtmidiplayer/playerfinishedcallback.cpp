@@ -5,7 +5,7 @@ PlayerFinishedCallback::PlayerFinishedCallback(QObject *parent_)
 {
 }
 
-void PlayerFinishedCallback::operator()(CxxMidi::Player::Abstract *)
+void PlayerFinishedCallback::operator()()
 {
     /*emit*/ this->playerFinished();
 }
