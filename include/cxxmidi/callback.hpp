@@ -3,12 +3,11 @@
 
 namespace CxxMidi {
 
-template<typename T>
 class Callback
 {
 public:
     inline Callback(){}
-    virtual void operator()(T*)=0;
+    virtual void operator()()=0;
 };
 
 } // namespace CxxMidi

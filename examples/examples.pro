@@ -3,4 +3,5 @@ SUBDIRS = synchronous \
 asynchronous \
 qtmidiplayer \
 qtmidieditor \
-sequencing
+sequencing \
+callbacks

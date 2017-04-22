@@ -203,7 +203,7 @@ void Point::fixZeroSign()
 
 void Point::flipSign()
 {
-    _negative = _negative ? false : true;
+    _negative = !_negative;
     this->fixZeroSign();
 }
 

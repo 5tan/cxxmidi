@@ -7,8 +7,12 @@
 #include <cxxmidi/callback.hpp>
 
 #ifdef WIN32
-#include <Windows.h>
+#   include <Windows.h>
 #endif
+
+#if __cplusplus > 199711L
+#   include <functional>
+#endif // __cplusplus > 199711L
 
 namespace CxxMidi {
 namespace Time {
@@ -47,8 +51,27 @@ public:
     inline void setSpeed(float speed_) { _speed = speed_; }
     inline float speed() const { return _speed; }
 
-    inline void setCallbackHeartbeat(Callback<Player::Abstract>* callbackHeartbeat_) { _callbackHeartbeat = callbackHeartbeat_; }
-    inline void setCallbackFinished(Callback<Player::Abstract>* callbackFinished_) { _callbackFinished = callbackFinished_; }
+    inline void setCallbackHeartbeat(void(*callback_)(void *), void* context_)
+    {
+        _callbackHeartbeatPtr = callback_;
+        _callbackHeartbeatContext = context_;
+    }
+
+    inline void setCallbackFinished(void(*callback_)(void *), void* context_)
+    {
+        _callbackFinishedPtr = callback_;
+        _callbackFinishedContext = context_;
+    }
+
+    inline void setCallbackHeartbeat(Callback* callbackHeartbeat_) { _callbackHeartbeat = callbackHeartbeat_; }
+    inline void setCallbackFinished(Callback* callbackFinished_) { _callbackFinished = callbackFinished_; }
+
+#if __cplusplus > 199711L
+    using Functor = std::function<void()>;
+
+    inline void setCallbackHeartbeat(const Functor& callbackHeartbeat_) { _functorHeartbeat = callbackHeartbeat_; }
+    inline void setCallbackFinished(const Functor& callbackFinished_) { _functorFinished = callbackFinished_; }
+#endif // __cplusplus > 199711L
 
 protected:
 
@@ -80,8 +103,22 @@ protected:
     Output::Abstract* _output;
 
     int _heartbeatHelper;
-    Callback<Player::Abstract>* _callbackHeartbeat;
-    Callback<Player::Abstract>* _callbackFinished;
+
+    // C style callbacks
+    void(*_callbackHeartbeatPtr)(void *);
+    void* _callbackHeartbeatContext;
+    void(*_callbackFinishedPtr)(void *);
+    void* _callbackFinishedContext;
+
+    // C++ style callbacs
+    Callback* _callbackHeartbeat;
+    Callback* _callbackFinished;
+
+#if __cplusplus > 199711L
+    // C++11 style callbacks
+    Functor _functorHeartbeat;
+    Functor _functorFinished;
+#endif // __cplusplus > 199711L
 
 private:
     static inline void setupWindowsTimers();
@@ -109,6 +146,10 @@ Abstract::Abstract()
     , _file(0)
     , _output(0)
     , _heartbeatHelper(0)
+    , _callbackHeartbeatPtr(0)
+    , _callbackHeartbeatContext(0)
+    , _callbackFinishedPtr(0)
+    , _callbackFinishedContext(0)
     , _callbackHeartbeat(0)
     , _callbackFinished(0)
 {
@@ -122,6 +163,10 @@ Abstract::Abstract(Output::Abstract* output_)
     , _file(0)
     , _output(output_)
     , _heartbeatHelper(0)
+    , _callbackHeartbeatPtr(0)
+    , _callbackHeartbeatContext(0)
+    , _callbackFinishedPtr(0)
+    , _callbackFinishedContext(0)
     , _callbackHeartbeat(0)
     , _callbackFinished(0)
 {

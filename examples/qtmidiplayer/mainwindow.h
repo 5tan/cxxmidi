@@ -44,8 +44,6 @@ private:
     QActionGroup * _outputsActionGroup;
     Ui::MainWindow *_ui;
 
-    PlayerHeartbeatCallback _playerHeartbeatCallback;
-    PlayerFinishedCallback _playerFinishedCallback;
 
     CxxMidi::Time::Point _currentTimePoint;
     CxxMidi::Time::Point _finalTimePoint;
@@ -53,6 +51,9 @@ private:
     CxxMidi::Output::Default* _midiOutput;
     CxxMidi::Player::Asynchronous* _midiPlayer;
     CxxMidi::File* _midiFile;
+
+    PlayerHeartbeatCallback _playerHeartbeatCallback;
+    PlayerFinishedCallback _playerFinishedCallback;
 
     bool _sliderLocked;
 };

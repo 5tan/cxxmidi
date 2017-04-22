@@ -6,6 +6,8 @@
 
 QT += widgets testlib
 
+CONFIG += c++11
+
 INCLUDEPATH += "../include"
 
 SOURCES += \  
