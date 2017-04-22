@@ -10,10 +10,10 @@ class Point
 {
 public:
     inline Point();
-    inline static Point createFromUs(int us_);
-    inline static Point createFromMs(int ms_);
-    inline static Point createFromS(int s_);
-    inline static Point createFromTimecode(const std::string& tc_);
+    inline static Point fromUs(int us_);
+    inline static Point fromMs(int ms_);
+    inline static Point fromS(int s_);
+    inline static Point fromTimecode(const std::string& tc_);
     inline static Point zero();
 
     inline std::string toTimecode(bool includeUs_=false) const;
@@ -31,6 +31,7 @@ public:
     inline Point operator-() const;
     inline Point operator+(const Point& other_) const;
     inline Point operator-(const Point& other_) const;
+    inline Point operator*(double factor_) const;
     inline Point operator+=(const Point& other_);
     inline Point operator-=(const Point& other_);
     inline Point operator*=(double factor_);
@@ -52,6 +53,8 @@ private:
     inline void fixZeroSign();
 };
 
+inline Point operator*(double lhs_, const Point& rhs_);
+
 } // namespace Time
 } // namespace CxxMidi
 
@@ -61,8 +64,7 @@ private:
 #include <cassert>
 #include <complex>
 #include <limits>
-
-#include <cxxmidi/guts/sscanf.hpp>
+#include <cstdio>
 
 inline std::ostream& operator<<(std::ostream& os_,
                                 const CxxMidi::Time::Point& tp_)
@@ -104,18 +106,16 @@ Point Point::zero()
     return Point();
 }
 
-Point Point::createFromTimecode(const std::string& tc_)
+Point Point::fromTimecode(const std::string& tc_)
 {
     Point r;
     int hh,mm,ss,us=0;
 
     if(tc_.find('&')==std::string::npos)
-        Guts::sscanfWrapper(tc_.c_str(), tc_.size(),
-                            "%d:%d:%d", &hh,&mm,&ss);
+        std::sscanf(tc_.c_str(), "%d:%d:%d", &hh,&mm,&ss);
     else
     {
-        Guts::sscanfWrapper(tc_.c_str(), tc_.size(),
-                            "%d:%d:%d&%d", &hh,&mm,&ss,&us);
+        std::sscanf(tc_.c_str(),"%d:%d:%d&%d", &hh,&mm,&ss,&us);
         r._us = us;
     }
 
@@ -126,7 +126,7 @@ Point Point::createFromTimecode(const std::string& tc_)
     return r;
 }
 
-Point Point::createFromUs(int us_)
+Point Point::fromUs(int us_)
 {
     Point r;
 
@@ -143,7 +143,7 @@ Point Point::createFromUs(int us_)
     return r;
 }
 
-Point Point::createFromMs(int ms_)
+Point Point::fromMs(int ms_)
 {
     Point r;
 
@@ -160,7 +160,7 @@ Point Point::createFromMs(int ms_)
     return r;
 }
 
-Point Point::createFromS(int s_)
+Point Point::fromS(int s_)
 {
     Point r;
 
@@ -178,19 +178,19 @@ Point Point::createFromS(int s_)
 
 void Point::addUs(int us_)
 {
-    *this = *this + createFromUs(us_);
+    *this = *this + fromUs(us_);
     this->fixZeroSign();
 }
 
 void Point::addMs(int ms_)
 {
-    *this = *this + createFromMs(ms_);
+    *this = *this + fromMs(ms_);
     this->fixZeroSign();
 }
 
 void Point::addS(int s_)
 {
-    *this = *this + createFromS(s_);
+    *this = *this + fromS(s_);
     this->fixZeroSign();
 }
 
@@ -254,6 +254,17 @@ Point Point::operator-(const Point& other_) const
         return addPositive(*this,-other_);
 }
 
+inline Point Point::operator*(double factor_) const
+{
+    Point ret = *this;
+    ret*=factor_;
+    return ret;
+}
+
+inline Point operator*(double lhs_, const Point& rhs_)
+{
+    return rhs_*lhs_;
+}
 
 Point Point::addPositive(const Point& a,const Point& b) const
 {
