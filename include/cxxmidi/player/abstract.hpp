@@ -51,26 +51,14 @@ public:
     inline void setSpeed(float speed_) { _speed = speed_; }
     inline float speed() const { return _speed; }
 
-    inline void setCallbackHeartbeat(void(*callback_)(void *), void* context_)
-    {
-        _callbackHeartbeatPtr = callback_;
-        _callbackHeartbeatContext = context_;
-    }
+    inline void setCallbackHeartbeat(void(*callback_)(void *), void* context_);
+    inline void setCallbackFinished(void(*callback_)(void *), void* context_);
 
-    inline void setCallbackFinished(void(*callback_)(void *), void* context_)
-    {
-        _callbackFinishedPtr = callback_;
-        _callbackFinishedContext = context_;
-    }
-
-    inline void setCallbackHeartbeat(Callback* callbackHeartbeat_) { _callbackHeartbeat = callbackHeartbeat_; }
-    inline void setCallbackFinished(Callback* callbackFinished_) { _callbackFinished = callbackFinished_; }
-
+    inline void setCallbackHeartbeat(Callback* callback_);
+    inline void setCallbackFinished(Callback* callback_);
 #if __cplusplus > 199711L
-    using Functor = std::function<void()>;
-
-    inline void setCallbackHeartbeat(const Functor& callbackHeartbeat_) { _functorHeartbeat = callbackHeartbeat_; }
-    inline void setCallbackFinished(const Functor& callbackFinished_) { _functorFinished = callbackFinished_; }
+    inline void setCallbackHeartbeat(const std::function<void()>& callback_);
+    inline void setCallbackFinished(const std::function<void()>& callback_);
 #endif // __cplusplus > 199711L
 
 protected:
@@ -105,19 +93,19 @@ protected:
     int _heartbeatHelper;
 
     // C style callbacks
-    void(*_callbackHeartbeatPtr)(void *);
-    void* _callbackHeartbeatContext;
-    void(*_callbackFinishedPtr)(void *);
-    void* _callbackFinishedContext;
+    void(*_clbkFunPtrHeartbeat)(void *);
+    void* _clbkFunCtxHeartbeat;
+    void(*_clbkFunPtrFinished)(void *);
+    void* _clbkFunCtxFinished;
 
     // C++ style callbacs
-    Callback* _callbackHeartbeat;
-    Callback* _callbackFinished;
+    Callback* _clbkObjPtrHeartbeat;
+    Callback* _clbkObjPtrFinished;
 
 #if __cplusplus > 199711L
     // C++11 style callbacks
-    Functor _functorHeartbeat;
-    Functor _functorFinished;
+    std::function<void()> _clbkFunHeartbeat;
+    std::function<void()> _clbkFunFinished;
 #endif // __cplusplus > 199711L
 
 private:
@@ -146,12 +134,12 @@ Abstract::Abstract()
     , _file(0)
     , _output(0)
     , _heartbeatHelper(0)
-    , _callbackHeartbeatPtr(0)
-    , _callbackHeartbeatContext(0)
-    , _callbackFinishedPtr(0)
-    , _callbackFinishedContext(0)
-    , _callbackHeartbeat(0)
-    , _callbackFinished(0)
+    , _clbkFunPtrHeartbeat(0)
+    , _clbkFunCtxHeartbeat(0)
+    , _clbkFunPtrFinished(0)
+    , _clbkFunCtxFinished(0)
+    , _clbkObjPtrHeartbeat(0)
+    , _clbkObjPtrFinished(0)
 {
     Abstract::setupWindowsTimers();
 }
@@ -163,12 +151,12 @@ Abstract::Abstract(Output::Abstract* output_)
     , _file(0)
     , _output(output_)
     , _heartbeatHelper(0)
-    , _callbackHeartbeatPtr(0)
-    , _callbackHeartbeatContext(0)
-    , _callbackFinishedPtr(0)
-    , _callbackFinishedContext(0)
-    , _callbackHeartbeat(0)
-    , _callbackFinished(0)
+    , _clbkFunPtrHeartbeat(0)
+    , _clbkFunCtxHeartbeat(0)
+    , _clbkFunPtrFinished(0)
+    , _clbkFunCtxFinished(0)
+    , _clbkObjPtrHeartbeat(0)
+    , _clbkObjPtrFinished(0)
 {
     Abstract::setupWindowsTimers();
 }
@@ -264,6 +252,42 @@ bool Abstract::finished() const
 
     return true;
 }
+
+void Abstract::setCallbackHeartbeat(void(*callback_)(void *),
+                                           void* context_)
+{
+    _clbkFunPtrHeartbeat = callback_;
+    _clbkFunCtxHeartbeat = context_;
+}
+
+void Abstract::setCallbackFinished(void(*callback_)(void *)
+                                          , void* context_)
+{
+    _clbkFunPtrFinished = callback_;
+    _clbkFunCtxFinished = context_;
+}
+
+void Abstract::setCallbackHeartbeat(Callback* callback_)
+{
+    _clbkObjPtrHeartbeat = callback_;
+}
+
+void Abstract::setCallbackFinished(Callback* callback_)
+{
+    _clbkObjPtrFinished = callback_;
+}
+
+#if __cplusplus > 199711L
+void Abstract::setCallbackHeartbeat(const std::function<void()>& callback_)
+{
+    _clbkFunHeartbeat = callback_;
+}
+
+void Abstract::setCallbackFinished(const std::function<void()>& callback_)
+{
+    _clbkFunFinished = callback_;
+}
+#endif // __cplusplus > 199711L
 
 bool Abstract::trackFinished(size_t trackNum_) const
 {

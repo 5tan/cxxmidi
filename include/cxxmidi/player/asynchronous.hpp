@@ -34,8 +34,15 @@ public:
     inline void setSpeed(float speed_);
     inline float speed();
 
-    inline void setCallbackHeartbeat(Callback *callbackHeartbeat_);
-    inline void setCallbackFinished(Callback*callbackFinished_);
+    inline void setCallbackHeartbeat(void(*callback_)(void *), void* context_);
+    inline void setCallbackFinished(void(*callback_)(void *), void* context_);
+
+    inline void setCallbackHeartbeat(Callback* callback_);
+    inline void setCallbackFinished(Callback* callback_);
+#if __cplusplus > 199711L
+    inline void setCallbackHeartbeat(const std::function<void()>& callback_);
+    inline void setCallbackFinished(const std::function<void()>& callback_);
+#endif // __cplusplus > 199711L
 
 private:
 
@@ -117,8 +124,21 @@ void *Asynchronous::playerLoop(void * caller_)
     uint32_t dt = 0;
     unsigned int us = 0;
     float speed = 0;
-    Callback* callbackHeartbeat=0;
-    Callback* callbackFinished=0;
+    // C style callbacks
+    void(*clbkFunPtrHeartbeat)(void *) =0;
+    void* clbkFunCtxHeartbeat;
+    void(*clbkFunPtrFinished)(void *) =0;
+    void* clbkFunCtxFinished=0;
+
+    // C++ style callbacs
+    Callback* clbkObjPtrHeartbeat=0;
+    Callback* clbkObjPtrFinished=0;
+
+#if __cplusplus > 199711L
+    // C++11 style callbacks
+    std::function<void()> clbkFunHeartbeat;
+    std::function<void()> clbkFunFinished;
+#endif // __cplusplus > 199711L
 
     while(true)
     {
@@ -133,8 +153,19 @@ void *Asynchronous::playerLoop(void * caller_)
                 dt = that->_playerState[trackNum].trackDt;
                 us = Converters::dt2us(dt,that->_tempo,that->_file->timeDivision());
                 speed = that->_speed;
-                callbackHeartbeat = that->_callbackHeartbeat;
-                callbackFinished = that->_callbackFinished;
+
+                clbkFunPtrHeartbeat = that->_clbkFunPtrHeartbeat;
+                clbkFunCtxHeartbeat = that->_clbkFunCtxHeartbeat;
+                clbkFunPtrFinished = that->_clbkFunPtrFinished;
+                clbkFunCtxFinished = that->_clbkFunCtxFinished;
+
+                clbkObjPtrHeartbeat = that->_clbkObjPtrHeartbeat;
+                clbkObjPtrFinished = that->_clbkObjPtrFinished;
+
+#if __cplusplus > 199711L
+                clbkFunHeartbeat = that->_clbkFunHeartbeat;
+                clbkFunFinished = that->_clbkFunFinished;
+#endif // __cplusplus > 199711L
             }
         }
         that-> _mutex.unlock();
@@ -147,8 +178,18 @@ void *Asynchronous::playerLoop(void * caller_)
             that->_mutex.unlock();
 
             if(finished)
-                if(callbackFinished)
-                    (*callbackFinished)();
+            {
+                if(clbkFunPtrFinished)
+                    (*clbkFunPtrFinished)(clbkFunCtxFinished);
+
+                if(clbkObjPtrFinished)
+                    (*clbkObjPtrFinished)();
+
+#if __cplusplus > 199711L
+                if(clbkFunFinished)
+                    clbkFunFinished();
+#endif // __cplusplus > 199711L
+            }
 
             return 0;
         }
@@ -166,8 +207,18 @@ void *Asynchronous::playerLoop(void * caller_)
             that->_mutex.lock();
             pauseRequest = that->_pauseRequest;
             speed = that->_speed;
-            callbackHeartbeat = that->_callbackHeartbeat;
-            callbackFinished = that->_callbackFinished;
+
+            clbkFunPtrHeartbeat = that->_clbkFunPtrHeartbeat;
+            clbkFunCtxHeartbeat = that->_clbkFunCtxHeartbeat;
+            clbkFunPtrFinished = that->_clbkFunPtrFinished;
+            clbkFunCtxFinished = that->_clbkFunCtxFinished;
+
+            clbkObjPtrHeartbeat = that->_clbkObjPtrHeartbeat;
+            clbkObjPtrFinished = that->_clbkObjPtrFinished;
+#if __cplusplus > 199711L
+            clbkFunHeartbeat = that->_clbkFunHeartbeat;
+            clbkFunFinished = that->_clbkFunFinished;
+#endif // __cplusplus > 199711L
             that->_mutex.unlock();
 
             if(pauseRequest)
@@ -184,8 +235,16 @@ void *Asynchronous::playerLoop(void * caller_)
             that->_currentTimePos.addUs(partial);
             that->_mutex.unlock();
 
-            if(callbackHeartbeat)
-                (*callbackHeartbeat)();
+            if(clbkFunPtrHeartbeat)
+                (*clbkFunPtrHeartbeat)(clbkFunCtxHeartbeat);
+
+            if(clbkObjPtrHeartbeat)
+                (*clbkObjPtrHeartbeat)();
+
+#if __cplusplus > 199711L
+            if(clbkFunHeartbeat)
+                clbkFunHeartbeat();
+#endif // __cplusplus > 199711L
         }
 
         Sleep::us(us/speed);
@@ -294,19 +353,53 @@ float Asynchronous::speed()
     return r;
 }
 
-void Asynchronous::setCallbackHeartbeat(Callback* callbackHeartbeat_)
+void Asynchronous::setCallbackHeartbeat(void(*callback_)(void *),
+                                    void* context_)
 {
     _mutex.lock();
-    _callbackHeartbeat = callbackHeartbeat_;
+    _clbkFunPtrHeartbeat = callback_;
+    _clbkFunCtxHeartbeat = context_;
     _mutex.unlock();
 }
 
-void Asynchronous::setCallbackFinished(Callback *callbackFinished_)
+void Asynchronous::setCallbackFinished(void(*callback_)(void *)
+                                   , void* context_)
 {
     _mutex.lock();
-    _callbackFinished = callbackFinished_;
+    _clbkFunPtrFinished = callback_;
+    _clbkFunCtxFinished = context_;
     _mutex.unlock();
 }
+
+void Asynchronous::setCallbackHeartbeat(Callback* callback_)
+{
+    _mutex.lock();
+    _clbkObjPtrHeartbeat = callback_;
+    _mutex.unlock();
+}
+
+void Asynchronous::setCallbackFinished(Callback* callback_)
+{
+    _mutex.lock();
+    _clbkObjPtrFinished = callback_;
+    _mutex.unlock();
+}
+
+#if __cplusplus > 199711L
+void Asynchronous::setCallbackHeartbeat(const std::function<void()>& callback_)
+{
+    _mutex.lock();
+    _clbkFunHeartbeat = callback_;
+    _mutex.unlock();
+}
+
+void Asynchronous::setCallbackFinished(const std::function<void()>& callback_)
+{
+    _mutex.lock();
+    _clbkFunFinished = callback_;
+    _mutex.unlock();
+}
+#endif // __cplusplus > 199711L
 
 } // Player
 } // CxxMidi
