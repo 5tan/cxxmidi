@@ -5,6 +5,7 @@
 #include <cxxmidi/file.hpp>
 #include <cxxmidi/note.hpp>
 #include <cxxmidi/instrument.hpp>
+#include <cxxmidi/version.hpp>
 
 class Tests: public QObject
 {
@@ -13,11 +14,17 @@ class Tests: public QObject
     static CxxMidi::File buildTestFile();
 
 private slots:
+    void initTestCase();
     void stdint();
     void time();
     void file();
     void instrument();
 };
+
+void Tests::initTestCase()
+{
+    qDebug() << "CxxMidi ver." << CXXMIDI_VERSION;
+}
 
 CxxMidi::File Tests::buildTestFile()
 {
