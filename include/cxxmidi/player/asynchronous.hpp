@@ -262,6 +262,8 @@ void *Asynchronous::playerLoop(void * caller_)
 
 void Asynchronous::goTo(const Time::Point& pos_)
 {
+    //! @TODO If goTo is called from player's callback, different impl is needed
+
     _mutex.lock();
     bool wasPlaying = _isPlaying;
     _mutex.unlock();
