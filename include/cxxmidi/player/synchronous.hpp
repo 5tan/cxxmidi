@@ -71,15 +71,15 @@ void Synchronous::playerLoop()
             Sleep::us(partial/_speed);
             _currentTimePos.addUs(partial);
 
-            if(_callbackHeartbeatPtr)
-                (*_callbackHeartbeatPtr)(_callbackHeartbeatContext);
+            if(_clbkFunPtrHeartbeat)
+                (*_clbkFunPtrHeartbeat)(_clbkFunCtxHeartbeat);
 
-            if(_callbackHeartbeat)
-                (*_callbackHeartbeat)();
+            if(_clbkObjPtrHeartbeat)
+                (*_clbkObjPtrHeartbeat)();
 
 #if __cplusplus > 199711L
-            if(_functorHeartbeat)
-                _functorHeartbeat();
+            if(_clbkFunHeartbeat)
+                _clbkFunHeartbeat();
 #endif // __cplusplus > 199711L
         }
 
@@ -90,15 +90,15 @@ void Synchronous::playerLoop()
         this->updatePlayerState(trackNum,dt);
     }
 
-    if(_callbackFinishedPtr)
-        (*_callbackFinishedPtr)(_callbackFinishedContext);
+    if(_clbkFunPtrFinished)
+        (*_clbkFunPtrFinished)(_clbkFunCtxFinished);
 
-    if(_callbackFinished)
-        (*_callbackFinished)();
+    if(_clbkObjPtrFinished)
+        (*_clbkObjPtrFinished)();
 
 #if __cplusplus > 199711L
-            if(_functorFinished)
-                _functorFinished();
+            if(_clbkFunFinished)
+                _clbkFunFinished();
 #endif // __cplusplus > 199711L
 }
 

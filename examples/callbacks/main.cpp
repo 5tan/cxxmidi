@@ -3,7 +3,7 @@
 #include <cxxmidi/player/synchronous.hpp>
 #include <cxxmidi/callback.hpp>
 
-// there are three possible ways of defining a callback
+// there are 3 possible ways of registering a callback
 void example1_cStyleCallbacks();
 void example2_cppStyleCallbacks();
 void example3_cpp11StyleCallbacks();
@@ -16,12 +16,12 @@ int main(int /*argc*/, char ** /*argv*/)
 }
 
 // *****************************************************************************
-// Example 2: C style callbacks
+// Example 1: C style callbacks
 
-void functionHearbeat(void *context_)
+void clbkHearbeat(void *context_)
 {
     CxxMidi::Player::Abstract *player =
-            reinterpret_cast<CxxMidi::Player::Abstract *>(context_);
+            reinterpret_cast<CxxMidi::Player::Synchronous *>(context_);
 
     std::cerr << player->currentTimePos() << std::endl;
 }
@@ -39,9 +39,7 @@ void example1_cStyleCallbacks()
     CxxMidi::File file("music/c_major_scale.mid");
     player.setFile(&file);
 
-    player.setCallbackHeartbeat(functionHearbeat,
-                                reinterpret_cast<void*>(&player));
-
+    player.setCallbackHeartbeat(clbkHearbeat, reinterpret_cast<void*>(&player));
     player.setCallbackFinished(functionFinished,0);
 
     player.play();
@@ -53,7 +51,7 @@ void example1_cStyleCallbacks()
 class MyHeartbeatCallback : public CxxMidi::Callback
 {
 public:
-    MyHeartbeatCallback(CxxMidi::Player::Abstract *player_)
+    MyHeartbeatCallback(CxxMidi::Player::Synchronous *player_)
         : _player(player_)
     {}
 
@@ -65,7 +63,7 @@ public:
     }
 
 private:
-    CxxMidi::Player::Abstract *_player;
+    CxxMidi::Player::Synchronous *_player;
 };
 
 class MyFinishedCallback : public CxxMidi::Callback
@@ -100,7 +98,7 @@ void example2_cppStyleCallbacks()
 // *****************************************************************************
 // Example 3: C++11 style callbacks
 
-void callbackHearbeat(CxxMidi::Player::Abstract *player_)
+void callbackHearbeat(CxxMidi::Player::Synchronous *player_)
 {
     std::cerr << player_->currentTimePos()
               << " (C++11)"
