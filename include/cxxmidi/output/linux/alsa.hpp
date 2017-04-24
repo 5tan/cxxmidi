@@ -61,6 +61,13 @@ public:
     inline Alsa(unsigned int initialPort_);
     inline virtual ~Alsa();
 
+    Alsa(const Alsa&); // non-copyable
+    Alsa &operator=(const Alsa &); // non-copyable (assignment)
+#if __cplusplus > 199711L
+    Alsa(Alsa&&) = default;
+    Alsa& operator=(Alsa&&) = default;
+#endif // __cplusplus > 199711L
+
     inline virtual void openPort( unsigned int portNumber_ = 0);
     inline virtual void closePort();
     inline virtual void openVirtualPort(const std::string& portName_ = std::string( "RtMidi Output"));
