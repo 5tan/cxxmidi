@@ -13,6 +13,13 @@ public:
     inline Synchronous(Output::Abstract *output_);
     inline virtual ~Synchronous();
 
+    // Synchronous(const Synchronous&); // default is ok
+    // Synchronous &operator=(const Synchronous &); // default is ok
+#if __cplusplus > 199711L
+    Synchronous(Synchronous&&) = default;
+    Synchronous& operator=(Synchronous&&) = default;
+#endif // __cplusplus > 199711L
+
     inline virtual void play() ;
 
 private:
