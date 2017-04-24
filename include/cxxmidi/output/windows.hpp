@@ -189,7 +189,13 @@ void Windows::openPort(unsigned int portNumber_)
 
 void Windows::closePort()
 {
-
+    if ( _connected )
+    {
+        WinMidiData *data = static_cast<WinMidiData *> (_apiData);
+        midiOutReset( data->outHandle );
+        midiOutClose( data->outHandle );
+        _connected = false;
+    }
 }
 
 void Windows::openVirtualPort( const std::string& /*portName_ */)
