@@ -1,5 +1,7 @@
 #include "trackmodel.h"
 
+#include <QStringList>
+
 #include <cxxmidi/instrument.hpp>
 #include <cxxmidi/note.hpp>
 #include <cxxmidi/utils.hpp>
