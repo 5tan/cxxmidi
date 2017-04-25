@@ -8,4 +8,3 @@ before_install:
 script:
  - sh -c "cd examples && qmake examples.pro && make"
  - sh -c "cd tests && qmake tests.pro && make"
- - tests/tests
