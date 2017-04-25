@@ -4,13 +4,7 @@ compiler: gcc
 before_install:
  - sudo add-apt-repository --yes ppa:ubuntu-sdk-team/ppa
  - sudo apt-get update -qq
-addons:
-  apt:
-    packages:
-     - qt5-qmake 
-     - tbase5-dev 
-     - qtdeclarative5-dev
-     - libasound2-dev
+ - sudo apt-get install -qq qt5-qmake qtbase5-dev qtdeclarative5-dev libasound2-dev
 script:
  - mkdir build-test ; cd build-tests
  - qmake -qt=qt5 ../tests/tests.pro
