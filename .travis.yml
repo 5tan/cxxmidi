@@ -1,6 +1,9 @@
 sudo: false
 language: cpp
 compiler: gcc
+before_install:
+    - sudo add-apt-repository --yes ppa:ubuntu-sdk-team/ppa
+    - sudo apt-get update -qq
 addons:
   apt:
     packages:
