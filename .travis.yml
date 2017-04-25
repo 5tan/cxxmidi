@@ -1,0 +1,12 @@
+sudo: false
+language: cpp
+compiler: gcc
+addons:
+  apt:
+    packages:
+    - libqt5-dev
+    - libasound2-dev
+script:
+ - mkdir build-test ; cd build-tests
+ - qmake ../tests/tests.pro
+ - make
