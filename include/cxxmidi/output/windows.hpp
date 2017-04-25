@@ -66,6 +66,13 @@ public:
     inline Windows(unsigned int initialPort_);
     inline virtual ~Windows();
 
+    Windows(const Windows&); // non-copyable
+    Windows &operator=(const Windows &); // non-copyable (assignment)
+#if __cplusplus > 199711L
+    Windows(Windows&&) = default;
+    Windows& operator=(Windows&&) = default;
+#endif // __cplusplus > 199711L
+
     inline virtual void openPort( unsigned int portNumber_ = 0);
     inline virtual void closePort();
     inline virtual void openVirtualPort(const std::string& portName_ = std::string( "CxxMidi Output"));
@@ -189,7 +196,13 @@ void Windows::openPort(unsigned int portNumber_)
 
 void Windows::closePort()
 {
-
+    if ( _connected )
+    {
+        WinMidiData *data = static_cast<WinMidiData *> (_apiData);
+        midiOutReset( data->outHandle );
+        midiOutClose( data->outHandle );
+        _connected = false;
+    }
 }
 
 void Windows::openVirtualPort( const std::string& /*portName_ */)

@@ -16,6 +16,13 @@ public:
     inline Asynchronous(Output::Abstract *output_);
     inline virtual ~Asynchronous();
 
+    Asynchronous(const Asynchronous&); // non-copyable
+    Asynchronous &operator=(const Asynchronous &); // non-copyable (assignment)
+#if __cplusplus > 199711L
+    Asynchronous(Asynchronous&&) = default;
+    Asynchronous& operator=(Asynchronous&&) = default;
+#endif // __cplusplus > 199711L
+
     inline virtual void play();
     inline virtual void pause();
 

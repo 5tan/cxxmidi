@@ -25,6 +25,14 @@ class Mutex
 public:
     inline  Mutex();
     inline ~Mutex();
+
+    Mutex(const Mutex&); // non-copyable
+    Mutex &operator=(const Mutex &); // non-copyable (assignment)
+#if __cplusplus > 199711L
+    Mutex(Mutex&&) = default;
+    Mutex& operator=(Mutex&&) = default;
+#endif // __cplusplus > 199711L
+
     inline void lock();
     inline void unlock();
 

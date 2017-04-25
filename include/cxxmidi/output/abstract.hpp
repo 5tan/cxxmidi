@@ -41,6 +41,13 @@ public:
     inline Abstract();
     inline ~Abstract();
 
+    Abstract(const Abstract&); // non-copyable
+    Abstract &operator=(const Abstract &); // non-copyable (assignment)
+#if __cplusplus > 199711L
+    Abstract(Abstract&&) = default;
+    Abstract& operator=(Abstract&&) = default;
+#endif // __cplusplus > 199711L
+
     virtual void openPort(unsigned int portNumber_=0) =0;
     virtual void closePort() =0;
     virtual void openVirtualPort(const std::string& portName_ = std::string( "RtMidi Virtual Output") ) =0;
