@@ -19,6 +19,10 @@ private slots:
     void time();
     void file();
     void instrument();
+//#if __cplusplus > 199711L
+    void noexceptMoveCtors();
+//#endif // __cplusplus > 199711L
+
 };
 
 void Tests::initTestCase()
@@ -107,6 +111,21 @@ void Tests::instrument()
     QCOMPARE((int)CxxMidi::Instrument(CxxMidi::Instrument::Gunshot),
              127);
 }
+
+void Tests::noexceptMoveCtors()
+{
+#if __cplusplus > 199711L
+    // we want these classes to be noexcept move constructible
+    // for the best std::vector performance
+    QVERIFY(std::is_nothrow_move_constructible<CxxMidi::Message>::value);
+    QVERIFY(std::is_nothrow_move_assignable<CxxMidi::Message>::value);
+    QVERIFY(std::is_nothrow_move_constructible<CxxMidi::Event>::value);
+    QVERIFY(std::is_nothrow_move_assignable<CxxMidi::Event>::value);
+    QVERIFY(std::is_nothrow_move_constructible<CxxMidi::Track>::value);
+    QVERIFY(std::is_nothrow_move_assignable<CxxMidi::Track>::value);
+#endif // __cplusplus > 199711L
+}
+
 
 QTEST_MAIN(Tests)
 #include "tests.moc"
