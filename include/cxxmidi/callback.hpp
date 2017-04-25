@@ -7,6 +7,7 @@ class Callback
 {
 public:
     inline Callback(){}
+
     virtual void operator()()=0;
 };
 

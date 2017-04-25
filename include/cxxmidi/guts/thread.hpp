@@ -28,6 +28,13 @@ public:
     inline Thread( void* (*fun_)(void *), void* ctx_);
     inline ~Thread();
 
+    Thread(const Thread&); // non-copyable
+    Thread &operator=(const Thread &); // non-copyable (assignment)
+#if __cplusplus > 199711L
+    Thread(Thread&&) = default;
+    Thread& operator=(Thread&&) = default;
+#endif // __cplusplus > 199711L
+
     inline void join();
 
 private:

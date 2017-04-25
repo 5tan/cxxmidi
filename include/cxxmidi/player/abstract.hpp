@@ -29,6 +29,13 @@ class Abstract
 {
 public:
 
+    // Abstract(const Abstract&); // default is ok
+    // Abstract &operator=(const Abstract &); // default is ok
+#if __cplusplus > 199711L
+    Abstract(Abstract&&) = default;
+    Abstract& operator=(Abstract&&) = default;
+#endif // __cplusplus > 199711L
+
     inline Abstract();
     inline Abstract(Output::Abstract *output_);
     inline virtual ~Abstract();
