@@ -1,11 +1,10 @@
-sudo: false
 language: cpp
 compiler: gcc
-addons:
-  apt:
-    packages:
-    - libqt4-dev
-    - libasound2-dev
+before_install:
+ - sudo add-apt-repository --yes ppa:ubuntu-sdk-team/ppa
+ - sudo apt-get update -qq
+ - sudo apt-get install -qq qt5-qmake qtbase5-dev qtdeclarative5-dev libasound2-dev
 script:
- - qmake tests/tests.pro
+ - qmake -qt=qt5 -v
+ - qmake -qt=qt5 tests/tests.pro
  - make
