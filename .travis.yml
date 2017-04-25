@@ -6,5 +6,6 @@ before_install:
  - sudo apt-get update -qq
  - sudo apt-get install -qq qt5-qmake qtbase5-dev qtdeclarative5-dev libasound2-dev
 script:
- - qmake -qt=qt5 "DESTDIT=build" tests/tests.pro
- - make build/Makefile
+ - sh -c "cd examples && qmake examples.pro && make"
+ - sh -c "cd tests && qmake tests.pro && make"
+ - tests/tests
