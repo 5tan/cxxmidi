@@ -9,6 +9,7 @@ before_install:
  - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 90
 script:
  - gcc --version
+ - g++ --version
  - qmake --version
  - qmake -qt=qt5 --version
  - sh -c "cd examples && qmake -qt=qt5 examples.pro && make"
