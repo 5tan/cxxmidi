@@ -20,7 +20,9 @@
 
 # CxxMidi v0.2
 
-Modern C++ MIDI library.
+[![Build Status](https://travis-ci.org/5tan/cxxmidi.svg?branch=master)](https://travis-ci.org/5tan/cxxmidi)
+
+C++ MIDI library.
 
 ## Key features
 * MIDI files read/write
