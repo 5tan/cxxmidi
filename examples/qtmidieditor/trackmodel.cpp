@@ -131,7 +131,7 @@ QVariant TrackModel::data(const QModelIndex & index_, int role_) const
 
             if(event->isMeta(CxxMidi::Event::Tempo))
             {
-                int tempo;
+                int tempo=0;
 
                 if(event->size() >=5 )
                     tempo =CxxMidi::Utils::extractTempo(
