@@ -8,5 +8,8 @@ before_install:
  - sudo apt-get install -qq qt5-qmake qtbase5-dev qtdeclarative5-dev libasound2-dev g++-5
  - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 90
 script:
- - sh -c "cd examples && qmake examples.pro && make"
- - sh -c "cd tests && qmake tests.pro && make"
+ - gcc --version
+ - qmake --version
+ - qmake -qt=qt5 --version
+ - sh -c "cd examples && qmake -qt=qt5 examples.pro && make"
+ - sh -c "cd tests && qmake -qt=qt5 tests.pro && make"
