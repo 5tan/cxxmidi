@@ -84,7 +84,7 @@ Use of some CxxMidi classes requires linking external libraries.
 
 CxxMidi class | Required external library
 ------------- | -------------------------
-`CxxMidi::Output::Alsa` or `CxxMidi::Output::Alsa` on Unix | libasound
+`CxxMidi::Output::Alsa` or `CxxMidi::Output::Default` on Unix | libasound
 `CxxMidi::Output::Windows` or `CxxMidi::Output::Default` on Windows | winmm.lib
 `CxxMidi::Player::Asynchronous` and if pre C++11 compiler on Unix | lpthread
 
