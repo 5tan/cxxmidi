@@ -50,7 +50,7 @@ int main(int /*argc*/, char ** /*argv*/)
 {
     CxxMidi::Output::Default output;
     for(int i=0; i<output.getPortCount(); i++)
-        std::cerr << i << ": " << output.getPortName(0) << std::endl;
+        std::cerr << i << ": " << output.getPortName(i) << std::endl;
     output.openPort(0);
 
     CxxMidi::File file("some_file.mid");
