@@ -50,7 +50,7 @@ int main(int /*argc*/, char ** /*argv*/)
 {
     CxxMidi::Output::Default output;
     for(int i=0; i<output.getPortCount(); i++)
-        std::cerr << i << ": " << output.getPortName(i) << std::endl;
+        std::cout << i << ": " << output.getPortName(i) << std::endl;
     output.openPort(0);
 
     CxxMidi::File file("some_file.mid");
@@ -60,7 +60,7 @@ int main(int /*argc*/, char ** /*argv*/)
 
     player.setCallbackHeartbeat([&]()
     {
-        std::cerr << player.currentTimePos() << std::endl;
+        std::cout << player.currentTimePos() << std::endl;
     });
 
     player.play();
