@@ -11,8 +11,8 @@ MainWindow::MainWindow(QWidget *parent_)
   _ui->setupUi(this);
 
   if (QApplication::instance()->arguments().size() >= 2) {
-    QString fileName = QApplication::instance()->arguments().at(1);
-    _file = cxxmidi::File(fileName.toStdString().c_str());
+    QString file_name = QApplication::instance()->arguments().at(1);
+    _file = cxxmidi::File(file_name.toStdString().c_str());
   }
 
   _fileModel.SetFile(&_file);
@@ -45,17 +45,17 @@ MainWindow::MainWindow(QWidget *parent_)
 }
 
 void MainWindow::CreateMenu() {
-  QMenu *fileMenu = this->menuBar()->addMenu(tr("&File"));
+  QMenu *file_menu = this->menuBar()->addMenu(tr("&File"));
 
-  QAction *action = fileMenu->addAction(tr("&Open"));
+  QAction *action = file_menu->addAction(tr("&Open"));
   connect(action, SIGNAL(triggered()), this, SLOT(OnOpenFile()));
 
-  action = fileMenu->addAction(tr("&Save as"));
+  action = file_menu->addAction(tr("&Save as"));
   connect(action, SIGNAL(triggered()), this, SLOT(OnSaveAs()));
 
-  fileMenu->addSeparator();
+  file_menu->addSeparator();
 
-  action = fileMenu->addAction(tr("&Exit"));
+  action = file_menu->addAction(tr("&Exit"));
   QObject::connect(action, SIGNAL(triggered()), QApplication::instance(),
                    SLOT(quit()));
   //! @TODO ask if save changes
@@ -88,11 +88,11 @@ void MainWindow::OnRequestDeleteEvent(int num) {
 }
 
 void MainWindow::OnOpenFile() {
-  QString fileName = QFileDialog::getOpenFileName(
+  QString file_name = QFileDialog::getOpenFileName(
       this, tr("Open file"), ".",
       tr("MIDI files (*.mid *.midi);;Any files (*)"));
 
-  _file = cxxmidi::File(fileName.toStdString().c_str());
+  _file = cxxmidi::File(file_name.toStdString().c_str());
   _fileModel.SetFile(&_file);
 }
 
