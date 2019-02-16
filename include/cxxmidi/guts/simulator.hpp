@@ -11,11 +11,11 @@ namespace guts {
 
 class Simulator : public player::Abstract {
  public:
-  inline time::Duration Duration(const File &file_);
+  inline time::Duration Duration(const File &file);
 
  private:
   inline virtual void Play() {}
-  inline virtual void Play(const File * /*file_*/) {}
+  inline virtual void Play(const File * /*file*/) {}
   inline virtual void Pause() {}
   inline virtual void Resume() {}
 };
@@ -29,11 +29,11 @@ class Simulator : public player::Abstract {
 namespace cxxmidi {
 namespace guts {
 
-time::Duration Simulator::Duration(const File &file_) {
+time::Duration Simulator::Duration(const File &file) {
   time::Duration r;
 
   _tempo = 500000;  // default tempo
-  _file = &file_;
+  _file = &file;
   this->InitPlayerState();
 
   while (!this->Finished()) {

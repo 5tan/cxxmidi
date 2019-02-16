@@ -11,12 +11,12 @@ class PlayerHeartbeatCallback : public QObject, public cxxmidi::Callback {
   Q_OBJECT
 
  public:
-  PlayerHeartbeatCallback(cxxmidi::player::Abstract *player_,
-                          QObject *parent_ = 0);
+  PlayerHeartbeatCallback(cxxmidi::player::Abstract *player,
+                          QObject *parent = 0);
   virtual void operator()();
 
  signals:
-  void PlayerTimeChanged(cxxmidi::time::Point time_);
+  void PlayerTimeChanged(cxxmidi::time::Point time);
 
  private:
   cxxmidi::player::Abstract *_player;

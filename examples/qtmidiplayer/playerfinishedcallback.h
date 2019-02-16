@@ -10,7 +10,7 @@ class PlayerFinishedCallback : public QObject, public cxxmidi::Callback {
   Q_OBJECT
 
  public:
-  PlayerFinishedCallback(QObject *parent_ = 0);
+  PlayerFinishedCallback(QObject *parent = 0);
 
   virtual void operator()();
 
