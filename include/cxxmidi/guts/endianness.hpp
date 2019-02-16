@@ -46,7 +46,7 @@ T ReadBe(std::fstream &file_) {
 }
 
 template <typename T>
-size_t writeBe(std::ofstream &file_, T val_) {
+size_t WriteBe(std::ofstream &file_, T val_) {
   size_t size = sizeof(val_);
 
   if (MachineIsLittleEndian()) val_ = Fix<T>(val_);
