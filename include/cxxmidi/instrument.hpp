@@ -8,197 +8,197 @@ namespace cxxmidi {
 class Instrument {
  public:
   enum Name {
-    AcousticGrandPiano = 0,
-    BrightAcousticPiano = 1,
-    ElectricGrandPiano = 2,
-    HonkytonkPiano = 3,
-    ElectricPiano1 = 4,
-    ElectricPiano2 = 5,
-    Harpsichord = 6,
-    Clavi = 7,
+    kAcousticGrandPiano = 0,
+    kBrightAcousticPiano = 1,
+    kElectricGrandPiano = 2,
+    kHonkytonkPiano = 3,
+    kElectricPiano1 = 4,
+    kElectricPiano2 = 5,
+    kHarpsichord = 6,
+    kClavi = 7,
 
-    Celesta = 8,
-    Glockenspiel = 9,
-    MusicBox = 10,
-    Vibraphone = 11,
-    Marimba = 12,
-    Xylophone = 13,
-    TubularBells = 14,
-    Dulcimer = 15,
+    kCelesta = 8,
+    kGlockenspiel = 9,
+    kMusicBox = 10,
+    kVibraphone = 11,
+    kMarimba = 12,
+    kXylophone = 13,
+    kTubularBells = 14,
+    kDulcimer = 15,
 
-    DrawbarOrgan = 16,
-    PercussiveOrgan = 17,
-    RockOrgan = 18,
-    ChurchOrgan = 19,
-    ReedOrgan = 20,
-    Accordion = 21,
-    Harmonica = 22,
-    TangoAccordion = 23,
+    kDrawbarOrgan = 16,
+    kPercussiveOrgan = 17,
+    kRockOrgan = 18,
+    kChurchOrgan = 19,
+    kReedOrgan = 20,
+    kAccordion = 21,
+    kHarmonica = 22,
+    kTangoAccordion = 23,
 
-    AcousticGuitarNylon = 24,
-    AcousticGuitarSteel = 25,
-    ElectricGuitarJazz = 26,
-    ElectricGuitarClean = 27,
-    ElectricGuitarMuted = 28,
-    OverdrivenGuitar = 29,
-    DistortionGuitar = 30,
-    GuitarHarmonics = 31,
-    AcousticBass = 32,
-    ElectricBassFinger = 33,
-    ElectricBassPick = 34,
-    FretlessBass = 35,
-    SlapBass1 = 36,
-    SlapBass2 = 37,
-    SynthBass1 = 38,
-    SynthBass2 = 39,
+    kAcousticGuitarNylon = 24,
+    kAcousticGuitarSteel = 25,
+    kElectricGuitarJazz = 26,
+    kElectricGuitarClean = 27,
+    kElectricGuitarMuted = 28,
+    kOverdrivenGuitar = 29,
+    kDistortionGuitar = 30,
+    kGuitarHarmonics = 31,
+    kAcousticBass = 32,
+    kElectricBassFinger = 33,
+    kElectricBassPick = 34,
+    kFretlessBass = 35,
+    kSlapBass1 = 36,
+    kSlapBass2 = 37,
+    kSynthBass1 = 38,
+    kSynthBass2 = 39,
 
-    Violin = 40,
-    Viola = 41,
-    Cello = 42,
-    Contrabass = 43,
-    TremoloStrings = 44,
-    PizzacatoStrings = 45,
-    OrchestralHarp = 46,
-    Timpani = 47,
+    kViolin = 40,
+    kViola = 41,
+    kCello = 42,
+    kContrabass = 43,
+    kTremoloStrings = 44,
+    kPizzacatoStrings = 45,
+    kOrchestralHarp = 46,
+    kTimpani = 47,
 
-    StringEnsemble1 = 48,
-    StringEnsemble2 = 49,
-    Synthstrings1 = 50,
-    Synthstrings2 = 51,
-    ChoirAahs = 52,
-    VoiceOohs = 53,
-    SynthVoice = 54,
-    OrchestraHit = 55,
+    kStringEnsemble1 = 48,
+    kStringEnsemble2 = 49,
+    kSynthstrings1 = 50,
+    kSynthstrings2 = 51,
+    kChoirAahs = 52,
+    kVoiceOohs = 53,
+    kSynthVoice = 54,
+    kOrchestraHit = 55,
 
-    Trumpet = 56,
-    Trombone = 57,
-    Tuba = 58,
-    MutedTrumped = 59,
-    FrenchHorn = 60,
-    BrassSection = 61,
-    Synthbrass1 = 62,
-    Synthbrass2 = 63,
-    SopranoSax = 64,
-    AltoSax = 65,
-    TenorSax = 66,
-    BaritoneSax = 67,
-    Oboe = 68,
-    EnglishHorn = 69,
-    Bassoon = 70,
-    Clarinet = 71,
+    kTrumpet = 56,
+    kTrombone = 57,
+    kTuba = 58,
+    kMutedTrumped = 59,
+    kFrenchHorn = 60,
+    kBrassSection = 61,
+    kSynthbrass1 = 62,
+    kSynthbrass2 = 63,
+    kSopranoSax = 64,
+    kAltoSax = 65,
+    kTenorSax = 66,
+    kBaritoneSax = 67,
+    kOboe = 68,
+    kEnglishHorn = 69,
+    kBassoon = 70,
+    kClarinet = 71,
 
-    Piccolo = 72,
-    Flute = 73,
-    Recorder = 74,
-    PanFlute = 75,
-    BlownBottle = 76,
-    Shakuhachi = 77,
-    Whistle = 78,
-    Ocarina = 79,
+    kPiccolo = 72,
+    kFlute = 73,
+    kRecorder = 74,
+    kPanFlute = 75,
+    kBlownBottle = 76,
+    kShakuhachi = 77,
+    kWhistle = 78,
+    kOcarina = 79,
 
-    LeadSquare = 80,
-    LeadSawtooth = 81,
-    LeadCalliope = 82,
-    LeadChiff = 83,
-    LeadCharang = 84,
-    LeadVoice = 85,
-    LeadFifths = 86,
-    LeadBass = 87,
+    kLeadSquare = 80,
+    kLeadSawtooth = 81,
+    kLeadCalliope = 82,
+    kLeadChiff = 83,
+    kLeadCharang = 84,
+    kLeadVoice = 85,
+    kLeadFifths = 86,
+    kLeadBass = 87,
 
-    PadNewAge = 88,
-    PadWarm = 89,
-    PadPolysynth = 90,
-    PadChoir = 91,
-    PadBowed = 92,
-    PadMetallic = 93,
-    PadHalo = 94,
-    PadSweep = 95,
+    kPadNewAge = 88,
+    kPadWarm = 89,
+    kPadPolysynth = 90,
+    kPadChoir = 91,
+    kPadBowed = 92,
+    kPadMetallic = 93,
+    kPadHalo = 94,
+    kPadSweep = 95,
 
-    FxTrain = 96,
-    FxSoundtrack = 97,
-    FxCrystal = 98,
-    FxAtmosphere = 99,
-    FxBrightness = 100,
-    FxGoblins = 101,
-    FxEchoes = 102,
-    FxScifi = 103,
+    kFxTrain = 96,
+    kFxSoundtrack = 97,
+    kFxCrystal = 98,
+    kFxAtmosphere = 99,
+    kFxBrightness = 100,
+    kFxGoblins = 101,
+    kFxEchoes = 102,
+    kFxScifi = 103,
 
-    Sitar = 104,
-    Banjo = 105,
-    Shamisen = 106,
-    Koto = 107,
-    Kalimba = 108,
-    Bagpipe = 109,
-    Fiddle = 110,
-    Shanai = 111,
+    kSitar = 104,
+    kBanjo = 105,
+    kShamisen = 106,
+    kKoto = 107,
+    kKalimba = 108,
+    kBagpipe = 109,
+    kFiddle = 110,
+    kShanai = 111,
 
-    TinkleBell = 112,
-    Agogo = 113,
-    SteelDrums = 114,
-    Woodblocks = 115,
-    TaikoDrum = 116,
-    MelodicDrum = 117,
-    SynthDrum = 118,
-    ReverseCymbal = 119,
+    kTinkleBell = 112,
+    kAgogo = 113,
+    kSteelDrums = 114,
+    kWoodblocks = 115,
+    kTaikoDrum = 116,
+    kMelodicDrum = 117,
+    kSynthDrum = 118,
+    kReverseCymbal = 119,
 
-    GuitarFretNoise = 120,
-    BreathNoise = 121,
-    Seashore = 122,
-    BirdTweet = 123,
-    TelephoneRing = 124,
-    Helicopter = 125,
-    Applause = 126,
-    Gunshot = 127,
+    kGuitarFretNoise = 120,
+    kBreathNoise = 121,
+    kSeashore = 122,
+    kBirdTweet = 123,
+    kTelephoneRing = 124,
+    kHelicopter = 125,
+    kApplause = 126,
+    kGunshot = 127,
 
-    AcousticBassDrum = 35,  // percussion (notes played on channel 10)
-    BassDrum1 = 36,
-    SideStick = 37,
-    AcousticSnare = 38,
-    HandClap = 39,
-    ElectricSnare = 40,
-    LowFloorTom = 41,
-    ClosedHiHat = 42,
-    HighFloorTom = 43,
-    PedalHiHat = 44,
-    LowTom = 45,
-    OpenHiHat = 46,
-    LowMidTom = 47,
-    HighMidTom = 48,
-    CrashCymbal1 = 49,
-    HighTom = 50,
-    RideCymbal1 = 51,
-    ChineseCymbal = 52,
-    RideBell = 53,
-    Tambourine = 54,
-    SplashCymbal = 55,
-    Cowbell = 56,
-    CrashCymbal2 = 57,
-    Vibraslap = 58,
-    RideCymbal2 = 59,
-    HiBongo = 60,
-    LowBongo = 61,
-    MuteHiConga = 62,
-    OpenHiConga = 63,
-    LowConga = 64,
-    HighTimbale = 65,
-    LowTimbale = 66,
-    HighAgogo = 67,
-    LowAgogo = 68,
-    Cabasa = 69,
-    Maracas = 70,
-    ShortWhistle = 71,
-    LongWhistle = 72,
-    ShortGuiro = 73,
-    LongGuiro = 74,
-    Claves = 75,
-    HiWoodBlock = 76,
-    LowWoodBlock = 77,
-    MuteCuica = 78,
-    OpenCuica = 79,
-    MuteTriangle = 80,
-    OpenTriangle = 81,
+    kAcousticBassDrum = 35,  // percussion (notes played on channel 10)
+    kBassDrum1 = 36,
+    kSideStick = 37,
+    kAcousticSnare = 38,
+    kHandClap = 39,
+    kElectricSnare = 40,
+    kLowFloorTom = 41,
+    kClosedHiHat = 42,
+    kHighFloorTom = 43,
+    kPedalHiHat = 44,
+    kLowTom = 45,
+    kOpenHiHat = 46,
+    kLowMidTom = 47,
+    kHighMidTom = 48,
+    kCrashCymbal1 = 49,
+    kHighTom = 50,
+    kRideCymbal1 = 51,
+    kChineseCymbal = 52,
+    kRideBell = 53,
+    kTambourine = 54,
+    kSplashCymbal = 55,
+    kCowbell = 56,
+    kCrashCymbal2 = 57,
+    kVibraslap = 58,
+    kRideCymbal2 = 59,
+    kHiBongo = 60,
+    kLowBongo = 61,
+    kMuteHiConga = 62,
+    kOpenHiConga = 63,
+    kLowConga = 64,
+    kHighTimbale = 65,
+    kLowTimbale = 66,
+    kHighAgogo = 67,
+    kLowAgogo = 68,
+    kCabasa = 69,
+    kMaracas = 70,
+    kShortWhistle = 71,
+    kLongWhistle = 72,
+    kShortGuiro = 73,
+    kLongGuiro = 74,
+    kClaves = 75,
+    kHiWoodBlock = 76,
+    kLowWoodBlock = 77,
+    kMuteCuica = 78,
+    kOpenCuica = 79,
+    kMuteTriangle = 80,
+    kOpenTriangle = 81,
 
-    Undefined = 128
+    kUndefined = 128
   };
 
   inline Instrument();
@@ -209,114 +209,114 @@ class Instrument {
   inline static std::string GetName(int instrument, int channel = -1);
 
  protected:
-  int _val;  // 0 ... 128
+  int val_;  // 0 ... 128
 };
 
 }  // namespace CxxMidi
 
 namespace cxxmidi {
 
-Instrument::Instrument() : _val(Undefined) {}
+Instrument::Instrument() : val_(kUndefined) {}
 
-Instrument::Instrument(int val) : _val(val) {}
+Instrument::Instrument(int val) : val_(val) {}
 
-Instrument::operator int() const { return _val; }
+Instrument::operator int() const { return val_; }
 
 std::string Instrument::GetName(int instrument, int channel) {
   if (channel == 10) switch (instrument) {
-      case AcousticBassDrum:
+      case kAcousticBassDrum:
         return "Acoustic Bass Drum";
-      case BassDrum1:
+      case kBassDrum1:
         return "Bass Drum 1";
-      case SideStick:
+      case kSideStick:
         return "Side Stick";
-      case AcousticSnare:
+      case kAcousticSnare:
         return "Acoustic Snare";
-      case HandClap:
+      case kHandClap:
         return "Hand Clap";
-      case ElectricSnare:
+      case kElectricSnare:
         return "Electric Snare";
-      case LowFloorTom:
+      case kLowFloorTom:
         return "Low Floor Tom";
-      case ClosedHiHat:
+      case kClosedHiHat:
         return "Closed Hi Hat";
-      case HighFloorTom:
+      case kHighFloorTom:
         return "High Floor Tom";
-      case PedalHiHat:
+      case kPedalHiHat:
         return "Pedal Hi Hat";
-      case LowTom:
+      case kLowTom:
         return "Low Tom";
-      case OpenHiHat:
+      case kOpenHiHat:
         return "Open Hi Hat";
-      case LowMidTom:
+      case kLowMidTom:
         return "Low Mid Tom";
-      case HighMidTom:
+      case kHighMidTom:
         return "High Mid Tom";
-      case CrashCymbal1:
+      case kCrashCymbal1:
         return "Crash Cymbal 1";
-      case HighTom:
+      case kHighTom:
         return "High Tom";
-      case RideCymbal1:
+      case kRideCymbal1:
         return "Ride Cymbal 1";
-      case ChineseCymbal:
+      case kChineseCymbal:
         return "Chinese Cymbal";
-      case RideBell:
+      case kRideBell:
         return "Ride Bell";
-      case Tambourine:
+      case kTambourine:
         return "Tambourine";
-      case SplashCymbal:
+      case kSplashCymbal:
         return "Splash Cymbal";
-      case Cowbell:
+      case kCowbell:
         return "Cowbell";
-      case CrashCymbal2:
+      case kCrashCymbal2:
         return "Crash Cymbal 2";
-      case Vibraslap:
+      case kVibraslap:
         return "Vibraslap";
-      case RideCymbal2:
+      case kRideCymbal2:
         return "Ride Cymbal 2";
-      case HiBongo:
+      case kHiBongo:
         return "Hi Bongo";
-      case LowBongo:
+      case kLowBongo:
         return "Low Bongo";
-      case MuteHiConga:
+      case kMuteHiConga:
         return "Mute Hi Conga";
-      case OpenHiConga:
+      case kOpenHiConga:
         return "Open Hi Conga";
-      case LowConga:
+      case kLowConga:
         return "Low Conga";
-      case HighTimbale:
+      case kHighTimbale:
         return "High Timbale";
-      case LowTimbale:
+      case kLowTimbale:
         return "Low Timbale";
-      case HighAgogo:
+      case kHighAgogo:
         return "High Agogo";
-      case LowAgogo:
+      case kLowAgogo:
         return "Low Agogo";
-      case Cabasa:
+      case kCabasa:
         return "Cabasa";
-      case Maracas:
+      case kMaracas:
         return "Maracas";
-      case ShortWhistle:
+      case kShortWhistle:
         return "Short Whistle";
-      case LongWhistle:
+      case kLongWhistle:
         return "Long Whistle";
-      case ShortGuiro:
+      case kShortGuiro:
         return "Short Guiro";
-      case LongGuiro:
+      case kLongGuiro:
         return "Long Guiro";
-      case Claves:
+      case kClaves:
         return "Claves";
-      case HiWoodBlock:
+      case kHiWoodBlock:
         return "Hi Wood Block";
-      case LowWoodBlock:
+      case kLowWoodBlock:
         return "Low Wood Block";
-      case MuteCuica:
+      case kMuteCuica:
         return "Mute Cuica";
-      case OpenCuica:
+      case kOpenCuica:
         return "Open Cuica";
-      case MuteTriangle:
+      case kMuteTriangle:
         return "Mute Triangle";
-      case OpenTriangle:
+      case kOpenTriangle:
         return "Open Triangle";
       default:
         break;
@@ -324,362 +324,362 @@ std::string Instrument::GetName(int instrument, int channel) {
 
   if (channel == -1)  // undefined channel
     switch (instrument) {
-      case FretlessBass:
+      case kFretlessBass:
         return "Fretless Bass / Acoustic Bass Drum";
-      case SlapBass1:
+      case kSlapBass1:
         return "Slap Bass 1 / Bass Drum1";
-      case SlapBass2:
+      case kSlapBass2:
         return "Slap Bass 2 / Side Stick";
-      case SynthBass1:
+      case kSynthBass1:
         return "Synth Bass 1 / Acoustic Snare";
-      case SynthBass2:
+      case kSynthBass2:
         return "Synth Bass 2 / Hand Clap";
-      case Violin:
+      case kViolin:
         return "Violin / Electric Snare";
-      case Viola:
+      case kViola:
         return "Viola / Low Floor Tom";
-      case Cello:
+      case kCello:
         return "Cello / Closed Hi Hat";
-      case Contrabass:
+      case kContrabass:
         return "Contrabass / High Floor Tom";
-      case TremoloStrings:
+      case kTremoloStrings:
         return "Tremolo Strings / Pedal HiHat";
-      case PizzacatoStrings:
+      case kPizzacatoStrings:
         return "Pizzacato Strings / Low Tom";
-      case OrchestralHarp:
+      case kOrchestralHarp:
         return "Orchestral Harp / Open Hi Hat";
-      case Timpani:
+      case kTimpani:
         return "Timpani / Low Mid Tom";
-      case StringEnsemble1:
+      case kStringEnsemble1:
         return "String Ensemble 1 / High Mid Tom";
-      case StringEnsemble2:
+      case kStringEnsemble2:
         return "String Ensemble 2 / Crash Cymbal1";
-      case Synthstrings1:
+      case kSynthstrings1:
         return "Synthstrings 1 / High Tom";
-      case Synthstrings2:
+      case kSynthstrings2:
         return "Synthstrings 2 / Ride Cymbal1";
-      case ChoirAahs:
+      case kChoirAahs:
         return "Choir Aahs / Chinese Cymbal";
-      case VoiceOohs:
+      case kVoiceOohs:
         return "Voice Oohs / Ride Bell";
-      case SynthVoice:
+      case kSynthVoice:
         return "Synth Voice / Tambourine";
-      case OrchestraHit:
+      case kOrchestraHit:
         return "Orchestra Hit / Splash Cymbal";
-      case Trumpet:
+      case kTrumpet:
         return "Trumpet / Cowbell";
-      case Trombone:
+      case kTrombone:
         return "Trombone / Crash Cymbal2";
-      case Tuba:
+      case kTuba:
         return "Tuba / Vibraslap";
-      case MutedTrumped:
+      case kMutedTrumped:
         return "Muted Trumped / Ride Cymbal2";
-      case FrenchHorn:
+      case kFrenchHorn:
         return "French Horn / Hi Bongo";
-      case BrassSection:
+      case kBrassSection:
         return "Brass Section / Low Bongo";
-      case Synthbrass1:
+      case kSynthbrass1:
         return "Synthbrass 1 / Mute Hi Conga";
-      case Synthbrass2:
+      case kSynthbrass2:
         return "Synthbrass 2 / Open Hi Conga";
-      case SopranoSax:
+      case kSopranoSax:
         return "Soprano Sax / Low Conga";
-      case AltoSax:
+      case kAltoSax:
         return "Alto Sax / High Timbale";
-      case TenorSax:
+      case kTenorSax:
         return "Tenor Sax / Low Timbale";
-      case BaritoneSax:
+      case kBaritoneSax:
         return "Baritone Sax / High Agogo";
-      case Oboe:
+      case kOboe:
         return "Oboe / Low Agogo";
-      case EnglishHorn:
+      case kEnglishHorn:
         return "English Horn / Cabasa";
-      case Bassoon:
+      case kBassoon:
         return "Bassoon / Maracas";
-      case Clarinet:
+      case kClarinet:
         return "Clarinet / Short Whistle";
-      case Piccolo:
+      case kPiccolo:
         return "Piccolo / Long Whistle";
-      case Flute:
+      case kFlute:
         return "Flute / Short Guiro";
-      case Recorder:
+      case kRecorder:
         return "Recorder / Long Guiro";
-      case PanFlute:
+      case kPanFlute:
         return "Pan Flute / Claves";
-      case BlownBottle:
+      case kBlownBottle:
         return "Blown Bottle / Hi Wood Block";
-      case Shakuhachi:
+      case kShakuhachi:
         return "Shakuhachi / Low Wood Block";
-      case Whistle:
+      case kWhistle:
         return "Whistle / Mute Cuica";
-      case Ocarina:
+      case kOcarina:
         return "Ocarina / Open Cuica";
-      case LeadSquare:
+      case kLeadSquare:
         return "Lead Square / Mute Triangle";
-      case LeadSawtooth:
+      case kLeadSawtooth:
         return "Lead Sawtooth / Open Triangle";
       default:
         break;
     }
 
   switch (instrument) {
-    case AcousticGrandPiano:
+    case kAcousticGrandPiano:
       return "Acoustic Grand Piano";
-    case BrightAcousticPiano:
+    case kBrightAcousticPiano:
       return "Bright Acoustic Piano";
-    case ElectricGrandPiano:
+    case kElectricGrandPiano:
       return "Electric Grand Piano";
-    case HonkytonkPiano:
+    case kHonkytonkPiano:
       return "Honkytonk Piano";
-    case ElectricPiano1:
+    case kElectricPiano1:
       return "Electric Piano 1";
-    case ElectricPiano2:
+    case kElectricPiano2:
       return "Electric Piano 2";
-    case Harpsichord:
+    case kHarpsichord:
       return "Harpsichord";
-    case Clavi:
+    case kClavi:
       return "Clavi";
-    case Celesta:
+    case kCelesta:
       return "Celesta";
-    case Glockenspiel:
+    case kGlockenspiel:
       return "Glockenspiel";
-    case MusicBox:
+    case kMusicBox:
       return "Music Box";
-    case Vibraphone:
+    case kVibraphone:
       return "Vibraphone";
-    case Marimba:
+    case kMarimba:
       return "Marimba";
-    case Xylophone:
+    case kXylophone:
       return "Xylophone";
-    case TubularBells:
+    case kTubularBells:
       return "Tubular Bells";
-    case Dulcimer:
+    case kDulcimer:
       return "Dulcimer";
-    case DrawbarOrgan:
+    case kDrawbarOrgan:
       return "Drawbar Organ";
-    case PercussiveOrgan:
+    case kPercussiveOrgan:
       return "Percussive Organ";
-    case RockOrgan:
+    case kRockOrgan:
       return "Rock Organ";
-    case ChurchOrgan:
+    case kChurchOrgan:
       return "Church Organ";
-    case ReedOrgan:
+    case kReedOrgan:
       return "Reed Organ";
-    case Accordion:
+    case kAccordion:
       return "Accordion";
-    case Harmonica:
+    case kHarmonica:
       return "Harmonica";
-    case TangoAccordion:
+    case kTangoAccordion:
       return "Tango Accordion";
-    case AcousticGuitarNylon:
+    case kAcousticGuitarNylon:
       return "Acoustic Guitar Nylon";
-    case AcousticGuitarSteel:
+    case kAcousticGuitarSteel:
       return "Acoustic Guitar Steel";
-    case ElectricGuitarJazz:
+    case kElectricGuitarJazz:
       return "Electric Guitar Jazz";
-    case ElectricGuitarClean:
+    case kElectricGuitarClean:
       return "Electric Guitar Clean";
-    case ElectricGuitarMuted:
+    case kElectricGuitarMuted:
       return "Electric Guitar Muted";
-    case OverdrivenGuitar:
+    case kOverdrivenGuitar:
       return "Overdriven Guitar";
-    case DistortionGuitar:
+    case kDistortionGuitar:
       return "Distortion Guitar";
-    case GuitarHarmonics:
+    case kGuitarHarmonics:
       return "Guitar Harmonics";
-    case AcousticBass:
+    case kAcousticBass:
       return "Acoustic Bass";
-    case ElectricBassFinger:
+    case kElectricBassFinger:
       return "Electric Bass Finger";
-    case ElectricBassPick:
+    case kElectricBassPick:
       return "Electric Bass Pick";
-    case FretlessBass:
+    case kFretlessBass:
       return "Fretless Bass";
-    case SlapBass1:
+    case kSlapBass1:
       return "Slap Bass 1";
-    case SlapBass2:
+    case kSlapBass2:
       return "Slap Bass 2";
-    case SynthBass1:
+    case kSynthBass1:
       return "Synth Bass 1";
-    case SynthBass2:
+    case kSynthBass2:
       return "Synth Bass 2";
-    case Violin:
+    case kViolin:
       return "Violin";
-    case Viola:
+    case kViola:
       return "Viola";
-    case Cello:
+    case kCello:
       return "Cello";
-    case Contrabass:
+    case kContrabass:
       return "Contrabass";
-    case TremoloStrings:
+    case kTremoloStrings:
       return "Tremolo Strings";
-    case PizzacatoStrings:
+    case kPizzacatoStrings:
       return "Pizzacato Strings";
-    case OrchestralHarp:
+    case kOrchestralHarp:
       return "Orchestral Harp";
-    case Timpani:
+    case kTimpani:
       return "Timpani";
-    case StringEnsemble1:
+    case kStringEnsemble1:
       return "String Ensemble 1";
-    case StringEnsemble2:
+    case kStringEnsemble2:
       return "String Ensemble 2";
-    case Synthstrings1:
+    case kSynthstrings1:
       return "Synthstrings 1";
-    case Synthstrings2:
+    case kSynthstrings2:
       return "Synthstrings 2";
-    case ChoirAahs:
+    case kChoirAahs:
       return "Choir Aahs";
-    case VoiceOohs:
+    case kVoiceOohs:
       return "Voice Oohs";
-    case SynthVoice:
+    case kSynthVoice:
       return "Synth Voice";
-    case OrchestraHit:
+    case kOrchestraHit:
       return "Orchestra Hit";
-    case Trumpet:
+    case kTrumpet:
       return "Trumpet";
-    case Trombone:
+    case kTrombone:
       return "Trombone";
-    case Tuba:
+    case kTuba:
       return "Tuba";
-    case MutedTrumped:
+    case kMutedTrumped:
       return "Muted Trumped";
-    case FrenchHorn:
+    case kFrenchHorn:
       return "French Horn";
-    case BrassSection:
+    case kBrassSection:
       return "Brass Section";
-    case Synthbrass1:
+    case kSynthbrass1:
       return "Synthbrass 1";
-    case Synthbrass2:
+    case kSynthbrass2:
       return "Synthbrass 2";
-    case SopranoSax:
+    case kSopranoSax:
       return "Soprano Sax";
-    case AltoSax:
+    case kAltoSax:
       return "Alto Sax";
-    case TenorSax:
+    case kTenorSax:
       return "Tenor Sax";
-    case BaritoneSax:
+    case kBaritoneSax:
       return "Baritone Sax";
-    case Oboe:
+    case kOboe:
       return "Oboe";
-    case EnglishHorn:
+    case kEnglishHorn:
       return "English Horn";
-    case Bassoon:
+    case kBassoon:
       return "Bassoon";
-    case Clarinet:
+    case kClarinet:
       return "Clarinet";
-    case Piccolo:
+    case kPiccolo:
       return "Piccolo";
-    case Flute:
+    case kFlute:
       return "Flute";
-    case Recorder:
+    case kRecorder:
       return "Recorder";
-    case PanFlute:
+    case kPanFlute:
       return "Pan Flute";
-    case BlownBottle:
+    case kBlownBottle:
       return "Blown Bottle";
-    case Shakuhachi:
+    case kShakuhachi:
       return "Shakuhachi";
-    case Whistle:
+    case kWhistle:
       return "Whistle";
-    case Ocarina:
+    case kOcarina:
       return "Ocarina";
-    case LeadSquare:
+    case kLeadSquare:
       return "Lead Square";
-    case LeadSawtooth:
+    case kLeadSawtooth:
       return "Lead Sawtooth";
-    case LeadCalliope:
+    case kLeadCalliope:
       return "Lead Calliope";
-    case LeadChiff:
+    case kLeadChiff:
       return "Lead Chiff";
-    case LeadCharang:
+    case kLeadCharang:
       return "Lead Charang";
-    case LeadVoice:
+    case kLeadVoice:
       return "Lead Voice";
-    case LeadFifths:
+    case kLeadFifths:
       return "Lead Fifths";
-    case LeadBass:
+    case kLeadBass:
       return "Lead Bass";
-    case PadNewAge:
+    case kPadNewAge:
       return "Pad New Age";
-    case PadWarm:
+    case kPadWarm:
       return "Pad Warm";
-    case PadPolysynth:
+    case kPadPolysynth:
       return "Pad Polysynth";
-    case PadChoir:
+    case kPadChoir:
       return "Pad Choir";
-    case PadBowed:
+    case kPadBowed:
       return "Pad Bowed";
-    case PadMetallic:
+    case kPadMetallic:
       return "Pad Metallic";
-    case PadHalo:
+    case kPadHalo:
       return "Pad Halo";
-    case PadSweep:
+    case kPadSweep:
       return "Pad Sweep";
-    case FxTrain:
+    case kFxTrain:
       return "Fx Train";
-    case FxSoundtrack:
+    case kFxSoundtrack:
       return "Fx Soundtrack";
-    case FxCrystal:
+    case kFxCrystal:
       return "Fx Crystal";
-    case FxAtmosphere:
+    case kFxAtmosphere:
       return "Fx Atmosphere";
-    case FxBrightness:
+    case kFxBrightness:
       return "Fx Brightness";
-    case FxGoblins:
+    case kFxGoblins:
       return "Fx Goblins";
-    case FxEchoes:
+    case kFxEchoes:
       return "Fx Echoes";
-    case FxScifi:
+    case kFxScifi:
       return "Fx Sci fi";
-    case Sitar:
+    case kSitar:
       return "Sitar";
-    case Banjo:
+    case kBanjo:
       return "Banjo";
-    case Shamisen:
+    case kShamisen:
       return "Shamisen";
-    case Koto:
+    case kKoto:
       return "Koto";
-    case Kalimba:
+    case kKalimba:
       return "Kalimba";
-    case Bagpipe:
+    case kBagpipe:
       return "Bagpipe";
-    case Fiddle:
+    case kFiddle:
       return "Fiddle";
-    case Shanai:
+    case kShanai:
       return "Shanai";
-    case TinkleBell:
+    case kTinkleBell:
       return "Tinkle Bell";
-    case Agogo:
+    case kAgogo:
       return "Agogo";
-    case SteelDrums:
+    case kSteelDrums:
       return "Steel Drums";
-    case Woodblocks:
+    case kWoodblocks:
       return "Woodblocks";
-    case TaikoDrum:
+    case kTaikoDrum:
       return "Taiko Drum";
-    case MelodicDrum:
+    case kMelodicDrum:
       return "Melodic Drum";
-    case SynthDrum:
+    case kSynthDrum:
       return "Synth Drum";
-    case ReverseCymbal:
+    case kReverseCymbal:
       return "Reverse Cymbal";
-    case GuitarFretNoise:
+    case kGuitarFretNoise:
       return "Guitar Fret Noise";
-    case BreathNoise:
+    case kBreathNoise:
       return "Breath Noise";
-    case Seashore:
+    case kSeashore:
       return "Seashore";
-    case BirdTweet:
+    case kBirdTweet:
       return "Bird Tweet";
-    case TelephoneRing:
+    case kTelephoneRing:
       return "Telephone Ring";
-    case Helicopter:
+    case kHelicopter:
       return "Helicopter";
-    case Applause:
+    case kApplause:
       return "Applause";
-    case Gunshot:
+    case kGunshot:
       return "Gunshot";
-    case Undefined:
+    case kUndefined:
       return "Undefined";
     default:
       return "";

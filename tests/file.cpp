@@ -20,17 +20,17 @@ class FileTestFixture : public ::testing::Test {
       for (int i = 0; i < 10; i++) {
         track.push_back(
             cxxmidi::Event(0,                             // deltatime
-                           cxxmidi::Message::NoteOn,      // message type
+                           cxxmidi::Message::kNoteOn,      // message type
                            cxxmidi::Note::MiddleC() + i,  // note
                            100 + i));                     // velocity [0...127]
         track.push_back(
             cxxmidi::Event(dt,                            // deltatime
-                           cxxmidi::Message::NoteOn,      // message type
+                           cxxmidi::Message::kNoteOn,      // message type
                            cxxmidi::Note::MiddleC() + i,  // note
                            0));  // velocity=0 => note off
       }
       track.push_back(cxxmidi::Event(0,  // deltatime
-                                     cxxmidi::Message::Meta,
+                                     cxxmidi::Message::kMeta,
                                      cxxmidi::Message::EndOfTrack));
     }
 

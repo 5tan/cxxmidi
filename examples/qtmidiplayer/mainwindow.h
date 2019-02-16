@@ -39,20 +39,20 @@ class MainWindow : public QMainWindow {
  private:
   void CreateMenuBar();
 
-  QActionGroup* _outputsActionGroup;
-  Ui::MainWindow* _ui;
+  QActionGroup* outputs_action_group_;
+  Ui::MainWindow* ui_;
 
-  cxxmidi::time::Point _currentTimePoint;
-  cxxmidi::time::Point _finalTimePoint;
+  cxxmidi::time::Point current_time_point_;
+  cxxmidi::time::Point final_time_Point_;
 
-  cxxmidi::output::Default* _midiOutput;
-  cxxmidi::player::Asynchronous* _midiPlayer;
-  cxxmidi::File* _midiFile;
+  cxxmidi::output::Default* midi_output_;
+  cxxmidi::player::Asynchronous* midi_player_;
+  cxxmidi::File* midi_file_;
 
-  PlayerHeartbeatCallback _playerHeartbeatCallback;
-  PlayerFinishedCallback _playerFinishedCallback;
+  PlayerHeartbeatCallback player_heartbeat_callback_;
+  PlayerFinishedCallback player_finished_callback_;
 
-  bool _sliderLocked;
+  bool slider_locked_;
 };
 
 #endif  // MAINWINDOW_H

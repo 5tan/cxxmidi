@@ -8,210 +8,210 @@ namespace cxxmidi {
 class Note {
  public:
   enum Name {
-    Undefined = 128,
+    kUndefined = 128,
 
     // octave -5
-    C00 = 0,
-    C00s = 1,
-    D00b = 1,
-    D00 = 2,
-    D00s = 3,
-    E00b = 3,
-    E00 = 4,
-    F00 = 5,
-    F00s = 6,
-    G00b = 6,
-    G00 = 7,
-    G00s = 8,
-    A00b = 8,
-    A00 = 9,
-    A00s = 10,
-    B00b = 10,
-    B00 = 11,
+    kC00 = 0,
+    kC00s = 1,
+    kD00b = 1,
+    kD00 = 2,
+    kD00s = 3,
+    kE00b = 3,
+    kE00 = 4,
+    kF00 = 5,
+    kF00s = 6,
+    kG00b = 6,
+    kG00 = 7,
+    kG00s = 8,
+    kA00b = 8,
+    kA00 = 9,
+    kA00s = 10,
+    kB00b = 10,
+    kB00 = 11,
 
     // octave -4
-    C0 = 12,
-    C0s = 13,
-    D0b = 13,
-    D0 = 14,
-    D0s = 15,
-    E0b = 15,
-    E0 = 16,
-    F0 = 17,
-    F0s = 18,
-    G0b = 18,
-    G0 = 19,
-    G0s = 20,
-    A0b = 20,
-    A0 = 21,
-    A0s = 22,
-    B0b = 22,
-    B0 = 23,
+    kC0 = 12,
+    kC0s = 13,
+    kD0b = 13,
+    kD0 = 14,
+    kD0s = 15,
+    kE0b = 15,
+    kE0 = 16,
+    kF0 = 17,
+    kF0s = 18,
+    kG0b = 18,
+    kG0 = 19,
+    kG0s = 20,
+    kA0b = 20,
+    kA0 = 21,
+    kA0s = 22,
+    kB0b = 22,
+    kB0 = 23,
 
     // octave -3
-    C1 = 24,
-    C1s = 25,
-    D1b = 25,
-    D1 = 26,
-    D1s = 27,
-    E1b = 27,
-    E1 = 28,
-    F1 = 29,
-    F1s = 30,
-    G1b = 30,
-    G1 = 31,
-    G1s = 32,
-    A1b = 32,
-    A1 = 33,
-    A1s = 34,
-    B1b = 34,
-    B1 = 35,
+    kC1 = 24,
+    kC1s = 25,
+    kD1b = 25,
+    kD1 = 26,
+    kD1s = 27,
+    kE1b = 27,
+    kE1 = 28,
+    kF1 = 29,
+    kF1s = 30,
+    kG1b = 30,
+    kG1 = 31,
+    kG1s = 32,
+    kA1b = 32,
+    kA1 = 33,
+    kA1s = 34,
+    kB1b = 34,
+    kB1 = 35,
 
     // octave -2
-    C2 = 36,
-    C2s = 37,
-    D2b = 37,
-    D2 = 38,
-    D2s = 39,
-    E2b = 39,
-    E2 = 40,
-    F2 = 41,
-    F2s = 42,
-    G2b = 42,
-    G2 = 43,
-    G2s = 44,
-    A2b = 44,
-    A2 = 45,
-    A2s = 46,
-    B2b = 46,
-    B2 = 47,
+    kC2 = 36,
+    kC2s = 37,
+    kD2b = 37,
+    kD2 = 38,
+    kD2s = 39,
+    kE2b = 39,
+    kE2 = 40,
+    kF2 = 41,
+    kF2s = 42,
+    kG2b = 42,
+    kG2 = 43,
+    kG2s = 44,
+    kA2b = 44,
+    kA2 = 45,
+    kA2s = 46,
+    kB2b = 46,
+    kB2 = 47,
 
     // octave -1
-    C3 = 48,
-    C3s = 49,
-    D3b = 49,
-    D3 = 50,
-    D3s = 51,
-    E3b = 51,
-    E3 = 52,
-    F3 = 53,
-    F3s = 54,
-    G3b = 54,
-    G3 = 55,
-    G3s = 56,
-    A3b = 56,
-    A3 = 57,
-    A3s = 58,
-    B3b = 58,
-    B3 = 59,
+    kC3 = 48,
+    kC3s = 49,
+    kD3b = 49,
+    kD3 = 50,
+    kD3s = 51,
+    kE3b = 51,
+    kE3 = 52,
+    kF3 = 53,
+    kF3s = 54,
+    kG3b = 54,
+    kG3 = 55,
+    kG3s = 56,
+    kA3b = 56,
+    kA3 = 57,
+    kA3s = 58,
+    kB3b = 58,
+    kB3 = 59,
 
     // octave 0
-    C4 = 60,  // middle C
-    C4s = 61,
-    D4b = 61,
-    D4 = 62,
-    D4s = 63,
-    E4b = 63,
-    E4 = 64,
-    F4 = 65,
-    F4s = 66,
-    G4b = 66,
-    G4 = 67,
-    G4s = 68,
-    A4b = 68,
-    A4 = 69,  // 440Hz
-    A4s = 70,
-    B4b = 70,
-    B4 = 71,
+    kC4 = 60,  // middle C
+    kC4s = 61,
+    kD4b = 61,
+    kD4 = 62,
+    kD4s = 63,
+    kE4b = 63,
+    kE4 = 64,
+    kF4 = 65,
+    kF4s = 66,
+    kG4b = 66,
+    kG4 = 67,
+    kG4s = 68,
+    kA4b = 68,
+    kA4 = 69,  // 440Hz
+    kA4s = 70,
+    kB4b = 70,
+    kB4 = 71,
 
     // octave 1
-    C5 = 72,
-    C5s = 73,
-    D5b = 73,
-    D5 = 74,
-    D5s = 75,
-    E5b = 75,
-    E5 = 76,
-    F5 = 77,
-    F5s = 78,
-    G5b = 78,
-    G5 = 79,
-    G5s = 80,
-    A5b = 80,
-    A5 = 81,
-    A5s = 82,
-    B5b = 82,
-    B5 = 83,
+    kC5 = 72,
+    kC5s = 73,
+    kD5b = 73,
+    kD5 = 74,
+    kD5s = 75,
+    kE5b = 75,
+    kE5 = 76,
+    kF5 = 77,
+    kF5s = 78,
+    kG5b = 78,
+    kG5 = 79,
+    kG5s = 80,
+    kA5b = 80,
+    kA5 = 81,
+    kA5s = 82,
+    kB5b = 82,
+    kB5 = 83,
 
     // octave 2
-    C6 = 84,
-    C6s = 85,
-    D6b = 85,
-    D6 = 86,
-    D6s = 87,
-    E6b = 87,
-    E6 = 88,
-    F6 = 89,
-    F6s = 90,
-    G6b = 90,
-    G6 = 91,
-    G6s = 92,
-    A6b = 92,
-    A6 = 93,
-    A6s = 94,
-    B6b = 94,
-    B6 = 95,
+    kC6 = 84,
+    kC6s = 85,
+    kD6b = 85,
+    kD6 = 86,
+    kD6s = 87,
+    kE6b = 87,
+    kE6 = 88,
+    kF6 = 89,
+    kF6s = 90,
+    kG6b = 90,
+    kG6 = 91,
+    kG6s = 92,
+    kA6b = 92,
+    kA6 = 93,
+    kA6s = 94,
+    kB6b = 94,
+    kB6 = 95,
 
     // octave 3
-    C7 = 96,
-    C7s = 97,
-    D7b = 97,
-    D7 = 98,
-    D7s = 99,
-    E7b = 99,
-    E7 = 100,
-    F7 = 101,
-    F7s = 102,
-    G7b = 102,
-    G7 = 103,
-    G7s = 104,
-    A7b = 104,
-    A7 = 105,
-    A7s = 106,
-    B7b = 106,
-    B7 = 107,
+    kC7 = 96,
+    kC7s = 97,
+    kD7b = 97,
+    kD7 = 98,
+    kD7s = 99,
+    kE7b = 99,
+    kE7 = 100,
+    kF7 = 101,
+    kF7s = 102,
+    kG7b = 102,
+    kG7 = 103,
+    kG7s = 104,
+    kA7b = 104,
+    kA7 = 105,
+    kA7s = 106,
+    kB7b = 106,
+    kB7 = 107,
 
     // octave 4
-    C8 = 108,
-    C8s = 109,
-    D8b = 109,
-    D8 = 110,
-    D8s = 111,
-    E8b = 111,
-    E8 = 112,
-    F8 = 113,
-    F8s = 114,
-    G8b = 114,
-    G8 = 115,
-    G8s = 116,
-    A8b = 116,
-    A8 = 117,
-    A8s = 118,
-    B8b = 118,
-    B8 = 119,
+    kC8 = 108,
+    kC8s = 109,
+    kD8b = 109,
+    kD8 = 110,
+    kD8s = 111,
+    kE8b = 111,
+    kE8 = 112,
+    kF8 = 113,
+    kF8s = 114,
+    kG8b = 114,
+    kG8 = 115,
+    kG8s = 116,
+    kA8b = 116,
+    kA8 = 117,
+    kA8s = 118,
+    kB8b = 118,
+    kB8 = 119,
 
     // octave 5
-    C9 = 120,
-    C9s = 121,
-    D9b = 121,
-    D9 = 122,
-    D9s = 123,
-    E9b = 123,
-    E9 = 124,
-    F9 = 125,
-    F9s = 126,
-    G9b = 126,
-    G9 = 127
+    kC9 = 120,
+    kC9s = 121,
+    kD9b = 121,
+    kD9 = 122,
+    kD9s = 123,
+    kE9b = 123,
+    kE9 = 124,
+    kF9 = 125,
+    kF9s = 126,
+    kG9b = 126,
+    kG9 = 127
   };
 
   inline Note();
@@ -225,294 +225,293 @@ class Note {
   inline static std::string GetName(int note);
 
  protected:
-  int _val;  // 0 ... 127
+  int val_;  // 0 ... 127
 };
 
 }  // namespace CxxMidi
 
 namespace cxxmidi {
 
-Note::Note() : _val(Undefined) {}
+Note::Note() : val_(kUndefined) {}
 
-Note::Note(int val) : _val(val) {}
+Note::Note(int val) : val_(val) {}
 
-Note Note::MiddleC() { return Note(C4); }
+Note Note::MiddleC() { return Note(kC4); }
 
-Note Note::A440Hz() { return Note(A4); }
+Note Note::A440Hz() { return Note(kA4); }
 
-Note::operator int() const { return _val; }
+Note::operator int() const { return val_; }
 
 std::string Note::GetName(int note) {
   switch (note) {
-    case C00:
+    case kC00:
       return "C00";
-    case C00s:
+    case kC00s:
       return "C00s/D00b";
-    case D00:
+    case kD00:
       return "D00";
-    case D00s:
+    case kD00s:
       return "D00s/E00b";
-    case E00:
+    case kE00:
       return "E00";
-    case F00:
+    case kF00:
       return "F00";
-    case F00s:
+    case kF00s:
       return "F00s/G00b";
-    case G00:
+    case kG00:
       return "G00";
-    case G00s:
+    case kG00s:
       return "G00s/A00b";
-    case A00:
+    case kA00:
       return "A00";
-    case A00s:
+    case kA00s:
       return "A00s/B00b";
-    case B00:
+    case kB00:
       return "B00";
 
-    case C0:
+    case kC0:
       return "C0";
-    case C0s:
+    case kC0s:
       return "C0s/D0b";
-    case D0:
+    case kD0:
       return "D0";
-    case D0s:
+    case kD0s:
       return "D0s/E0b";
-    case E0:
+    case kE0:
       return "E0";
-    case F0:
+    case kF0:
       return "F0";
-    case F0s:
+    case kF0s:
       return "F0s/G0b";
-    case G0:
+    case kG0:
       return "G0";
-    case G0s:
+    case kG0s:
       return "G0s/A0b";
-    case A0:
+    case kA0:
       return "A0";
-    case A0s:
+    case kA0s:
       return "A0s/B0b";
 
-    case B0:
+    case kB0:
       return "B0";
-    case C1:
+    case kC1:
       return "C1";
-    case C1s:
+    case kC1s:
       return "C1s/D1b";
-    case D1:
+    case kD1:
       return "D1";
-    case D1s:
+    case kD1s:
       return "D1s/E1b";
-    case E1:
+    case kE1:
       return "E1";
-    case F1:
+    case kF1:
       return "F1";
-    case F1s:
+    case kF1s:
       return "F1s/G1b";
-    case G1:
+    case kG1:
       return "G1";
-    case G1s:
+    case kG1s:
       return "G1s/A1b";
-    case A1:
+    case kA1:
       return "A1";
-    case A1s:
+    case kA1s:
       return "A1s/B1b";
-    case B1:
+    case kB1:
       return "B1";
 
-    case C2:
+    case kC2:
       return "C2";
-    case C2s:
+    case kC2s:
       return "C2s/D2b";
-    case D2:
+    case kD2:
       return "D2";
-    case D2s:
+    case kD2s:
       return "D2s/E2b";
-    case E2:
+    case kE2:
       return "E2";
-    case F2:
+    case kF2:
       return "F2";
-    case F2s:
+    case kF2s:
       return "F2s/G2b";
-    case G2:
+    case kG2:
       return "G2";
-    case G2s:
+    case kG2s:
       return "G2s/A2b";
-    case A2:
+    case kA2:
       return "A2";
-    case A2s:
+    case kA2s:
       return "A2s/B2b";
-    case B2:
+    case kB2:
       return "B2";
 
-    case C3:
+    case kC3:
       return "C3";
-    case C3s:
+    case kC3s:
       return "C3s/D3b";
-    case D3:
+    case kD3:
       return "D3";
-    case D3s:
+    case kD3s:
       return "D3s/E3b";
-    case E3:
+    case kE3:
       return "E3";
-    case F3:
+    case kF3:
       return "F3";
-    case F3s:
+    case kF3s:
       return "F3s/G3b";
-      ;
-    case G3:
+    case kG3:
       return "G3";
-    case G3s:
+    case kG3s:
       return "G3s/A3b";
-    case A3:
+    case kA3:
       return "A3";
-    case A3s:
+    case kA3s:
       return "A3s/B3b";
-    case B3:
+    case kB3:
       return "B3";
 
-    case C4:
+    case kC4:
       return "C4";
-    case C4s:
+    case kC4s:
       return "C4s/D4b";
-    case D4:
+    case kD4:
       return "D4";
-    case D4s:
+    case kD4s:
       return "D4s/E4b";
-    case E4:
+    case kE4:
       return "E4";
-    case F4:
+    case kF4:
       return "F4";
-    case F4s:
+    case kF4s:
       return "F4s/G4b";
-    case G4:
+    case kG4:
       return "G4";
-    case G4s:
+    case kG4s:
       return "G4s/A4b";
-    case A4:
+    case kA4:
       return "A4";
-    case A4s:
+    case kA4s:
       return "A4s/B4b";
-    case B4:
+    case kB4:
       return "B4";
 
-    case C5:
+    case kC5:
       return "C5";
-    case C5s:
+    case kC5s:
       return "C5s/D5b";
-    case D5:
+    case kD5:
       return "D5";
-    case D5s:
+    case kD5s:
       return "D5s/E5b";
-    case E5:
+    case kE5:
       return "E5";
-    case F5:
+    case kF5:
       return "F5";
-    case F5s:
+    case kF5s:
       return "F5s/G5b";
-    case G5:
+    case kG5:
       return "G5";
-    case G5s:
+    case kG5s:
       return "G5s/A5b";
-    case A5:
+    case kA5:
       return "A5";
-    case A5s:
+    case kA5s:
       return "A5s/B5b";
-    case B5:
+    case kB5:
       return "B5";
 
-    case C6:
+    case kC6:
       return "C6";
-    case C6s:
+    case kC6s:
       return "C6s/D6b";
-    case D6:
+    case kD6:
       return "D6";
-    case D6s:
+    case kD6s:
       return "D6s/E6b";
-    case E6:
+    case kE6:
       return "E6";
-    case F6:
+    case kF6:
       return "F6";
-    case F6s:
+    case kF6s:
       return "F6s/G6b";
-    case G6:
+    case kG6:
       return "G6";
-    case G6s:
+    case kG6s:
       return "G6s/A6b";
-    case A6:
+    case kA6:
       return "A6";
-    case A6s:
+    case kA6s:
       return "A6s/B6b";
-    case B6:
+    case kB6:
       return "B6";
 
-    case C7:
+    case kC7:
       return "C7";
-    case C7s:
+    case kC7s:
       return "C7s/D7b";
-    case D7:
+    case kD7:
       return "D7";
-    case D7s:
+    case kD7s:
       return "D7s/E7b";
-    case E7:
+    case kE7:
       return "E7";
-    case F7:
+    case kF7:
       return "F7";
-    case F7s:
+    case kF7s:
       return "F7s/G7b";
-    case G7:
+    case kG7:
       return "G7";
-    case G7s:
+    case kG7s:
       return "G7s/A7b";
-    case A7:
+    case kA7:
       return "A7";
-    case A7s:
+    case kA7s:
       return "A7s/B7b";
-    case B7:
+    case kB7:
       return "B7";
 
-    case C8:
+    case kC8:
       return "C8";
-    case C8s:
+    case kC8s:
       return "C8s/D8b";
-    case D8:
+    case kD8:
       return "D8";
-    case D8s:
+    case kD8s:
       return "D8s/E8b";
-    case E8:
+    case kE8:
       return "E8";
-    case F8:
+    case kF8:
       return "F8";
-    case F8s:
+    case kF8s:
       return "F8s/G8b";
-    case G8:
+    case kG8:
       return "G8";
-    case G8s:
+    case kG8s:
       return "G8s/A8b";
-    case A8:
+    case kA8:
       return "A8";
-    case A8s:
+    case kA8s:
       return "A8s/B8b";
-    case B8:
+    case kB8:
       return "B8";
 
-    case C9:
+    case kC9:
       return "C9";
-    case C9s:
+    case kC9s:
       return "C9s/D9b";
-    case D9:
+    case kD9:
       return "D9";
-    case D9s:
+    case kD9s:
       return "D9s/E9b";
-    case E9:
+    case kE9:
       return "E8";
-    case F9:
+    case kF9:
       return "F9";
-    case F9s:
+    case kF9s:
       return "F9s/G9b";
-    case G9:
+    case kG9:
       return "G9";
 
-    case Undefined:
+    case kUndefined:
       return "Undefined";
     default:
       return "Error";

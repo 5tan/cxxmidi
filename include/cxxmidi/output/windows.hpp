@@ -83,7 +83,7 @@ class Windows : public Output::Abstract {
   inline virtual void Initialize();
 
  private:
-  void *_apiData;
+  void *api_data_;
 };
 
 }  // namespace Output
@@ -104,7 +104,7 @@ Windows::~Windows() {
   this->ClosePort();
 
   // Cleanup
-  WinMidiData *data = static_cast<WinMidiData *>(_apiData);
+  WinMidiData *data = static_cast<WinMidiData *>(api_data_);
   delete data;
 }
 
@@ -144,7 +144,7 @@ void Windows::Initialize() {
 
   // Save our api-specific connection information.
   WinMidiData *data = (WinMidiData *)new WinMidiData;
-  _apiData = (void *)data;
+  api_data_ = (void *)data;
 }
 
 void Windows::OpenPort(unsigned int portNumber_) {
@@ -163,7 +163,7 @@ void Windows::OpenPort(unsigned int portNumber_) {
     std::cerr << "CxxMidi: invalid port number " << portNumber_ << std::endl;
 #endif
 
-  WinMidiData *data = static_cast<WinMidiData *>(_apiData);
+  WinMidiData *data = static_cast<WinMidiData *>(api_data_);
   MMRESULT result = midiOutOpen(&data->outHandle, portNumber_, (DWORD)NULL,
                                 (DWORD)NULL, CALLBACK_NULL);
 #ifndef CXXMIDI_QUIET
@@ -176,7 +176,7 @@ void Windows::OpenPort(unsigned int portNumber_) {
 
 void Windows::ClosePort() {
   if (_connected) {
-    WinMidiData *data = static_cast<WinMidiData *>(_apiData);
+    WinMidiData *data = static_cast<WinMidiData *>(api_data_);
     midiOutReset(data->outHandle);
     midiOutClose(data->outHandle);
     _connected = false;
@@ -202,7 +202,7 @@ void Windows::SendMessage(const std::vector<uint8_t> *msg_) {
   }
 
   MMRESULT result;
-  WinMidiData *data = static_cast<WinMidiData *>(_apiData);
+  WinMidiData *data = static_cast<WinMidiData *>(api_data_);
   if (msg_->at(0) == 0xF0) {  // Sysex message
 
     // Allocate buffer for sysex data.

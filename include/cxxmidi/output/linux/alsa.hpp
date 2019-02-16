@@ -215,7 +215,7 @@ void Alsa::Initialize() {
 }
 
 void Alsa::OpenPort(unsigned int port_num) {
-  if (_connected) this->ClosePort();
+  if (connected_) this->ClosePort();
 
   unsigned int nSrc = this->GetPortCount();
 #ifndef CXXMIDI_QUIET
@@ -264,14 +264,14 @@ void Alsa::OpenPort(unsigned int port_num) {
 #endif
   }
 
-  _connected = true;
+  connected_ = true;
 }
 
 void Alsa::ClosePort() {
-  if (_connected) {
+  if (connected_) {
     snd_seq_unsubscribe_port(_apiData->seq, _apiData->subscription);
     snd_seq_port_subscribe_free(_apiData->subscription);
-    _connected = false;
+    connected_ = false;
   }
 }
 
