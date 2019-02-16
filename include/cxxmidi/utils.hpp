@@ -28,8 +28,8 @@ inline uint32_t ExtractTempo(uint8_t v0, uint8_t v1, uint8_t v2) {
 }
 
 inline constexpr unsigned int UsPerTick(unsigned int tempo_uspq,
-                                        uint16_t timeDiv) {
-  return tempo_uspq / timeDiv;
+                                        uint16_t time_div) {
+  return tempo_uspq / time_div;
 }
 
 inline uint32_t GetVlq(std::fstream &file) {
@@ -44,7 +44,7 @@ inline uint32_t GetVlq(std::fstream &file) {
   return r;
 }
 
-inline size_t SaveVlq(std::ofstream &outputFile, unsigned int val) {
+inline size_t SaveVlq(std::ofstream &output_file, unsigned int val) {
   size_t r = 0;
   uint32_t vlq = val & 0x7f;
 
@@ -58,7 +58,7 @@ inline size_t SaveVlq(std::ofstream &outputFile, unsigned int val) {
   // save variable-length quantity
   while (true) {
     r++;
-    outputFile.write(reinterpret_cast<char *>(&vlq), 1);
+    output_file.write(reinterpret_cast<char *>(&vlq), 1);
     if (vlq & 0x80)
       vlq >>= 8;
     else
