@@ -29,7 +29,7 @@
 
 #include <string>
 #include <vector>
-#include <cxxmidi/guts/stdint.hpp>
+#include <cstdint>
 
 namespace CxxMidi {
 namespace Output {
@@ -65,7 +65,7 @@ protected:
 } // namespace Output
 } // namespace CxxMidi
 
-#include <cxxmidi/guts/stdint.hpp>
+#include <cstdint>
 
 namespace CxxMidi {
 namespace Output {

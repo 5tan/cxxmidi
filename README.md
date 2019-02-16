@@ -92,5 +92,4 @@ CxxMidi class | Required external library
 ## License
 
 * CxxMidi: GPLv3
-* pstdint: BSD
 * RtMidi: https://www.music.mcgill.ca/~gary/rtmidi/index.html#license 
