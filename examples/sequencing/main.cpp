@@ -14,8 +14,8 @@ int main(int /*argc*/, char ** /*argv*/) {
                                   500000,  // tempo [us/quarternote]
                                   500);    // time division [us/quarternote]
 
-  cxxmidi::File myFile;
-  cxxmidi::Track &track = myFile.AddTrack();
+  cxxmidi::File my_file;
+  cxxmidi::Track &track = my_file.AddTrack();
 
   // Chromatic scale starting on C4
   for (int i = 0; i < 13; i++) {
@@ -35,9 +35,9 @@ int main(int /*argc*/, char ** /*argv*/) {
   // play the file
   cxxmidi::output::Default output(0);
   cxxmidi::player::Synchronous player(&output);
-  player.SetFile(&myFile);
+  player.SetFile(&my_file);
   player.Play();
 
   // save the file
-  myFile.SaveAs("chromatic.mid");
+  my_file.SaveAs("chromatic.mid");
 }

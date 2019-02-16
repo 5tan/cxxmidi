@@ -17,9 +17,9 @@ int main(int /*argc*/, char ** /*argv*/) {
 // *****************************************************************************
 // Example 1: C style callbacks
 
-void ClbkHearbeat(void *context_) {
+void ClbkHearbeat(void *context) {
   cxxmidi::player::Abstract *player =
-      reinterpret_cast<cxxmidi::player::Synchronous *>(context_);
+      reinterpret_cast<cxxmidi::player::Synchronous *>(context);
 
   std::cerr << player->CurrentTimePos() << std::endl;
 }
@@ -44,8 +44,8 @@ void Example1CStyleCallbacks() {
 
 class MyHeartbeatCallback : public cxxmidi::Callback {
  public:
-  MyHeartbeatCallback(cxxmidi::player::Synchronous *player_)
-      : _player(player_) {}
+  MyHeartbeatCallback(cxxmidi::player::Synchronous *player)
+      : _player(player) {}
 
   virtual void operator()() {
     std::cerr << _player->CurrentTimePos() << " (MyHeartbeatCallback)"
@@ -84,8 +84,8 @@ void Example2CppStyleCallbacks() {
 // *****************************************************************************
 // Example 3: C++11 style callbacks
 
-void callbackHearbeat(cxxmidi::player::Synchronous *player_) {
-  std::cerr << player_->CurrentTimePos() << " (C++11)" << std::endl;
+void callbackHearbeat(cxxmidi::player::Synchronous *player) {
+  std::cerr << player->CurrentTimePos() << " (C++11)" << std::endl;
 }
 
 void Example3Cpp11StyleCallbacks() {
