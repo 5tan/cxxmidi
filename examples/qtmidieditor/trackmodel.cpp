@@ -123,7 +123,7 @@ QVariant TrackModel::data(const QModelIndex& index_, int role_) const {
 
         switch (type & 0xf0) {
           case cxxmidi::Event::ProgramChange: {
-            QString name = cxxmidi::Instrument::Name(event->at(1)).c_str();
+            QString name = cxxmidi::Instrument::GetName(event->at(1)).c_str();
             r += QString("Prog=\"%1\" ").arg(name);
             break;
           }
@@ -139,12 +139,12 @@ QVariant TrackModel::data(const QModelIndex& index_, int role_) const {
         switch (type & 0xf0) {
           case cxxmidi::Event::NoteOff:
           case cxxmidi::Event::NoteOn: {
-            QString note = cxxmidi::Note::name(event->at(1)).c_str();
+            QString note = cxxmidi::Note::GetName(event->at(1)).c_str();
             r += QString("Note=%1 Vel=%2 ").arg(note).arg(event->at(2));
             break;
           }
           case cxxmidi::Event::NoteAftertouch: {
-            QString note = cxxmidi::Note::name(event->at(1)).c_str();
+            QString note = cxxmidi::Note::GetName(event->at(1)).c_str();
             r += QString("Note=%1 Pressure=%2 ").arg(note).arg(event->at(2));
             break;
           }

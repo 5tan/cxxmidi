@@ -7,7 +7,7 @@ namespace cxxmidi {
 
 class Instrument {
  public:
-  enum Name {
+  enum GetName {
     AcousticGrandPiano = 0,
     BrightAcousticPiano = 1,
     ElectricGrandPiano = 2,
@@ -206,7 +206,7 @@ class Instrument {
 
   inline operator int() const;
 
-  inline static std::string Name(int instrument_, int channel_ = -1);
+  inline static std::string GetName(int instrument_, int channel_ = -1);
 
  protected:
   int _val;  // 0 ... 128
@@ -222,7 +222,7 @@ Instrument::Instrument(int val_) : _val(val_) {}
 
 Instrument::operator int() const { return _val; }
 
-std::string Instrument::Name(int instrument_, int channel_) {
+std::string Instrument::GetName(int instrument_, int channel_) {
   if (channel_ == 10) switch (instrument_) {
       case AcousticBassDrum:
         return "Acoustic Bass Drum";

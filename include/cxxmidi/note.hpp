@@ -215,14 +215,14 @@ class Note {
   };
 
   inline Note();
-  inline Note(int val_);
+  inline Note(int val);
 
   inline static Note MiddleC();
   inline static Note A440Hz();
 
   inline operator int() const;
 
-  inline static std::string name(int note_);
+  inline static std::string GetName(int note);
 
  protected:
   int _val;  // 0 ... 127
@@ -234,7 +234,7 @@ namespace cxxmidi {
 
 Note::Note() : _val(Undefined) {}
 
-Note::Note(int val_) : _val(val_) {}
+Note::Note(int val) : _val(val) {}
 
 Note Note::MiddleC() { return Note(C4); }
 
@@ -242,8 +242,8 @@ Note Note::A440Hz() { return Note(A4); }
 
 Note::operator int() const { return _val; }
 
-std::string Note::name(int note_) {
-  switch (note_) {
+std::string Note::GetName(int note) {
+  switch (note) {
     case C00:
       return "C00";
     case C00s:
