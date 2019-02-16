@@ -18,8 +18,8 @@ int main(int /*argc*/, char ** /*argv*/) {
 // Example 1: C style callbacks
 
 void clbkHearbeat(void *context_) {
-  CxxMidi::Player::Abstract *player =
-      reinterpret_cast<CxxMidi::Player::Synchronous *>(context_);
+  cxxmidi::player::Abstract *player =
+      reinterpret_cast<cxxmidi::player::Synchronous *>(context_);
 
   std::cerr << player->currentTimePos() << std::endl;
 }
@@ -27,10 +27,10 @@ void clbkHearbeat(void *context_) {
 void functionFinished(void *) { std::cerr << "finished!" << std::endl; }
 
 void example1_cStyleCallbacks() {
-  CxxMidi::Output::Default output(0);
-  CxxMidi::Player::Synchronous player(&output);
+  cxxmidi::output::Default output(0);
+  cxxmidi::player::Synchronous player(&output);
 
-  CxxMidi::File file("music/c_major_scale.mid");
+  cxxmidi::File file("music/c_major_scale.mid");
   player.setFile(&file);
 
   player.setCallbackHeartbeat(clbkHearbeat, reinterpret_cast<void *>(&player));
@@ -42,9 +42,9 @@ void example1_cStyleCallbacks() {
 // *****************************************************************************
 // Example 2: C++ style callbacks
 
-class MyHeartbeatCallback : public CxxMidi::Callback {
+class MyHeartbeatCallback : public cxxmidi::Callback {
  public:
-  MyHeartbeatCallback(CxxMidi::Player::Synchronous *player_)
+  MyHeartbeatCallback(cxxmidi::player::Synchronous *player_)
       : _player(player_) {}
 
   virtual void operator()() {
@@ -53,10 +53,10 @@ class MyHeartbeatCallback : public CxxMidi::Callback {
   }
 
  private:
-  CxxMidi::Player::Synchronous *_player;
+  cxxmidi::player::Synchronous *_player;
 };
 
-class MyFinishedCallback : public CxxMidi::Callback {
+class MyFinishedCallback : public cxxmidi::Callback {
  public:
   MyFinishedCallback() {}
 
@@ -66,10 +66,10 @@ class MyFinishedCallback : public CxxMidi::Callback {
 };
 
 void example2_cppStyleCallbacks() {
-  CxxMidi::Output::Default output(0);
-  CxxMidi::Player::Synchronous player(&output);
+  cxxmidi::output::Default output(0);
+  cxxmidi::player::Synchronous player(&output);
 
-  CxxMidi::File file("music/c_major_scale.mid");
+  cxxmidi::File file("music/c_major_scale.mid");
   player.setFile(&file);
 
   MyHeartbeatCallback myHeartbeatCallback(&player);
@@ -84,16 +84,16 @@ void example2_cppStyleCallbacks() {
 // *****************************************************************************
 // Example 3: C++11 style callbacks
 
-void callbackHearbeat(CxxMidi::Player::Synchronous *player_) {
+void callbackHearbeat(cxxmidi::player::Synchronous *player_) {
   std::cerr << player_->currentTimePos() << " (C++11)" << std::endl;
 }
 
 void example3_cpp11StyleCallbacks() {
 #if __cplusplus > 199711L
-  CxxMidi::Output::Default output(0);
-  CxxMidi::Player::Synchronous player(&output);
+  cxxmidi::output::Default output(0);
+  cxxmidi::player::Synchronous player(&output);
 
-  CxxMidi::File file("music/c_major_scale.mid");
+  cxxmidi::File file("music/c_major_scale.mid");
   player.setFile(&file);
 
   auto myHeartbeatCallback = std::bind(callbackHearbeat, &player);

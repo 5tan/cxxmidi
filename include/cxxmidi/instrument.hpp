@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace CxxMidi {
+namespace cxxmidi {
 
 class Instrument {
  public:
@@ -214,7 +214,7 @@ class Instrument {
 
 }  // namespace CxxMidi
 
-namespace CxxMidi {
+namespace cxxmidi {
 
 Instrument::Instrument() : _val(Undefined) {}
 

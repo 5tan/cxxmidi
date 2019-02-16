@@ -4,10 +4,10 @@
 #include <cxxmidi/player/synchronous.hpp>
 
 int main(int /*argc*/, char** /*argv*/) {
-  CxxMidi::Output::Default output(1);
-  CxxMidi::Player::Synchronous player(&output);
+  cxxmidi::output::Default output(1);
+  cxxmidi::player::Synchronous player(&output);
 
-  CxxMidi::File file("music/chopin.mid");
+  cxxmidi::File file("music/chopin.mid");
   player.setFile(&file);
 
   player.play();

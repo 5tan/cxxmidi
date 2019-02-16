@@ -1,7 +1,7 @@
 #ifndef CCXMIDI_SYSEX_HPP
 #define CCXMIDI_SYSEX_HPP
 
-namespace CxxMidi {
+namespace cxxmidi {
 
 class Sysex {
   enum VendorId {

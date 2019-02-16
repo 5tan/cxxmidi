@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-namespace CxxMidi {
+namespace cxxmidi {
 
 class Message : public std::vector<uint8_t> {
  public:
@@ -83,7 +83,7 @@ class Message : public std::vector<uint8_t> {
 
 }  // namespace CxxMidi
 
-namespace CxxMidi {
+namespace cxxmidi {
 
 Message::Message() {}
 

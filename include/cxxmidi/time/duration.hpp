@@ -3,8 +3,8 @@
 
 #include <cxxmidi/time/point.hpp>
 
-namespace CxxMidi {
-namespace Time {
+namespace cxxmidi {
+namespace time {
 
 class Period;
 
@@ -33,13 +33,13 @@ class Duration {
 #include <cxxmidi/time/period.hpp>
 
 inline std::ostream& operator<<(std::ostream& os_,
-                                const CxxMidi::Time::Duration& td_) {
+                                const cxxmidi::time::Duration& td_) {
   os_ << td_.toTimecode(true);
   return os_;
 }
 
-namespace CxxMidi {
-namespace Time {
+namespace cxxmidi {
+namespace time {
 
 Duration::Duration() {}
 

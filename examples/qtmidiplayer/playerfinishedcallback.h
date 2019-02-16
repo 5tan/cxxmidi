@@ -6,7 +6,7 @@
 #include <cxxmidi/callback.hpp>
 #include <cxxmidi/player/abstract.hpp>
 
-class PlayerFinishedCallback : public QObject, public CxxMidi::Callback {
+class PlayerFinishedCallback : public QObject, public cxxmidi::Callback {
   Q_OBJECT
 
  public:
