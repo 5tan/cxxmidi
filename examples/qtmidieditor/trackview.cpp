@@ -11,14 +11,14 @@ TrackView::TrackView(QWidget* parent_) : QTableView(parent_) {
 
 TrackView::~TrackView() {}
 
-void TrackView::ShowContextMenu(const QPoint& pos_) {
+void TrackView::ShowContextMenu(const QPoint& pos) {
   QAction* action;
 
-  int pos = this->indexAt(pos_).row();
+  int p = this->indexAt(pos).row();
 
   QMenu myMenu;
 
-  if (pos == -1) {
+  if (p == -1) {
     action = myMenu.addAction(tr("Add event"));
     action->setData(0);
   } else {
@@ -32,7 +32,7 @@ void TrackView::ShowContextMenu(const QPoint& pos_) {
 
   //! @FIXME menu should not be shown if there is no track selected
 
-  QPoint globalPos = this->mapToGlobal(pos_);
+  QPoint globalPos = this->mapToGlobal(pos);
   QAction* selectedItem = myMenu.exec(globalPos);
 
   if (selectedItem) {
@@ -41,13 +41,13 @@ void TrackView::ShowContextMenu(const QPoint& pos_) {
         this->RequestAddEvent(0);
         break;
       case 1:
-        this->RequestDeleteEvent(pos);
+        this->RequestDeleteEvent(p);
         break;
       case 2:
-        this->RequestAddEvent(pos);
+        this->RequestAddEvent(p);
         break;
       case 3:
-        this->RequestAddEvent(pos + 1);
+        this->RequestAddEvent(p + 1);
         break;
       default:
         break;

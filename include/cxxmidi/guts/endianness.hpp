@@ -18,15 +18,15 @@ inline bool MachineIsLittleEndian() {
 }
 
 template <typename T>
-T Fix(const T &v_) {
+T Fix(const T &v) {
   T r = 0;
 
-  for (size_t i = 0; i < sizeof(v_); i++) {
-    const T size = static_cast<T>(sizeof(v_));
+  for (size_t i = 0; i < sizeof(v); i++) {
+    const T size = static_cast<T>(sizeof(v));
     const T it = static_cast<T>(i);
 
     T mask1 = 0xff << 8 * i;
-    T byte = (v_ & mask1) >> 8 * i;
+    T byte = (v & mask1) >> 8 * i;
     T offset = (size - it - 1) * 8;
     T mask2 = 0xff << offset;
     r |= (((byte) << offset) & mask2);
@@ -36,9 +36,9 @@ T Fix(const T &v_) {
 }
 
 template <typename T>
-T ReadBe(std::fstream &file_) {
+T ReadBe(std::fstream &file) {
   T r;
-  file_.read(reinterpret_cast<char *>(&r), sizeof(T));
+  file.read(reinterpret_cast<char *>(&r), sizeof(T));
 
   if (MachineIsLittleEndian()) r = Fix<T>(r);
 
@@ -46,15 +46,15 @@ T ReadBe(std::fstream &file_) {
 }
 
 template <typename T>
-size_t WriteBe(std::ofstream &file_, T val_) {
-  size_t size = sizeof(val_);
+size_t WriteBe(std::ofstream &file, T val) {
+  size_t size = sizeof(val);
 
-  if (MachineIsLittleEndian()) val_ = Fix<T>(val_);
+  if (MachineIsLittleEndian()) val = Fix<T>(val);
 
-  file_.write(reinterpret_cast<char *>(&val_), size);
+  file.write(reinterpret_cast<char *>(&val), size);
 
 #ifndef CXXMIDI_QUIET
-  if (file_.bad()) std::cerr << "CxxMidi: file write error" << std::endl;
+  if (file.bad()) std::cerr << "CxxMidi: file write error" << std::endl;
 #endif
 
   return size;
