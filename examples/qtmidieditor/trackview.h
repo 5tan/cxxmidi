@@ -4,20 +4,18 @@
 #include <QObject>
 #include <QTableView>
 
-class TrackView : public QTableView
-{
-    Q_OBJECT
-public:
-  TrackView(QWidget* parent_=0);
+class TrackView : public QTableView {
+  Q_OBJECT
+ public:
+  TrackView(QWidget* parent_ = 0);
   virtual ~TrackView();
 
-signals:
+ signals:
   void requestAddEvent(int num_);
   void requestDeleteEvent(int num_);
 
-public slots:
+ public slots:
   void showContextMenu(const QPoint& pos_);
 };
 
-
-#endif // TRACKVIEW_H
+#endif  // TRACKVIEW_H

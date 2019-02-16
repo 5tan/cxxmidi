@@ -14,35 +14,33 @@ namespace Ui {
 class MainWindow;
 }
 
-class MainWindow : public QMainWindow
-{
-    Q_OBJECT
+class MainWindow : public QMainWindow {
+  Q_OBJECT
 
-public:
-    explicit MainWindow(QWidget *parent_ = 0);
-    ~MainWindow();
+ public:
+  explicit MainWindow(QWidget *parent_ = 0);
+  ~MainWindow();
 
-private slots:
-    void onTrackSelected(QModelIndex index_);
-    void onOpenFile();
-    void onSaveAs();
-    void onRequestAddTrack(int num_);
-    void onRequestDeleteTrack(int num_);
-    void onRequestAddEvent(int num_);
-    void onRequestDeleteEvent(int num_);
+ private slots:
+  void onTrackSelected(QModelIndex index_);
+  void onOpenFile();
+  void onSaveAs();
+  void onRequestAddTrack(int num_);
+  void onRequestDeleteTrack(int num_);
+  void onRequestAddEvent(int num_);
+  void onRequestDeleteEvent(int num_);
 
-private:
+ private:
+  void createMenu();
 
-    void createMenu();
+  Ui::MainWindow *_ui;
 
-    Ui::MainWindow *_ui;
+  FileModel _fileModel;
+  FileView _fileView;
+  TrackModel _trackModel;
+  TrackView _trackView;
 
-    FileModel _fileModel;
-    FileView _fileView;
-    TrackModel _trackModel;
-    TrackView _trackView;
-
-    CxxMidi::File _file;
+  CxxMidi::File _file;
 };
 
-#endif // MAINWINDOW_H
+#endif  // MAINWINDOW_H

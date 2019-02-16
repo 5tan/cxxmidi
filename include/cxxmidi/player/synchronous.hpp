@@ -7,109 +7,89 @@ namespace CxxMidi {
 class File;
 namespace Player {
 
-class Synchronous : public Player::Abstract
-{
-public:
-    inline Synchronous(Output::Abstract *output_);
-    inline virtual ~Synchronous();
+class Synchronous : public Player::Abstract {
+ public:
+  inline Synchronous(Output::Abstract* output_);
+  inline virtual ~Synchronous();
 
-    // Synchronous(const Synchronous&); // default is ok
-    // Synchronous &operator=(const Synchronous &); // default is ok
+  // Synchronous(const Synchronous&); // default is ok
+  // Synchronous &operator=(const Synchronous &); // default is ok
 #if __cplusplus > 199711L
-    Synchronous(Synchronous&&) = default;
-    Synchronous& operator=(Synchronous&&) = default;
-#endif // __cplusplus > 199711L
+  Synchronous(Synchronous&&) = default;
+  Synchronous& operator=(Synchronous&&) = default;
+#endif  // __cplusplus > 199711L
 
-    inline virtual void play() ;
+  inline virtual void play();
 
-private:
-
-    inline void playerLoop();
-    inline virtual void pause(){}
-
+ private:
+  inline void playerLoop();
+  inline virtual void pause() {}
 };
 
-} // Player
-} // CxxMidi
+}  // namespace Player
+}  // namespace CxxMidi
 
 #include <assert.h>
 
-#include <cxxmidi/utils.hpp>
-#include <cxxmidi/sleep.hpp>
 #include <cxxmidi/converters.hpp>
 #include <cxxmidi/file.hpp>
+#include <cxxmidi/sleep.hpp>
+#include <cxxmidi/utils.hpp>
 
 namespace CxxMidi {
 namespace Player {
 
-Synchronous::Synchronous(Output::Abstract* output_)
-    : Abstract(output_)
-{
+Synchronous::Synchronous(Output::Abstract* output_) : Abstract(output_) {}
+
+Synchronous::~Synchronous() {}
+
+void Synchronous::play() {
+  if (!_output || !_file) return;
+
+  this->playerLoop();
 }
 
-Synchronous::~Synchronous()
-{
-}
+void Synchronous::playerLoop() {
+  while (!this->finished()) {
+    unsigned int trackNum = this->trackPending();
+    unsigned int eventNum = _playerState[trackNum].trackPointer;
+    uint32_t dt = _playerState[trackNum].trackDt;
+    unsigned int us = Converters::dt2us(dt, _tempo, _file->timeDivision());
 
-void Synchronous::play()
-{
-    if(!_output || !_file)
-        return;
+    while ((_heartbeatHelper + us) >= 10000) {
+      unsigned int partial = 10000 - _heartbeatHelper;
+      _heartbeatHelper = 0;
+      us -= partial;
 
-    this->playerLoop();
-}
+      Sleep::us(partial / _speed);
+      _currentTimePos.addUs(partial);
 
-void Synchronous::playerLoop()
-{
+      if (_clbkFunPtrHeartbeat) (*_clbkFunPtrHeartbeat)(_clbkFunCtxHeartbeat);
 
-    while(!this->finished())
-    {
-        unsigned int trackNum = this->trackPending();
-        unsigned int eventNum = _playerState[trackNum].trackPointer;
-        uint32_t dt = _playerState[trackNum].trackDt;
-        unsigned int us = Converters::dt2us(dt,_tempo,_file->timeDivision());
-
-        while ( (_heartbeatHelper + us) >= 10000)
-        {
-            unsigned int partial = 10000 - _heartbeatHelper;
-            _heartbeatHelper =0;
-            us -= partial;
-
-            Sleep::us(partial/_speed);
-            _currentTimePos.addUs(partial);
-
-            if(_clbkFunPtrHeartbeat)
-                (*_clbkFunPtrHeartbeat)(_clbkFunCtxHeartbeat);
-
-            if(_clbkObjPtrHeartbeat)
-                (*_clbkObjPtrHeartbeat)();
+      if (_clbkObjPtrHeartbeat) (*_clbkObjPtrHeartbeat)();
 
 #if __cplusplus > 199711L
-            if(_clbkFunHeartbeat)
-                _clbkFunHeartbeat();
-#endif // __cplusplus > 199711L
-        }
-
-        Sleep::us(us/_speed);
-        _heartbeatHelper += us;
-        _currentTimePos.addUs(us);
-        this->execEvent((*_file)[trackNum][eventNum]);
-        this->updatePlayerState(trackNum,dt);
+      if (_clbkFunHeartbeat) _clbkFunHeartbeat();
+#endif  // __cplusplus > 199711L
     }
 
-    if(_clbkFunPtrFinished)
-        (*_clbkFunPtrFinished)(_clbkFunCtxFinished);
+    Sleep::us(us / _speed);
+    _heartbeatHelper += us;
+    _currentTimePos.addUs(us);
+    this->execEvent((*_file)[trackNum][eventNum]);
+    this->updatePlayerState(trackNum, dt);
+  }
 
-    if(_clbkObjPtrFinished)
-        (*_clbkObjPtrFinished)();
+  if (_clbkFunPtrFinished) (*_clbkFunPtrFinished)(_clbkFunCtxFinished);
+
+  if (_clbkObjPtrFinished) (*_clbkObjPtrFinished)();
 
 #if __cplusplus > 199711L
-            if(_clbkFunFinished)
-                _clbkFunFinished();
-#endif // __cplusplus > 199711L
+  if (_clbkFunFinished) _clbkFunFinished();
+#endif  // __cplusplus > 199711L
 }
 
-} // Player
-} // CxxMidi
+}  // namespace Player
+}  // namespace CxxMidi
 
-#endif // CXXMIDI_PLAYER_SYNCHRONOUS_HPP
+#endif  // CXXMIDI_PLAYER_SYNCHRONOUS_HPP
