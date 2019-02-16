@@ -10,17 +10,17 @@ class FileModel : public QAbstractListModel {
   Q_OBJECT
 
  public:
-  FileModel(QObject *parent_ = 0);
+  FileModel(QObject *parent = 0);
   virtual ~FileModel();
 
-  virtual int rowCount(const QModelIndex &index_) const;
-  virtual QVariant data(const QModelIndex &index_,
-                        int role_ = Qt::DisplayRole) const;
+  virtual int rowCount(const QModelIndex &index) const;
+  virtual QVariant data(const QModelIndex &index,
+                        int role = Qt::DisplayRole) const;
 
-  void SetFile(cxxmidi::File *file_);
+  void SetFile(cxxmidi::File *file);
 
-  void RemoveTrack(int num_);
-  void AddTrack(int num_);
+  void RemoveTrack(int num);
+  void AddTrack(int num);
 
  private:
   cxxmidi::File *_file;
