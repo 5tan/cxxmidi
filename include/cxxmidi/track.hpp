@@ -13,8 +13,6 @@ class Track : public std::vector<Event> {
   inline Event& AddEvent();
 
   inline std::string GetName() const;
-
- private:
 };
 
 }  // namespace CxxMidi

@@ -10,7 +10,7 @@ const char* TrackModel::columnNames[] = {"Dt [ticks]", "Data", "Type",
                                          "Description"};
 
 TrackModel::TrackModel(QObject* parent)
-    : QAbstractTableModel(parent), _track(0) {}
+    : QAbstractTableModel(parent), track_(0) {}
 
 TrackModel::~TrackModel() {}
 
@@ -22,7 +22,7 @@ Qt::ItemFlags TrackModel::flags(const QModelIndex& index) const {
 }
 
 int TrackModel::rowCount(const QModelIndex& /*index*/) const {
-  if (_track) return static_cast<int>(_track->size());
+  if (track_) return static_cast<int>(track_->size());
 
   return 0;
 }
@@ -35,7 +35,7 @@ bool TrackModel::setData(const QModelIndex& index, const QVariant& value,
     switch (index.column()) {
       case COLUMN_DT: {
         uint32_t val = value.toUInt();
-        _track->at(index.row()).SetDt(val);
+        track_->at(index.row()).SetDt(val);
         return true;
       }
       case COLUMN_DATA: {
@@ -48,7 +48,7 @@ bool TrackModel::setData(const QModelIndex& index, const QVariant& value,
         in.remove(' ');
         QStringList list = in.split(',');
 
-        cxxmidi::Event& event = _track->at(index.row());
+        cxxmidi::Event& event = track_->at(index.row());
         event.clear();
 
         for (int i = 0; i < list.size(); i++) {
@@ -85,7 +85,7 @@ QVariant TrackModel::data(const QModelIndex& index, int role) const {
   if (role == Qt::DisplayRole) {
     QString r;
 
-    const cxxmidi::Event* event = &_track->at(row);
+    const cxxmidi::Event* event = &track_->at(row);
     switch (col) {
       case COLUMN_DT:
         return QVariant((unsigned int)event->Dt());
@@ -122,12 +122,12 @@ QVariant TrackModel::data(const QModelIndex& index, int role) const {
         if (event->size() <= 1) break;
 
         switch (type & 0xf0) {
-          case cxxmidi::Event::ProgramChange: {
+          case cxxmidi::Event::kProgramChange: {
             QString name = cxxmidi::Instrument::GetName(event->at(1)).c_str();
             r += QString("Prog=\"%1\" ").arg(name);
             break;
           }
-          case cxxmidi::Event::ChannelAftertouch:
+          case cxxmidi::Event::kChannelAftertouch:
             r += QString("Val=%1 ").arg(event->at(1));
             break;
           default:
@@ -137,24 +137,24 @@ QVariant TrackModel::data(const QModelIndex& index, int role) const {
         if (event->size() <= 2) break;
 
         switch (type & 0xf0) {
-          case cxxmidi::Event::NoteOff:
-          case cxxmidi::Event::NoteOn: {
+          case cxxmidi::Event::kNoteOff:
+          case cxxmidi::Event::kNoteOn: {
             QString note = cxxmidi::Note::GetName(event->at(1)).c_str();
             r += QString("Note=%1 Vel=%2 ").arg(note).arg(event->at(2));
             break;
           }
-          case cxxmidi::Event::NoteAftertouch: {
+          case cxxmidi::Event::kNoteAftertouch: {
             QString note = cxxmidi::Note::GetName(event->at(1)).c_str();
             r += QString("Note=%1 Pressure=%2 ").arg(note).arg(event->at(2));
             break;
           }
-          case cxxmidi::Event::ControlChange: {
+          case cxxmidi::Event::kControlChange: {
             r += QString("Controller=%1 Val=%2 ")
                      .arg(event->at(1))
                      .arg(event->at(2));
             break;
           }
-          case cxxmidi::Event::PitchWheel: {
+          case cxxmidi::Event::kPitchWheel: {
             uint16_t combined;  // 14 bit
             combined = (uint16_t)event->at(2);
             combined <<= 7;
@@ -198,22 +198,22 @@ QVariant TrackModel::data(const QModelIndex& index, int role) const {
 }
 
 void TrackModel::SetTrack(cxxmidi::Track* track) {
-  _track = track;
+  track_ = track;
   this->layoutChanged();
 }
 
 void TrackModel::AddEvent(int num) {
   this->beginInsertRows(QModelIndex(), num, num);
   std::cerr << "num_: " << num << std::endl;
-  cxxmidi::Track::iterator it = _track->begin() + num;
-  _track->insert(it, cxxmidi::Event());
+  cxxmidi::Track::iterator it = track_->begin() + num;
+  track_->insert(it, cxxmidi::Event());
   this->endInsertRows();
 }
 
 void TrackModel::RemoveEvent(int num) {
   this->beginRemoveRows(QModelIndex(), num, num);
-  cxxmidi::Track::iterator it = _track->begin() + num;
-  _track->erase(it);
+  cxxmidi::Track::iterator it = track_->begin() + num;
+  track_->erase(it);
   this->endRemoveRows();
 }
 

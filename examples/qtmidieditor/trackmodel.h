@@ -40,7 +40,7 @@ class TrackModel : public QAbstractTableModel {
   void RemoveEvent(int num);
 
  private:
-  cxxmidi::Track* _track;
+  cxxmidi::Track* track_;
 };
 
 #endif  // TRACKMODEL_H

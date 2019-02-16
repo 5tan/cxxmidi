@@ -23,7 +23,7 @@ class FileModel : public QAbstractListModel {
   void AddTrack(int num);
 
  private:
-  cxxmidi::File *_file;
+  cxxmidi::File *file_;
 };
 
 #endif /* FILEMODEL_H */

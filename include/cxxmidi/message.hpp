@@ -10,36 +10,36 @@ namespace cxxmidi {
 class Message : public std::vector<uint8_t> {
  public:
   enum Type {
-    Undefined = 0x00,
+    kUndefined = 0x00,
 
     // voice
-    NoteOff = 0x80,
-    NoteOn = 0x90,
-    NoteAftertouch = 0xa0,
-    ControlChange = 0xb0,
-    ProgramChange = 0xc0,      // size 1
-    ChannelAftertouch = 0xd0,  // size 1
-    PitchWheel = 0xe0,
+    kNoteOff = 0x80,
+    kNoteOn = 0x90,
+    kNoteAftertouch = 0xa0,
+    kControlChange = 0xb0,
+    kProgramChange = 0xc0,      // size 1
+    kChannelAftertouch = 0xd0,  // size 1
+    kPitchWheel = 0xe0,
 
     // system common
-    SysExBegin = 0xf0,
-    MtcQuarterFrame = 0xf1,
-    SongPositionPointer = 0xf2,
-    SongSelect = 0xf3,
-    TuneRequest = 0xf6,
-    SysExEnd = 0xf7,
+    kSysExBegin = 0xf0,
+    kMtcQuarterFrame = 0xf1,
+    kSongPositionPointer = 0xf2,
+    kSongSelect = 0xf3,
+    kTuneRequest = 0xf6,
+    kSysExEnd = 0xf7,
 
     // realtime
-    Clock = 0xf8,
-    Tick = 0xf9,
-    Start = 0xfa,
-    Continue = 0xfb,
-    Stop = 0xfc,
-    ActiveSense = 0xfe,
-    Reset = 0xff,
+    kClock = 0xf8,
+    kTick = 0xf9,
+    kStart = 0xfa,
+    kContinue = 0xfb,
+    kStop = 0xfc,
+    kActiveSense = 0xfe,
+    kReset = 0xff,
 
     // Meta events
-    Meta = 0xff
+    kMeta = 0xff
   };
 
   enum MetaType {
@@ -77,8 +77,6 @@ class Message : public std::vector<uint8_t> {
 
   inline std::string GetText() const;
   inline std::string GetName() const;
-
- private:
 };
 
 }  // namespace CxxMidi
@@ -104,7 +102,7 @@ Message::Message(uint8_t b1, uint8_t b2, uint8_t b3) {
 
 Message::Type Message::GetType() const {
   if (!this->empty()) return static_cast<Type>((*this)[0]);
-  return Undefined;
+  return kUndefined;
 }
 
 bool Message::IsMeta() const {
@@ -118,7 +116,7 @@ bool Message::IsMeta(MetaType meta_type) const {
 
 bool Message::IsSysex() const {
   if (!this->empty())
-    return ((*this)[0] == SysExBegin) || ((*this)[0] == SysExEnd);
+    return ((*this)[0] == kSysExBegin) || ((*this)[0] == kSysExEnd);
   return false;
 }
 
@@ -193,45 +191,45 @@ std::string Message::GetName() const {
   }
 
   if (this->size()) switch ((*this)[0] & 0xf0) {
-      case NoteOff:
+      case kNoteOff:
         return "NoteOff";
-      case NoteOn:
+      case kNoteOn:
         return "NoteOn";
-      case NoteAftertouch:
+      case kNoteAftertouch:
         return "NoteAftertouch";
-      case ControlChange:
+      case kControlChange:
         return "ControlChange";
-      case ProgramChange:
+      case kProgramChange:
         return "ProgramChange";
-      case ChannelAftertouch:
+      case kChannelAftertouch:
         return "ChannelAftertouch";
-      case PitchWheel:
+      case kPitchWheel:
         return "PitchWheel";
-      case SysExBegin:
+      case kSysExBegin:
         return "SysExBegin";
-      case MtcQuarterFrame:
+      case kMtcQuarterFrame:
         return "MtcQuarterFrame";
-      case SongPositionPointer:
+      case kSongPositionPointer:
         return "SongPositionPointer";
-      case SongSelect:
+      case kSongSelect:
         return "SongSelect";
-      case TuneRequest:
+      case kTuneRequest:
         return "TuneRequest";
-      case SysExEnd:
+      case kSysExEnd:
         return "SysExEnd";
-      case Clock:
+      case kClock:
         return "Clock";
-      case Tick:
+      case kTick:
         return "Tick";
-      case Start:
+      case kStart:
         return "Start";
-      case Continue:
+      case kContinue:
         return "Continue";
-      case Stop:
+      case kStop:
         return "Stop";
-      case ActiveSense:
+      case kActiveSense:
         return "ActiveSense";
-      case Reset:
+      case kReset:
         return "Reset";
       default:
         break;

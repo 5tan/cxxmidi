@@ -3,8 +3,8 @@
 #include <cxxmidi/player/abstract.hpp>
 
 PlayerHeartbeatCallback::PlayerHeartbeatCallback(cxxmidi::player::Abstract *player, QObject *parent)
-    : QObject(parent), _player(player) {}
+    : QObject(parent), player_(player) {}
 
 void PlayerHeartbeatCallback::operator()() {
-  /*emit*/ this->PlayerTimeChanged(_player->CurrentTimePos());
+  /*emit*/ this->PlayerTimeChanged(player_->CurrentTimePos());
 }

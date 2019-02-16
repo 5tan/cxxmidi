@@ -20,16 +20,16 @@ int main(int /*argc*/, char ** /*argv*/) {
   // Chromatic scale starting on C4
   for (int i = 0; i < 13; i++) {
     track.push_back(cxxmidi::Event(0,                         // deltatime
-                                   cxxmidi::Message::NoteOn,  // message type
+                                   cxxmidi::Message::kNoteOn,  // message type
                                    cxxmidi::Note::MiddleC() + i,  // note
                                    100));  // velocity [0...127]
     track.push_back(cxxmidi::Event(dt,     // deltatime
-                                   cxxmidi::Message::NoteOn,  // message type
+                                   cxxmidi::Message::kNoteOn,  // message type
                                    cxxmidi::Note::MiddleC() + i,  // note
                                    0));  // velocity=0 => note off
   }
   track.push_back(cxxmidi::Event(0,  // deltatime
-                                 cxxmidi::Message::Meta,
+                                 cxxmidi::Message::kMeta,
                                  cxxmidi::Message::EndOfTrack));
 
   // play the file

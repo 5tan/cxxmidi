@@ -32,16 +32,16 @@ namespace guts {
 time::Duration Simulator::Duration(const File &file) {
   time::Duration r;
 
-  _tempo = 500000;  // default tempo
-  _file = &file;
+  tempo_ = 500000;  // default tempo
+  file_ = &file;
   this->InitPlayerState();
 
   while (!this->Finished()) {
     unsigned int trackNum = this->TrackPending();
-    unsigned int eventNum = _playerState[trackNum].trackPointer;
-    uint32_t dt = _playerState[trackNum].trackDt;
-    r.AddUs(converters::Dt2us(dt, _tempo, _file->TimeDivision()));
-    this->ExecEvent((*_file)[trackNum][eventNum]);
+    unsigned int eventNum = player_state_[trackNum].track_pointer_;
+    uint32_t dt = player_state_[trackNum].track_dt_;
+    r.AddUs(converters::Dt2us(dt, tempo_, file_->TimeDivision()));
+    this->ExecEvent((*file_)[trackNum][eventNum]);
     this->UpdatePlayerState(trackNum, dt);
   }
 

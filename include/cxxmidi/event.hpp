@@ -20,7 +20,7 @@ class Event : public Message {
   inline void SetDt(uint32_t dt);
 
  private:
-  uint32_t _dt;  // delta time [ticks]
+  uint32_t dt_;  // delta time [ticks]
 };
 
 }  // namespace CxxMidi
@@ -29,29 +29,29 @@ namespace cxxmidi {
 
 Event::Event() {}
 
-Event::Event(uint32_t dt) : _dt(dt) {}
+Event::Event(uint32_t dt) : dt_(dt) {}
 
 Event::Event(uint32_t dt, const Message &message)
-    : Message(message), _dt(dt) {}
+    : Message(message), dt_(dt) {}
 
-Event::Event(uint32_t dt, uint8_t b1) : _dt(dt) { this->push_back(b1); }
+Event::Event(uint32_t dt, uint8_t b1) : dt_(dt) { this->push_back(b1); }
 
-Event::Event(uint32_t dt, uint8_t b1, uint8_t b2) : _dt(dt) {
+Event::Event(uint32_t dt, uint8_t b1, uint8_t b2) : dt_(dt) {
   this->reserve(2);
   this->push_back(b1);
   this->push_back(b2);
 }
 
-Event::Event(uint32_t dt, uint8_t b1, uint8_t b2, uint8_t b3) : _dt(dt) {
+Event::Event(uint32_t dt, uint8_t b1, uint8_t b2, uint8_t b3) : dt_(dt) {
   this->reserve(3);
   this->push_back(b1);
   this->push_back(b2);
   this->push_back(b3);
 }
 
-uint32_t Event::Dt() const { return _dt; }
+uint32_t Event::Dt() const { return dt_; }
 
-void Event::SetDt(uint32_t dt) { _dt = dt; }
+void Event::SetDt(uint32_t dt) { dt_ = dt; }
 
 }  // namespace CxxMidi
 

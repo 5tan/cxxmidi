@@ -33,12 +33,12 @@ class MainWindow : public QMainWindow {
  private:
   void CreateMenu();
 
-  Ui::MainWindow *_ui;
+  Ui::MainWindow *ui_;
 
-  FileModel _fileModel;
-  FileView _fileView;
-  TrackModel _trackModel;
-  TrackView _trackView;
+  FileModel file_model_;
+  FileView file_view_;
+  TrackModel track_model_;
+  TrackView track_view_;
 
   cxxmidi::File _file;
 };
