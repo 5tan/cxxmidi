@@ -6,14 +6,14 @@
 namespace cxxmidi {
 namespace converters {
 
-inline constexpr unsigned int Dt2us(uint32_t dt_, unsigned int tempo_uspq_,
-                                    uint16_t timeDiv_) {
-  return dt_ * utils::UsPerTick(tempo_uspq_, timeDiv_);
+inline constexpr unsigned int Dt2us(uint32_t dt, unsigned int tempo_uspq,
+                                    uint16_t time_div) {
+  return dt * utils::UsPerTick(tempo_uspq, time_div);
 }
 
-inline constexpr uint32_t Us2dt(unsigned int us_, unsigned int tempo_uspq_,
-                                uint16_t timeDiv_) {
-  return us_ / utils::UsPerTick(tempo_uspq_, timeDiv_);
+inline constexpr uint32_t Us2dt(unsigned int us, unsigned int tempo_uspq,
+                                uint16_t time_div) {
+  return us / utils::UsPerTick(tempo_uspq, time_div);
 }
 
 }  // namespace Converters
