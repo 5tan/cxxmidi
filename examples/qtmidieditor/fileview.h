@@ -12,11 +12,11 @@ class FileView : public QListView {
   virtual ~FileView();
 
  signals:
-  void requestDeleteTrack(int num_);
-  void requestAddTrack(int num_);
+  void RequestDeleteTrack(int num_);
+  void RequestAddTrack(int num_);
 
  public slots:
-  void showContextMenu(const QPoint& pos_);
+  void ShowContextMenu(const QPoint& pos_);
 };
 
 #endif /* FILEVIEW_H */

@@ -6,12 +6,12 @@ FileView::FileView(QWidget* parent_) : QListView(parent_) {
   this->setContextMenuPolicy(Qt::CustomContextMenu);
 
   connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this,
-          SLOT(showContextMenu(const QPoint&)));
+          SLOT(ShowContextMenu(const QPoint&)));
 }
 
 FileView::~FileView() {}
 
-void FileView::showContextMenu(const QPoint& pos_) {
+void FileView::ShowContextMenu(const QPoint& pos_) {
   QAction* action;
   int pos = this->indexAt(pos_).row();
 
@@ -35,16 +35,16 @@ void FileView::showContextMenu(const QPoint& pos_) {
   if (selectedItem) {
     switch (selectedItem->data().toInt()) {
       case 0:
-        requestAddTrack(0);
+        RequestAddTrack(0);
         break;
       case 1:
-        requestAddTrack(pos);
+        RequestAddTrack(pos);
         break;
       case 2:
-        requestAddTrack(pos + 1);
+        RequestAddTrack(pos + 1);
         break;
       case 3:
-        requestDeleteTrack(pos);
+        RequestDeleteTrack(pos);
         break;
       default:
         break;

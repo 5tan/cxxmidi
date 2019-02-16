@@ -34,10 +34,10 @@ class TrackModel : public QAbstractTableModel {
 
   bool setData(const QModelIndex& index_, const QVariant& value_, int role_);
 
-  void setTrack(cxxmidi::Track* track_);
+  void SetTrack(cxxmidi::Track* track_);
 
-  void addEvent(int num_);
-  void removeEvent(int num_);
+  void AddEvent(int num_);
+  void RemoveEvent(int num_);
 
  private:
   cxxmidi::Track* _track;

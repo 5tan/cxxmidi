@@ -12,7 +12,7 @@ namespace cxxmidi {
 namespace sleep {
 
 template <typename T>
-inline void us(T us_) {
+inline void SleepUs(T us_) {
 #ifdef _WIN32
   __int64 us = static_cast<__int64>(us_);
 

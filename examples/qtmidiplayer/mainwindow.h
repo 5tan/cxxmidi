@@ -24,20 +24,20 @@ class MainWindow : public QMainWindow {
   ~MainWindow();
 
  private slots:
-  void onTimeSliderReleased();
-  void onTimeSliderPressed();
-  void onSpeedChange(double speed_);
+  void OnTimeSliderReleased();
+  void OnTimeSliderPressed();
+  void OnSpeedChange(double speed_);
   void updateTimeCode(cxxmidi::time::Point time_);
-  void onPauseClicked();
-  void onPlayClicked();
-  void openFile(const QString& path_);
-  void openFile();
-  void setOutput(int num_);
-  void onOutputSelected(QAction* action_);
-  void playerFinished();
+  void OnPauseClicked();
+  void OnPlayClicked();
+  void OpenFile(const QString& path_);
+  void OpenFile();
+  void SetOutput(int num_);
+  void OnOutputSelected(QAction* action_);
+  void PlayerFinished();
 
  private:
-  void createMenuBar();
+  void CreateMenuBar();
 
   QActionGroup* _outputsActionGroup;
   Ui::MainWindow* _ui;

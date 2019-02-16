@@ -16,8 +16,8 @@ class Event : public Message {
   inline Event(uint32_t dt_, uint8_t b1_, uint8_t b2_);
   inline Event(uint32_t dt_, uint8_t b1_, uint8_t b2_, uint8_t b3_);
 
-  inline uint32_t dt() const;
-  inline void setDt(uint32_t dt_);
+  inline uint32_t Dt() const;
+  inline void SetDt(uint32_t dt_);
 
  private:
   uint32_t _dt;  // delta time [ticks]
@@ -49,9 +49,9 @@ Event::Event(uint32_t dt_, uint8_t b1_, uint8_t b2_, uint8_t b3_) : _dt(dt_) {
   this->push_back(b3_);
 }
 
-uint32_t Event::dt() const { return _dt; }
+uint32_t Event::Dt() const { return _dt; }
 
-void Event::setDt(uint32_t dt_) { _dt = dt_; }
+void Event::SetDt(uint32_t dt_) { _dt = dt_; }
 
 }  // namespace CxxMidi
 

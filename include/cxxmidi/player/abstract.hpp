@@ -38,37 +38,37 @@ class Abstract {
   inline Abstract(output::Abstract* output_);
   inline virtual ~Abstract();
 
-  virtual void play() = 0;
-  virtual void pause() = 0;
+  virtual void Play() = 0;
+  virtual void Pause() = 0;
 
-  inline void goTo(const time::Point& pos_);
-  inline time::Point currentTimePos() const { return _currentTimePos; }
+  inline void GoTo(const time::Point& pos_);
+  inline time::Point CurrentTimePos() const { return _currentTimePos; }
 
-  inline void setFile(const File* file_);
-  inline void setOutput(output::Abstract* output_);
+  inline void SetFile(const File* file_);
+  inline void SetOutput(output::Abstract* output_);
   inline output::Abstract* output() { return _output; }
 
-  inline bool finished() const;
+  inline bool Finished() const;
 
-  inline bool isPlaying() const { return _isPlaying; }
-  inline bool isPaused() const { return !_isPlaying; }
+  inline bool IsPlaying() const { return _isPlaying; }
+  inline bool IsPaused() const { return !_isPlaying; }
 
-  inline void setSpeed(float speed_) { _speed = speed_; }
-  inline float speed() const { return _speed; }
+  inline void SetSpeed(float speed_) { _speed = speed_; }
+  inline float Speed() const { return _speed; }
 
-  inline void setCallbackHeartbeat(void (*callback_)(void*), void* context_);
-  inline void setCallbackFinished(void (*callback_)(void*), void* context_);
+  inline void SetCallbackHeartbeat(void (*callback_)(void*), void* context_);
+  inline void SetCallbackFinished(void (*callback_)(void*), void* context_);
 
-  inline void setCallbackHeartbeat(Callback* callback_);
-  inline void setCallbackFinished(Callback* callback_);
+  inline void SetCallbackHeartbeat(Callback* callback_);
+  inline void SetCallbackFinished(Callback* callback_);
 #if __cplusplus > 199711L
-  inline void setCallbackHeartbeat(const std::function<void()>& callback_);
-  inline void setCallbackFinished(const std::function<void()>& callback_);
+  inline void SetCallbackHeartbeat(const std::function<void()>& callback_);
+  inline void SetCallbackFinished(const std::function<void()>& callback_);
 #endif  // __cplusplus > 199711L
 
  protected:
-  inline bool trackFinished(size_t trackNum_) const;
-  inline unsigned int trackPending() const;
+  inline bool TrackFinished(size_t trackNum_) const;
+  inline unsigned int TrackPending() const;
 
   uint32_t _tempo;  // [us per quarternote]
   bool _isPlaying;
@@ -76,7 +76,7 @@ class Abstract {
   const File* _file;
   time::Point _currentTimePos;
 
-  inline void execEvent(const Event& event_);
+  inline void ExecEvent(const Event& event_);
 
   class PlayerStateElem {
    public:
@@ -87,8 +87,8 @@ class Abstract {
   };
 
   std::vector<PlayerStateElem> _playerState;
-  inline void initPlayerState();
-  inline void updatePlayerState(unsigned int trackNum_, unsigned int dt_);
+  inline void InitPlayerState();
+  inline void UpdatePlayerState(unsigned int trackNum_, unsigned int dt_);
   output::Abstract* _output;
 
   int _heartbeatHelper;
@@ -110,7 +110,7 @@ class Abstract {
 #endif  // __cplusplus > 199711L
 
  private:
-  static inline void setupWindowsTimers();
+  static inline void SetupWindowsTimers();
 };
 
 }  // namespace Player
@@ -141,7 +141,7 @@ Abstract::Abstract()
       _clbkFunCtxFinished(0),
       _clbkObjPtrHeartbeat(0),
       _clbkObjPtrFinished(0) {
-  Abstract::setupWindowsTimers();
+  Abstract::SetupWindowsTimers();
 }
 
 Abstract::Abstract(output::Abstract* output_)
@@ -157,10 +157,10 @@ Abstract::Abstract(output::Abstract* output_)
       _clbkFunCtxFinished(0),
       _clbkObjPtrHeartbeat(0),
       _clbkObjPtrFinished(0) {
-  Abstract::setupWindowsTimers();
+  Abstract::SetupWindowsTimers();
 }
 
-void Abstract::setupWindowsTimers() {
+void Abstract::SetupWindowsTimers() {
 #ifdef WIN32
   static bool once = true;
   if (once) {
@@ -179,36 +179,36 @@ void Abstract::setupWindowsTimers() {
 
 Abstract::~Abstract() {}
 
-void Abstract::setFile(const File* file_) {
+void Abstract::SetFile(const File* file_) {
   _file = file_;
   _playerState.clear();
-  _currentTimePos = time::Point::zero();
+  _currentTimePos = time::Point::Zero();
   _heartbeatHelper = 0;
   _tempo = 500000;
-  _output->reset();
-  this->initPlayerState();
+  _output->Reset();
+  this->InitPlayerState();
 }
 
-void Abstract::goTo(const time::Point& pos_) {
+void Abstract::GoTo(const time::Point& pos_) {
   if (!_file || !_output) return;
 
   _tempo = 500000;
-  _output->reset();
-  this->initPlayerState();
-  _currentTimePos = time::Point::zero();
+  _output->Reset();
+  this->InitPlayerState();
+  _currentTimePos = time::Point::Zero();
   _heartbeatHelper = 0;
 
-  while (!this->finished()) {
-    unsigned int trackNum = this->trackPending();
+  while (!this->Finished()) {
+    unsigned int trackNum = this->TrackPending();
     unsigned int eventNum = _playerState[trackNum].trackPointer;
     uint32_t dt = _playerState[trackNum].trackDt;
-    unsigned int us = converters::dt2us(dt, _tempo, _file->timeDivision());
-    _currentTimePos.addUs(us);
+    unsigned int us = converters::Dt2us(dt, _tempo, _file->TimeDivision());
+    _currentTimePos.AddUs(us);
 
     Event event = (*_file)[trackNum][eventNum];
-    if (event[0] != Message::NoteOn) this->execEvent(event);
+    if (event[0] != Message::NoteOn) this->ExecEvent(event);
 
-    this->updatePlayerState(trackNum, dt);
+    this->UpdatePlayerState(trackNum, dt);
 
     if (_currentTimePos >= pos_) break;
   }
@@ -218,61 +218,61 @@ Abstract::PlayerStateElem::PlayerStateElem(unsigned int trackPointer_,
                                            uint32_t trackDt_)
     : trackPointer(trackPointer_), trackDt(trackDt_) {}
 
-void Abstract::setOutput(output::Abstract* output_) { _output = output_; }
+void Abstract::SetOutput(output::Abstract* output_) { _output = output_; }
 
-void Abstract::initPlayerState() {
+void Abstract::InitPlayerState() {
   if (!_file) return;
 
   _playerState.clear();
-  for (size_t i = 0; i < _file->tracks(); i++)
-    _playerState.push_back(PlayerStateElem(0, (*_file)[i][0].dt()));
+  for (size_t i = 0; i < _file->Tracks(); i++)
+    _playerState.push_back(PlayerStateElem(0, (*_file)[i][0].Dt()));
 }
 
-bool Abstract::finished() const {
+bool Abstract::Finished() const {
   for (size_t i = 0; i < _playerState.size(); i++)
-    if (!this->trackFinished(i)) return false;
+    if (!this->TrackFinished(i)) return false;
 
   return true;
 }
 
-void Abstract::setCallbackHeartbeat(void (*callback_)(void*), void* context_) {
+void Abstract::SetCallbackHeartbeat(void (*callback_)(void*), void* context_) {
   _clbkFunPtrHeartbeat = callback_;
   _clbkFunCtxHeartbeat = context_;
 }
 
-void Abstract::setCallbackFinished(void (*callback_)(void*), void* context_) {
+void Abstract::SetCallbackFinished(void (*callback_)(void*), void* context_) {
   _clbkFunPtrFinished = callback_;
   _clbkFunCtxFinished = context_;
 }
 
-void Abstract::setCallbackHeartbeat(Callback* callback_) {
+void Abstract::SetCallbackHeartbeat(Callback* callback_) {
   _clbkObjPtrHeartbeat = callback_;
 }
 
-void Abstract::setCallbackFinished(Callback* callback_) {
+void Abstract::SetCallbackFinished(Callback* callback_) {
   _clbkObjPtrFinished = callback_;
 }
 
 #if __cplusplus > 199711L
-void Abstract::setCallbackHeartbeat(const std::function<void()>& callback_) {
+void Abstract::SetCallbackHeartbeat(const std::function<void()>& callback_) {
   _clbkFunHeartbeat = callback_;
 }
 
-void Abstract::setCallbackFinished(const std::function<void()>& callback_) {
+void Abstract::SetCallbackFinished(const std::function<void()>& callback_) {
   _clbkFunFinished = callback_;
 }
 #endif  // __cplusplus > 199711L
 
-bool Abstract::trackFinished(size_t trackNum_) const {
+bool Abstract::TrackFinished(size_t trackNum_) const {
   return (_playerState[trackNum_].trackPointer >= (*_file)[trackNum_].size());
 }
 
-unsigned int Abstract::trackPending() const {
+unsigned int Abstract::TrackPending() const {
   uint32_t dt = -1;
   size_t r = 0;
 
   for (size_t i = 0; i < _playerState.size(); i++)
-    if (!this->trackFinished(i))
+    if (!this->TrackFinished(i))
       if (_playerState[i].trackDt < dt) {
         dt = _playerState[i].trackDt;
         r = i;
@@ -281,27 +281,27 @@ unsigned int Abstract::trackPending() const {
   return static_cast<unsigned int>(r);
 }
 
-void Abstract::updatePlayerState(unsigned int trackNum_, unsigned int dt_) {
+void Abstract::UpdatePlayerState(unsigned int trackNum_, unsigned int dt_) {
   for (size_t i = 0; i < _playerState.size(); i++)
-    if (!this->trackFinished(i)) {
+    if (!this->TrackFinished(i)) {
       if (i == trackNum_) {
         unsigned int num = ++_playerState[i].trackPointer;
-        if (!this->trackFinished(i))
-          _playerState[i].trackDt = (*_file)[i][num].dt();
+        if (!this->TrackFinished(i))
+          _playerState[i].trackDt = (*_file)[i][num].Dt();
       } else
         _playerState[i].trackDt -= dt_;
     }
 }
 
-void Abstract::execEvent(const Event& event_) {
-  if (event_.isMeta()) {
-    if (event_.isMeta(Event::Tempo))
-      _tempo = cxxmidi::utils::extractTempo(event_[2], event_[3], event_[4]);
+void Abstract::ExecEvent(const Event& event_) {
+  if (event_.IsMeta()) {
+    if (event_.IsMeta(Event::Tempo))
+      _tempo = cxxmidi::utils::ExtractTempo(event_[2], event_[3], event_[4]);
 
     return;  // ignore other META events (?)
   }
 
-  if (_output) _output->sendMessage(&event_);
+  if (_output) _output->SendMessage(&event_);
 }
 
 }  // namespace Player

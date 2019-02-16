@@ -10,12 +10,12 @@ int main(int /*argc*/, char ** /*argv*/) {
 
   // Default MIDI time division is 500ticks/quarternote.
   // Default MIDI tempo is 500000us per quarternote
-  dt = cxxmidi::converters::us2dt(500000,  // 0.5s
+  dt = cxxmidi::converters::Us2dt(500000,  // 0.5s
                                   500000,  // tempo [us/quarternote]
                                   500);    // time division [us/quarternote]
 
   cxxmidi::File myFile;
-  cxxmidi::Track &track = myFile.addTrack();
+  cxxmidi::Track &track = myFile.AddTrack();
 
   // Chromatic scale starting on C4
   for (int i = 0; i < 13; i++) {
@@ -35,9 +35,9 @@ int main(int /*argc*/, char ** /*argv*/) {
   // play the file
   cxxmidi::output::Default output(0);
   cxxmidi::player::Synchronous player(&output);
-  player.setFile(&myFile);
-  player.play();
+  player.SetFile(&myFile);
+  player.Play();
 
   // save the file
-  myFile.saveAs("chromatic.mid");
+  myFile.SaveAs("chromatic.mid");
 }

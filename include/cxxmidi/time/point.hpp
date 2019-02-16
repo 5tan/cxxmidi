@@ -9,23 +9,23 @@ namespace time {
 class Point {
  public:
   inline Point();
-  inline static Point fromUs(int us_);
-  inline static Point fromMs(int ms_);
-  inline static Point fromS(int s_);
-  inline static Point fromTimecode(const std::string& tc_);
-  inline static Point zero();
+  inline static Point FromUs(int us_);
+  inline static Point FromMs(int ms_);
+  inline static Point FromS(int s_);
+  inline static Point FromTimecode(const std::string& tc_);
+  inline static Point Zero();
 
-  inline std::string toTimecode(bool includeUs_ = false) const;
+  inline std::string ToTimecode(bool includeUs_ = false) const;
 
-  inline bool negative() const { return _negative; }
-  inline void setNegative(bool negative_);
-  inline void flipSign();
-  inline unsigned int s() { return _s; }
-  inline unsigned int us() { return _us; }
+  inline bool Negative() const { return _negative; }
+  inline void SetNegative(bool negative_);
+  inline void FlipSign();
+  inline unsigned int S() { return _s; }
+  inline unsigned int Us() { return _us; }
 
-  inline void addUs(int us_);
-  inline void addMs(int ms_);
-  inline void addS(int s_);
+  inline void AddUs(int us_);
+  inline void AddMs(int ms_);
+  inline void AddS(int s_);
 
   inline Point operator-() const;
   inline Point operator+(const Point& other_) const;
@@ -47,9 +47,9 @@ class Point {
   uint32_t _s;
   int32_t _us;
 
-  inline Point addPositive(const Point& a, const Point& b) const;
-  inline Point substractPositive(const Point& a, const Point& b) const;
-  inline void fixZeroSign();
+  inline Point AddPositive(const Point& a, const Point& b) const;
+  inline Point SubstractPositive(const Point& a, const Point& b) const;
+  inline void FixZeroSign();
 };
 
 inline Point operator*(double lhs_, const Point& rhs_);
@@ -67,7 +67,7 @@ inline Point operator*(double lhs_, const Point& rhs_);
 
 inline std::ostream& operator<<(std::ostream& os_,
                                 const cxxmidi::time::Point& tp_) {
-  os_ << tp_.toTimecode(true);
+  os_ << tp_.ToTimecode(true);
   return os_;
 }
 
@@ -76,7 +76,7 @@ namespace time {
 
 Point::Point() : _negative(false), _s(0), _us(0) {}
 
-std::string Point::toTimecode(bool includeUs_) const {
+std::string Point::ToTimecode(bool includeUs_) const {
   std::stringstream ss;
 
   ss << (_negative ? "-" : "") << std::setw(2) << std::setfill('0')
@@ -89,9 +89,9 @@ std::string Point::toTimecode(bool includeUs_) const {
   return ss.str();
 }
 
-Point Point::zero() { return Point(); }
+Point Point::Zero() { return Point(); }
 
-Point Point::fromTimecode(const std::string& tc_) {
+Point Point::FromTimecode(const std::string& tc_) {
   Point r;
   int hh, mm, ss, us = 0;
 
@@ -109,7 +109,7 @@ Point Point::fromTimecode(const std::string& tc_) {
   return r;
 }
 
-Point Point::fromUs(int us_) {
+Point Point::FromUs(int us_) {
   Point r;
 
   if (us_ < 0) {
@@ -120,11 +120,11 @@ Point Point::fromUs(int us_) {
   r._s = us_ / 1000000;
   r._us = us_ % 1000000;
 
-  r.fixZeroSign();
+  r.FixZeroSign();
   return r;
 }
 
-Point Point::fromMs(int ms_) {
+Point Point::FromMs(int ms_) {
   Point r;
 
   if (ms_ < 0) {
@@ -135,11 +135,11 @@ Point Point::fromMs(int ms_) {
   r._s = ms_ / 1000;
   r._us = (ms_ % 1000) * 1000;
 
-  r.fixZeroSign();
+  r.FixZeroSign();
   return r;
 }
 
-Point Point::fromS(int s_) {
+Point Point::FromS(int s_) {
   Point r;
 
   if (s_ < 0) {
@@ -149,44 +149,44 @@ Point Point::fromS(int s_) {
 
   r._s = s_;
 
-  r.fixZeroSign();
+  r.FixZeroSign();
   return r;
 }
 
-void Point::addUs(int us_) {
-  *this = *this + fromUs(us_);
-  this->fixZeroSign();
+void Point::AddUs(int us_) {
+  *this = *this + FromUs(us_);
+  this->FixZeroSign();
 }
 
-void Point::addMs(int ms_) {
-  *this = *this + fromMs(ms_);
-  this->fixZeroSign();
+void Point::AddMs(int ms_) {
+  *this = *this + FromMs(ms_);
+  this->FixZeroSign();
 }
 
-void Point::addS(int s_) {
-  *this = *this + fromS(s_);
-  this->fixZeroSign();
+void Point::AddS(int s_) {
+  *this = *this + FromS(s_);
+  this->FixZeroSign();
 }
 
-void Point::fixZeroSign() {
+void Point::FixZeroSign() {
   if (!_s)
     if (!_us) _negative = false;
 }
 
-void Point::flipSign() {
+void Point::FlipSign() {
   _negative = !_negative;
-  this->fixZeroSign();
+  this->FixZeroSign();
 }
 
-void Point::setNegative(bool negative_) {
+void Point::SetNegative(bool negative_) {
   _negative = negative_;
-  this->fixZeroSign();
+  this->FixZeroSign();
 }
 
 Point Point::operator-() const {
   Point r(*this);
 
-  r.flipSign();
+  r.FlipSign();
 
   return r;
 }
@@ -197,13 +197,13 @@ Point Point::operator+(const Point& other_) const {
   // a + b = a + b
   // a + (-b) = a - b
   if (_negative && other_._negative)
-    return -addPositive(-*this, -other_);
+    return -AddPositive(-*this, -other_);
   else if (_negative && !other_._negative)
-    return -substractPositive(-*this, other_);
-  else if (!_negative && !other_.negative())
-    return addPositive(*this, other_);
+    return -SubstractPositive(-*this, other_);
+  else if (!_negative && !other_.Negative())
+    return AddPositive(*this, other_);
   else  // (!_negative && other._negative
-    return substractPositive(*this, -other_);
+    return SubstractPositive(*this, -other_);
 }
 
 Point Point::operator-(const Point& other_) const {
@@ -212,13 +212,13 @@ Point Point::operator-(const Point& other_) const {
   // a - b = a - b
   // a - (-a) = a + b
   if (_negative && other_._negative)
-    return -substractPositive(-*this, -other_);
+    return -SubstractPositive(-*this, -other_);
   else if (_negative && !other_._negative)
-    return -addPositive(-*this, other_);
-  else if (!_negative && !other_.negative())
-    return substractPositive(*this, other_);
+    return -AddPositive(-*this, other_);
+  else if (!_negative && !other_.Negative())
+    return SubstractPositive(*this, other_);
   else  // (!_negative && other._negative
-    return addPositive(*this, -other_);
+    return AddPositive(*this, -other_);
 }
 
 inline Point Point::operator*(double factor_) const {
@@ -229,7 +229,7 @@ inline Point Point::operator*(double factor_) const {
 
 inline Point operator*(double lhs_, const Point& rhs_) { return rhs_ * lhs_; }
 
-Point Point::addPositive(const Point& a, const Point& b) const {
+Point Point::AddPositive(const Point& a, const Point& b) const {
   assert(!a._negative);
   assert(!b._negative);
 
@@ -241,11 +241,11 @@ Point Point::addPositive(const Point& a, const Point& b) const {
   r._s += (r._us / 1000000);
   r._us %= 1000000;
 
-  r.fixZeroSign();
+  r.FixZeroSign();
   return r;
 }
 
-Point Point::substractPositive(const Point& a, const Point& b) const {
+Point Point::SubstractPositive(const Point& a, const Point& b) const {
   assert(!a._negative);
   assert(!b._negative);
 
@@ -382,12 +382,12 @@ Point Point::operator*=(double factor_) {
   _s = static_cast<uint32_t>(tmp / 1000000.);
   _us = static_cast<int32_t>(tmp) % 1000000;
 
-  this->fixZeroSign();
+  this->FixZeroSign();
   return *this;
 }
 
 double Point::operator/(const Point& other_) const {
-  if (other_ == zero()) return std::numeric_limits<double>::infinity();
+  if (other_ == Zero()) return std::numeric_limits<double>::infinity();
 
   double dthis = (1000000. * _s + _us);
   double dother = (1000000. * other_._s + other_._us);

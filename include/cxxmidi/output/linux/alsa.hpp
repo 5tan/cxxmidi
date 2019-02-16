@@ -67,16 +67,16 @@ class Alsa : public output::Abstract {
   Alsa &operator=(Alsa &&) = default;
 #endif  // __cplusplus > 199711L
 
-  inline virtual void openPort(unsigned int portNumber_ = 0);
-  inline virtual void closePort();
-  inline virtual void openVirtualPort(
+  inline virtual void OpenPort(unsigned int portNumber_ = 0);
+  inline virtual void ClosePort();
+  inline virtual void OpenVirtualPort(
       const std::string &portName_ = std::string("RtMidi Output"));
-  inline virtual size_t getPortCount();
-  inline virtual std::string getPortName(unsigned int portNumber_ = 0);
-  inline virtual void sendMessage(const std::vector<uint8_t> *msg_);
+  inline virtual size_t GetPortCount();
+  inline virtual std::string GetPortName(unsigned int portNumber_ = 0);
+  inline virtual void SendMessage(const std::vector<uint8_t> *msg_);
 
  protected:
-  inline virtual void initialize();
+  inline virtual void Initialize();
 
  private:
   inline static size_t portInfo(snd_seq_t *seq, snd_seq_port_info_t *pinfo,
@@ -92,16 +92,16 @@ namespace cxxmidi {
 namespace output {
 namespace linuxo {
 
-Alsa::Alsa() : _apiData(0) { this->initialize(); }
+Alsa::Alsa() : _apiData(0) { this->Initialize(); }
 
 Alsa::Alsa(unsigned int initialPort_) : _apiData(0) {
-  this->initialize();
-  this->openPort(initialPort_);
+  this->Initialize();
+  this->OpenPort(initialPort_);
 }
 
 Alsa::~Alsa() {
   // Close a connection if it exists.
-  closePort();
+  ClosePort();
 
   // Cleanup.
   if (_apiData->vport >= 0) snd_seq_delete_port(_apiData->seq, _apiData->vport);
@@ -142,7 +142,7 @@ size_t Alsa::portInfo(snd_seq_t *seq, snd_seq_port_info_t *pinfo,
   return 0;
 }
 
-size_t Alsa::getPortCount() {
+size_t Alsa::GetPortCount() {
   snd_seq_port_info_t *pinfo;
   snd_seq_port_info_alloca(&pinfo);
 
@@ -150,7 +150,7 @@ size_t Alsa::getPortCount() {
                   SND_SEQ_PORT_CAP_WRITE | SND_SEQ_PORT_CAP_SUBS_WRITE, -1);
 }
 
-std::string Alsa::getPortName(unsigned int portNumber_) {
+std::string Alsa::GetPortName(unsigned int portNumber_) {
   snd_seq_client_info_t *cinfo;
   snd_seq_port_info_t *pinfo;
   snd_seq_client_info_alloca(&cinfo);
@@ -176,7 +176,7 @@ std::string Alsa::getPortName(unsigned int portNumber_) {
   return stringName;
 }
 
-void Alsa::initialize() {
+void Alsa::Initialize() {
   // Set up the ALSA sequencer client
   snd_seq_t *seq;
   int result =
@@ -214,10 +214,10 @@ void Alsa::initialize() {
   snd_midi_event_init(_apiData->coder);
 }
 
-void Alsa::openPort(unsigned int portNumber_) {
-  if (_connected) this->closePort();
+void Alsa::OpenPort(unsigned int portNumber_) {
+  if (_connected) this->ClosePort();
 
-  unsigned int nSrc = this->getPortCount();
+  unsigned int nSrc = this->GetPortCount();
 #ifndef CXXMIDI_QUIET
   if (nSrc < 1) std::cerr << "CxxMidi: no MIDI output sources" << std::endl;
 #endif
@@ -267,7 +267,7 @@ void Alsa::openPort(unsigned int portNumber_) {
   _connected = true;
 }
 
-void Alsa::closePort() {
+void Alsa::ClosePort() {
   if (_connected) {
     snd_seq_unsubscribe_port(_apiData->seq, _apiData->subscription);
     snd_seq_port_subscribe_free(_apiData->subscription);
@@ -275,7 +275,7 @@ void Alsa::closePort() {
   }
 }
 
-void Alsa::openVirtualPort(const std::string &portName_) {
+void Alsa::OpenVirtualPort(const std::string &portName_) {
   if (_apiData->vport < 0) {
     _apiData->vport = snd_seq_create_simple_port(
         _apiData->seq, portName_.c_str(),
@@ -289,7 +289,7 @@ void Alsa::openVirtualPort(const std::string &portName_) {
   }
 }
 
-void Alsa::sendMessage(const std::vector<uint8_t> *msg_) {
+void Alsa::SendMessage(const std::vector<uint8_t> *msg_) {
   int result;
   unsigned int nBytes = msg_->size();
   if (nBytes > _apiData->bufferSize) {
