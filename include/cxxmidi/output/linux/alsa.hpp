@@ -57,7 +57,7 @@ class Alsa : public output::Abstract {
 
  public:
   inline Alsa();
-  inline Alsa(unsigned int initialPort_);
+  inline Alsa(unsigned int initial_port);
   inline virtual ~Alsa();
 
   Alsa(const Alsa &);             // non-copyable
@@ -67,13 +67,13 @@ class Alsa : public output::Abstract {
   Alsa &operator=(Alsa &&) = default;
 #endif  // __cplusplus > 199711L
 
-  inline virtual void OpenPort(unsigned int portNumber_ = 0);
+  inline virtual void OpenPort(unsigned int port_num = 0);
   inline virtual void ClosePort();
   inline virtual void OpenVirtualPort(
-      const std::string &portName_ = std::string("RtMidi Output"));
+      const std::string &port_name = std::string("RtMidi Output"));
   inline virtual size_t GetPortCount();
-  inline virtual std::string GetPortName(unsigned int portNumber_ = 0);
-  inline virtual void SendMessage(const std::vector<uint8_t> *msg_);
+  inline virtual std::string GetPortName(unsigned int port_num = 0);
+  inline virtual void SendMessage(const std::vector<uint8_t> *msg);
 
  protected:
   inline virtual void Initialize();
@@ -94,9 +94,9 @@ namespace linuxo {
 
 Alsa::Alsa() : _apiData(0) { this->Initialize(); }
 
-Alsa::Alsa(unsigned int initialPort_) : _apiData(0) {
+Alsa::Alsa(unsigned int initial_port) : _apiData(0) {
   this->Initialize();
-  this->OpenPort(initialPort_);
+  this->OpenPort(initial_port);
 }
 
 Alsa::~Alsa() {
@@ -150,7 +150,7 @@ size_t Alsa::GetPortCount() {
                   SND_SEQ_PORT_CAP_WRITE | SND_SEQ_PORT_CAP_SUBS_WRITE, -1);
 }
 
-std::string Alsa::GetPortName(unsigned int portNumber_) {
+std::string Alsa::GetPortName(unsigned int port_num) {
   snd_seq_client_info_t *cinfo;
   snd_seq_port_info_t *pinfo;
   snd_seq_client_info_alloca(&cinfo);
@@ -159,7 +159,7 @@ std::string Alsa::GetPortName(unsigned int portNumber_) {
   std::string stringName;
   if (portInfo(_apiData->seq, pinfo,
                SND_SEQ_PORT_CAP_WRITE | SND_SEQ_PORT_CAP_SUBS_WRITE,
-               (int)portNumber_)) {
+               (int)port_num)) {
     int cnum = snd_seq_port_info_get_client(pinfo);
     snd_seq_get_any_client_info(_apiData->seq, cnum, cinfo);
     std::ostringstream os;
@@ -214,7 +214,7 @@ void Alsa::Initialize() {
   snd_midi_event_init(_apiData->coder);
 }
 
-void Alsa::OpenPort(unsigned int portNumber_) {
+void Alsa::OpenPort(unsigned int port_num) {
   if (_connected) this->ClosePort();
 
   unsigned int nSrc = this->GetPortCount();
@@ -227,9 +227,9 @@ void Alsa::OpenPort(unsigned int portNumber_) {
 
   if (portInfo(_apiData->seq, pinfo,
                SND_SEQ_PORT_CAP_WRITE | SND_SEQ_PORT_CAP_SUBS_WRITE,
-               (int)portNumber_) == 0) {
+               (int)port_num) == 0) {
 #ifndef CXXMIDI_QUIET
-    std::cerr << "CxxMidi: invalid port port: " << portNumber_ << std::endl;
+    std::cerr << "CxxMidi: invalid port port: " << port_num << std::endl;
 #endif
   }
 
@@ -275,23 +275,23 @@ void Alsa::ClosePort() {
   }
 }
 
-void Alsa::OpenVirtualPort(const std::string &portName_) {
+void Alsa::OpenVirtualPort(const std::string &port_name) {
   if (_apiData->vport < 0) {
     _apiData->vport = snd_seq_create_simple_port(
-        _apiData->seq, portName_.c_str(),
+        _apiData->seq, port_name.c_str(),
         SND_SEQ_PORT_CAP_READ | SND_SEQ_PORT_CAP_SUBS_READ,
         SND_SEQ_PORT_TYPE_MIDI_GENERIC | SND_SEQ_PORT_TYPE_APPLICATION);
 #ifndef CXXMIDI_QUIET
     if (_apiData->vport < 0)
-      std::cerr << "CxxMidi: ALSA virtual port init error: " << portName_
+      std::cerr << "CxxMidi: ALSA virtual port init error: " << port_name
                 << std::endl;
 #endif
   }
 }
 
-void Alsa::SendMessage(const std::vector<uint8_t> *msg_) {
+void Alsa::SendMessage(const std::vector<uint8_t> *msg) {
   int result;
-  unsigned int nBytes = msg_->size();
+  unsigned int nBytes = msg->size();
   if (nBytes > _apiData->bufferSize) {
     _apiData->bufferSize = nBytes;
     result = snd_midi_event_resize_buffer(_apiData->coder, nBytes);
@@ -314,7 +314,7 @@ void Alsa::SendMessage(const std::vector<uint8_t> *msg_) {
   snd_seq_ev_set_source(&ev, _apiData->vport);
   snd_seq_ev_set_subs(&ev);
   snd_seq_ev_set_direct(&ev);
-  for (unsigned int i = 0; i < nBytes; ++i) _apiData->buffer[i] = msg_->at(i);
+  for (unsigned int i = 0; i < nBytes; ++i) _apiData->buffer[i] = msg->at(i);
   result = snd_midi_event_encode(_apiData->coder, _apiData->buffer,
                                  (long)nBytes, &ev);
   if (result < (int)nBytes) {
