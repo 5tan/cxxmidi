@@ -16,34 +16,34 @@ class Duration;
 class File : public std::vector<Track> {
  public:
   inline File();
-  inline File(const char *path_);
+  inline File(const char *path);
 
-  inline void Load(const char *path_);
-  inline void SaveAs(const char *path_) const;
+  inline void Load(const char *path);
+  inline void SaveAs(const char *path) const;
 
   inline Track &AddTrack();
   inline size_t Tracks() const;
 
   inline uint16_t TimeDivision() const;
-  inline void SetTimeDivision(uint16_t timeDivision_);
+  inline void SetTimeDivision(uint16_t timeDivision);
 
   inline time::Duration Duration() const;
 
  private:
   uint16_t _timeDivision;  // [ticks per quarternote]
 
-  inline void ReadHeaderChunk(std::fstream &file_);
-  inline void ReadUnknownChunk(std::fstream &file_);
-  inline void ReadTrackChunk(std::fstream &file_);
-  inline void ReadEvent(std::fstream &file_, Event &event_,
-                        bool &trackContinue_, uint8_t &runningStatus_);
+  inline void ReadHeaderChunk(std::fstream &file);
+  inline void ReadUnknownChunk(std::fstream &file);
+  inline void ReadTrackChunk(std::fstream &file);
+  inline void ReadEvent(std::fstream &file, Event &event,
+                        bool &trackContinue, uint8_t &runningStatus);
 
-  inline void SaveHeaderChunk(std::ofstream &outputFile_) const;
-  inline void SaveTrackChunk(std::ofstream &outputFile_, size_t num_) const;
-  inline size_t SaveEvent(std::ofstream &outputFile_, const Event &event_,
-                          uint8_t &lastCmd_) const;
+  inline void SaveHeaderChunk(std::ofstream &outputFile) const;
+  inline void SaveTrackChunk(std::ofstream &outputFile, size_t num) const;
+  inline size_t SaveEvent(std::ofstream &outputFile, const Event &event,
+                          uint8_t &lastCmd) const;
 
-  inline static void Putc(std::ofstream &file_, uint8_t c_);
+  inline static void Putc(std::ofstream &file, uint8_t c);
 };
 
 }  // namespace CxxMidi
@@ -55,20 +55,20 @@ class File : public std::vector<Track> {
 
 namespace cxxmidi {
 
-void File::Putc(std::ofstream &file_, uint8_t c_) {
-  file_.write(reinterpret_cast<char *>(&c_), 1);
+void File::Putc(std::ofstream &file, uint8_t c) {
+  file.write(reinterpret_cast<char *>(&c), 1);
 }
 
 File::File() : _timeDivision(500) {}
 
-File::File(const char *path_) : _timeDivision(500) { this->Load(path_); }
+File::File(const char *path) : _timeDivision(500) { this->Load(path); }
 
-void File::SaveAs(const char *path_) const {
-  std::ofstream outputFile(path_, std::ios_base::binary);
+void File::SaveAs(const char *path) const {
+  std::ofstream outputFile(path, std::ios_base::binary);
 
   if (!outputFile.good()) {
 #ifndef CXXMIDI_QUIET
-    std::cerr << "CxxMidi: could not open file " << path_ << std::endl;
+    std::cerr << "CxxMidi: could not open file " << path << std::endl;
 #endif
     return;
   }
@@ -83,15 +83,15 @@ void File::SaveAs(const char *path_) const {
   outputFile.close();
 }
 
-void File::SaveTrackChunk(std::ofstream &outputFile_, size_t num_) const {
-  const Track &track = this->at(num_);
+void File::SaveTrackChunk(std::ofstream &outputFile_, size_t num) const {
+  const Track &track = this->at(num);
 
   // save chunk id
-  guts::endianness::writeBe<uint32_t>(outputFile_, 0x4D54726B);  // "MTrk"
+  guts::endianness::WriteBe<uint32_t>(outputFile_, 0x4D54726B);  // "MTrk"
 
   // write dummy chunk size (we will get back here)
   std::streampos sizePos = outputFile_.tellp();
-  guts::endianness::writeBe<uint32_t>(outputFile_, 0);
+  guts::endianness::WriteBe<uint32_t>(outputFile_, 0);
 
   uint32_t chunkSize = 0;  // chunk size
   uint8_t lastCmd = 0;
@@ -105,96 +105,96 @@ void File::SaveTrackChunk(std::ofstream &outputFile_, size_t num_) const {
   // go back to chunk size
   outputFile_.seekp(sizePos);
   // save chunk size
-  guts::endianness::writeBe<uint32_t>(outputFile_, chunkSize);
+  guts::endianness::WriteBe<uint32_t>(outputFile_, chunkSize);
 
   // go to end of file
   outputFile_.seekp(0, std::ios_base::end);
 }
 
-size_t File::SaveEvent(std::ofstream &outputFile_, const Event &event_,
-                       uint8_t &lastCmd_) const {
+size_t File::SaveEvent(std::ofstream &outputFile, const Event &event,
+                       uint8_t &lastCmd) const {
   size_t r = 0;
 
-  if (event_.IsSysex()) {
+  if (event.IsSysex()) {
     // save delta time variable-length quantity
-    r += utils::SaveVlq(outputFile_, event_.Dt());
+    r += utils::SaveVlq(outputFile, event.Dt());
 
-    File::Putc(outputFile_, event_.at(0));  // SysEx type
+    File::Putc(outputFile, event.at(0));  // SysEx type
     r++;
 
-    uint8_t dataSize = static_cast<uint8_t>(event_.size()) - 1;
-    r += utils::SaveVlq(outputFile_, dataSize);
+    uint8_t dataSize = static_cast<uint8_t>(event.size()) - 1;
+    r += utils::SaveVlq(outputFile, dataSize);
 
     //! @TODO check it
-    for (size_t i = 1; i < event_.size(); i++) {
-      File::Putc(outputFile_, event_.at(i));  // save data bytes
+    for (size_t i = 1; i < event.size(); i++) {
+      File::Putc(outputFile, event.at(i));  // save data bytes
       r++;
     }
 
-    lastCmd_ = 0;
+    lastCmd = 0;
 
     return r;
   }
 
-  if (event_.IsMeta()) {
+  if (event.IsMeta()) {
     // save delta time variable-length quantity
-    r += utils::SaveVlq(outputFile_, event_.Dt());
+    r += utils::SaveVlq(outputFile, event.Dt());
 
-    File::Putc(outputFile_, 0xff);          // byte 0 (event_.at(0))
-    File::Putc(outputFile_, event_.at(1));  // byte 1, meta event type
+    File::Putc(outputFile, 0xff);          // byte 0 (event_.at(0))
+    File::Putc(outputFile, event.at(1));  // byte 1, meta event type
     r += 2;
 
-    uint8_t dataSize = static_cast<uint8_t>(event_.size()) - 2;
-    File::Putc(outputFile_, dataSize);  // save length
+    uint8_t dataSize = static_cast<uint8_t>(event.size()) - 2;
+    File::Putc(outputFile, dataSize);  // save length
     r++;
 
-    for (size_t i = 2; i < event_.size(); i++) {
-      File::Putc(outputFile_, event_.at(i));  // save data bytes
+    for (size_t i = 2; i < event.size(); i++) {
+      File::Putc(outputFile, event.at(i));  // save data bytes
       r++;
     }
 
-    lastCmd_ = 0;
+    lastCmd = 0;
 
     return r;
   }
 
-  uint8_t nowCmd = event_.at(0);
+  uint8_t nowCmd = event.at(0);
 
-  r += utils::SaveVlq(outputFile_, event_.Dt());
+  r += utils::SaveVlq(outputFile, event.Dt());
 
-  if (lastCmd_ != nowCmd) {
-    File::Putc(outputFile_, nowCmd);  // byte 0, event type
+  if (lastCmd != nowCmd) {
+    File::Putc(outputFile, nowCmd);  // byte 0, event type
     r++;
   }
 
-  for (size_t i = 1; i < event_.size(); i++) {
-    File::Putc(outputFile_, event_.at(i));  // data bytes
+  for (size_t i = 1; i < event.size(); i++) {
+    File::Putc(outputFile, event.at(i));  // data bytes
     r++;
   }
 
   // save current command if we use running status
-  lastCmd_ = nowCmd;
+  lastCmd = nowCmd;
 
   return r;
 }
 
 void File::SaveHeaderChunk(std::ofstream &outputFile_) const {
   // save chunk id
-  guts::endianness::writeBe<uint32_t>(outputFile_, 0x4D546864);  // "MThd"
+  guts::endianness::WriteBe<uint32_t>(outputFile_, 0x4D546864);  // "MThd"
 
   // save header size
-  guts::endianness::writeBe<uint32_t>(outputFile_, 6);
+  guts::endianness::WriteBe<uint32_t>(outputFile_, 6);
 
   // save file type (dummy, real value saved later)
   uint16_t fileType = (this->Tracks() > 1) ? 1 : 0;
-  guts::endianness::writeBe<uint16_t>(outputFile_, fileType);
+  guts::endianness::WriteBe<uint16_t>(outputFile_, fileType);
 
   // save tracks numer (dummy, real value saved later)
-  guts::endianness::writeBe<uint16_t>(outputFile_,
+  guts::endianness::WriteBe<uint16_t>(outputFile_,
                                       static_cast<uint16_t>(this->Tracks()));
 
   // save time division
-  guts::endianness::writeBe<uint16_t>(outputFile_, _timeDivision);
+  guts::endianness::WriteBe<uint16_t>(outputFile_, _timeDivision);
 }
 
 time::Duration File::Duration() const {
@@ -211,19 +211,19 @@ size_t File::Tracks() const { return this->size(); }
 
 uint16_t File::TimeDivision() const { return _timeDivision; }
 
-void File::SetTimeDivision(uint16_t timeDivision_) {
-  _timeDivision = timeDivision_;
+void File::SetTimeDivision(uint16_t timeDivision) {
+  _timeDivision = timeDivision;
 }
 
-void File::Load(const char *path_) {
+void File::Load(const char *path) {
   this->clear();
 
   // open file
-  std::fstream file(path_, std::fstream::in | std::fstream::binary);
+  std::fstream file(path, std::fstream::in | std::fstream::binary);
 
   if (!file.is_open()) {
 #ifndef CXXMIDI_QUIET
-    std::cerr << "CxxMidi: couldn't open: " << path_ << std::endl;
+    std::cerr << "CxxMidi: couldn't open: " << path << std::endl;
 #endif
     return;
   }
@@ -272,16 +272,16 @@ void File::Load(const char *path_) {
   }
 }
 
-void File::ReadHeaderChunk(std::fstream &file_) {
+void File::ReadHeaderChunk(std::fstream &file) {
   // read and check header size
-  if (guts::endianness::ReadBe<uint32_t>(file_) != 6) {
+  if (guts::endianness::ReadBe<uint32_t>(file) != 6) {
 #ifndef CXXMIDI_QUIET
     std::cerr << "CxxMidi: warning: unsupported MIDI file type" << std::endl;
 #endif
   }
 
   // read file type
-  uint16_t type = guts::endianness::ReadBe<uint16_t>(file_);
+  uint16_t type = guts::endianness::ReadBe<uint16_t>(file);
 
 #ifndef CXXMIDI_QUIET
   // check file type
@@ -293,13 +293,13 @@ void File::ReadHeaderChunk(std::fstream &file_) {
   // type 1: multi track
 
   // read tracks number
-  uint16_t tracksNumber = guts::endianness::ReadBe<uint16_t>(file_);
+  uint16_t tracksNumber = guts::endianness::ReadBe<uint16_t>(file);
 
   // reserve vector capacity
   this->reserve(tracksNumber);
 
   // read time division
-  _timeDivision = guts::endianness::ReadBe<uint16_t>(file_);
+  _timeDivision = guts::endianness::ReadBe<uint16_t>(file);
 
 #ifndef CXXMIDI_QUIET
   // check time division
@@ -309,24 +309,24 @@ void File::ReadHeaderChunk(std::fstream &file_) {
 #endif
 }
 
-void File::ReadUnknownChunk(std::fstream &file_) {
+void File::ReadUnknownChunk(std::fstream &file) {
   // get chunk size
-  uint32_t chunkSize = guts::endianness::ReadBe<uint32_t>(file_);
+  uint32_t chunkSize = guts::endianness::ReadBe<uint32_t>(file);
 
   // skip chunk data
-  file_.seekg(chunkSize, std::fstream::cur);
+  file.seekg(chunkSize, std::fstream::cur);
 }
 
-void File::ReadTrackChunk(std::fstream &file_) {
+void File::ReadTrackChunk(std::fstream &file) {
   // push back new track
   Track &track = this->AddTrack();
 
   // read track chunk size
-  uint32_t chunkSize = guts::endianness::ReadBe<uint32_t>(file_);
+  uint32_t chunkSize = guts::endianness::ReadBe<uint32_t>(file);
   // we will not use this size to read data (we wait for end event)
 
   uint8_t runningStatus = 0;  // start with no running status
-  std::fstream::streampos begin = file_.tellg();
+  std::fstream::streampos begin = file.tellg();
   bool trackContinue = true;
 
   // read track data
@@ -335,36 +335,36 @@ void File::ReadTrackChunk(std::fstream &file_) {
     Event &event = track.AddEvent();
 
     // get delta time
-    uint32_t dt = utils::GetVlq(file_);
+    uint32_t dt = utils::GetVlq(file);
 
     // save event delta time
     event.SetDt(dt);
 
     // read event data
-    this->ReadEvent(file_, event, trackContinue, runningStatus);
+    this->ReadEvent(file, event, trackContinue, runningStatus);
   }
 
 #ifndef CXXMIDI_QUIET
-  if (chunkSize != (file_.tellg() - begin))
+  if (chunkSize != (file.tellg() - begin))
     std::cerr << "CxxMidi: warning: track data and track chunk size mismatch"
               << std::endl;
 #endif
 }
 
-void File::ReadEvent(std::fstream &file_, Event &event_, bool &trackContinue_,
-                     uint8_t &runningStatus_) {
-  uint8_t cmd = guts::endianness::ReadBe<uint8_t>(file_);
+void File::ReadEvent(std::fstream &file, Event &event, bool &trackContinue,
+                     uint8_t &runningStatus) {
+  uint8_t cmd = guts::endianness::ReadBe<uint8_t>(file);
 
   // check running status
   bool incomplete = false;
   if (cmd < 0x80) {
     incomplete = true;  // this flag says: do not read to much later
-    event_.push_back(runningStatus_);  // command from previous complete event
-    event_.push_back(cmd);
-    cmd = runningStatus_;  // swap
+    event.push_back(runningStatus);  // command from previous complete event
+    event.push_back(cmd);
+    cmd = runningStatus;  // swap
   } else {
-    runningStatus_ = cmd;  // current command for this track
-    event_.push_back(cmd);
+    runningStatus = cmd;  // current command for this track
+    event.push_back(cmd);
   }
 
   switch (cmd & 0xf0)  // control events
@@ -376,18 +376,18 @@ void File::ReadEvent(std::fstream &file_, Event &event_, bool &trackContinue_,
     case Event::ControlChange:
     case Event::PitchWheel: {
       // get parameter 1
-      event_.push_back(guts::endianness::ReadBe<uint8_t>(file_));
+      event.push_back(guts::endianness::ReadBe<uint8_t>(file));
 
       // get parameter 2
       if (!incomplete)
-        event_.push_back(guts::endianness::ReadBe<uint8_t>(file_));
+        event.push_back(guts::endianness::ReadBe<uint8_t>(file));
     } break;
 
       // one parameter events
     case Event::ProgramChange:
     case Event::ChannelAftertouch: {
       if (!incomplete)
-        event_.push_back(guts::endianness::ReadBe<uint8_t>(file_));
+        event.push_back(guts::endianness::ReadBe<uint8_t>(file));
     } break;
 
     case 0xf0:  // META events or SysEx events
@@ -395,8 +395,8 @@ void File::ReadEvent(std::fstream &file_, Event &event_, bool &trackContinue_,
       switch (cmd) {
         case 0xff:  // META events
         {
-          uint8_t metaEventType = guts::endianness::ReadBe<uint8_t>(file_);
-          event_.push_back(metaEventType);
+          uint8_t metaEventType = guts::endianness::ReadBe<uint8_t>(file);
+          event.push_back(metaEventType);
 
           switch (metaEventType) {
             default: {
@@ -421,7 +421,7 @@ void File::ReadEvent(std::fstream &file_, Event &event_, bool &trackContinue_,
             case Event::TimeSignature:
             case Event::KeySignature: {
               // read string length
-              uint8_t strLength = guts::endianness::ReadBe<uint8_t>(file_);
+              uint8_t strLength = guts::endianness::ReadBe<uint8_t>(file);
               // event_.push_back(strLength);
 
 #ifndef CXXMIDI_QUIET
@@ -452,23 +452,23 @@ void File::ReadEvent(std::fstream &file_, Event &event_, bool &trackContinue_,
                   std::cerr << "CxxMidi: end of track event size is not 0 but "
                             << strLength << std::endl;
 #endif
-                trackContinue_ = false;
+                trackContinue = false;
               }
 
               // read string
               for (int i = 0; i < strLength; i++)
-                event_.push_back(guts::endianness::ReadBe<uint8_t>(file_));
+                event.push_back(guts::endianness::ReadBe<uint8_t>(file));
             } break;
           }
           break;
         }  // case 0xff, META events
         case Event::SysExBegin:
         case Event::SysExEnd: {
-          uint32_t size = utils::GetVlq(file_);
-          // uint32_t size = Guts::Endianness::readBE<uint8_t>(file_);
+          uint32_t size = utils::GetVlq(file);
+          // uint32_t size = Guts::Endianness::readBE<uint8_t>(file);
 
           for (unsigned int i = 0; i < size; i++)
-            event_.push_back(guts::endianness::ReadBe<uint8_t>(file_));
+            event.push_back(guts::endianness::ReadBe<uint8_t>(file));
         } break;
       }  // switch cmd
     }    // case 0xf0
