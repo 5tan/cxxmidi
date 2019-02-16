@@ -7,36 +7,36 @@
 #include <QSplitter>
 
 MainWindow::MainWindow(QWidget *parent_)
-    : QMainWindow(parent_), _ui(new Ui::MainWindow) {
-  _ui->setupUi(this);
+    : QMainWindow(parent_), ui_(new Ui::MainWindow) {
+  ui_->setupUi(this);
 
   if (QApplication::instance()->arguments().size() >= 2) {
     QString file_name = QApplication::instance()->arguments().at(1);
     _file = cxxmidi::File(file_name.toStdString().c_str());
   }
 
-  _fileModel.SetFile(&_file);
-  _fileView.setModel(&_fileModel);
+  file_model_.SetFile(&_file);
+  file_view_.setModel(&file_model_);
 
-  connect(&_fileView, SIGNAL(activated(QModelIndex)), this,
+  connect(&file_view_, SIGNAL(activated(QModelIndex)), this,
           SLOT(OnTrackSelected(QModelIndex)));
-  connect(&_fileView, SIGNAL(clicked(QModelIndex)), this,
+  connect(&file_view_, SIGNAL(clicked(QModelIndex)), this,
           SLOT(OnTrackSelected(QModelIndex)));
-  connect(&_fileView, SIGNAL(requestAddTrack(int)), this,
+  connect(&file_view_, SIGNAL(requestAddTrack(int)), this,
           SLOT(OnRequestAddTrack(int)));
-  connect(&_fileView, SIGNAL(requestDeleteTrack(int)), this,
+  connect(&file_view_, SIGNAL(requestDeleteTrack(int)), this,
           SLOT(OnRequestDeleteTrack(int)));
-  connect(&_trackView, SIGNAL(requestAddEvent(int)), this,
+  connect(&track_view_, SIGNAL(requestAddEvent(int)), this,
           SLOT(OnRequestAddEvent(int)));
-  connect(&_trackView, SIGNAL(requestDeleteEvent(int)), this,
+  connect(&track_view_, SIGNAL(requestDeleteEvent(int)), this,
           SLOT(OnRequestDeleteEvent(int)));
 
-  _trackModel.SetTrack(0);
-  _trackView.setModel(&_trackModel);
+  track_model_.SetTrack(0);
+  track_view_.setModel(&track_model_);
 
   QSplitter *splitter = new QSplitter;
-  splitter->addWidget(&_fileView);
-  splitter->addWidget(&_trackView);
+  splitter->addWidget(&file_view_);
+  splitter->addWidget(&track_view_);
   splitter->setStretchFactor(1, 2);
 
   this->setCentralWidget(splitter);
@@ -64,27 +64,27 @@ void MainWindow::CreateMenu() {
 void MainWindow::OnRequestAddTrack(int num) {
   //! @TODO there should be a command history (Undo/Redo)
 
-  _trackModel.SetTrack(0);  // address may change
-  _fileModel.AddTrack(num);
+  track_model_.SetTrack(0);  // address may change
+  file_model_.AddTrack(num);
 }
 
 void MainWindow::OnRequestDeleteTrack(int num) {
   //! @TODO there should be a command history (Undo/Redo)
 
-  _trackModel.SetTrack(0);  // address may change
-  _fileModel.RemoveTrack(num);
+  track_model_.SetTrack(0);  // address may change
+  file_model_.RemoveTrack(num);
 }
 
 void MainWindow::OnRequestAddEvent(int num) {
   //! @TODO there should be a command history (Undo/Redo)
 
-  _trackModel.AddEvent(num);
+  track_model_.AddEvent(num);
 }
 
 void MainWindow::OnRequestDeleteEvent(int num) {
   //! @TODO there should be a command history (Undo/Redo)
 
-  _trackModel.RemoveEvent(num);
+  track_model_.RemoveEvent(num);
 }
 
 void MainWindow::OnOpenFile() {
@@ -93,7 +93,7 @@ void MainWindow::OnOpenFile() {
       tr("MIDI files (*.mid *.midi);;Any files (*)"));
 
   _file = cxxmidi::File(file_name.toStdString().c_str());
-  _fileModel.SetFile(&_file);
+  file_model_.SetFile(&_file);
 }
 
 void MainWindow::OnSaveAs() {
@@ -101,18 +101,18 @@ void MainWindow::OnSaveAs() {
   dialog.setAcceptMode(QFileDialog::AcceptSave);
   dialog.setNameFilter(tr("MIDI files (*.mid *.midi);;Any files (*)"));
   if (dialog.exec()) {
-    QString fileName = dialog.selectedFiles().at(0);
-    if (QFileInfo(fileName).suffix().isEmpty()) fileName += ".mid";
+    QString file_name = dialog.selectedFiles().at(0);
+    if (QFileInfo(file_name).suffix().isEmpty()) file_name += ".mid";
 
     //! @TODO ask if overwrite
 
-    _file.SaveAs(fileName.toStdString().c_str());
+    _file.SaveAs(file_name.toStdString().c_str());
   }
 }
 
 void MainWindow::OnTrackSelected(QModelIndex index) {
-  _trackModel.SetTrack(&_file.at(index.row()));
-  _trackView.setModel(&_trackModel);
+  track_model_.SetTrack(&_file.at(index.row()));
+  track_view_.setModel(&track_model_);
 }
 
-MainWindow::~MainWindow() { delete _ui; }
+MainWindow::~MainWindow() { delete ui_; }

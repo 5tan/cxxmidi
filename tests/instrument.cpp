@@ -8,8 +8,8 @@ TEST(Instrument, GetSomeNames) {
 
 TEST(Instrument, GetSomeIds) {
   EXPECT_EQ(static_cast<int>(
-                cxxmidi::Instrument(cxxmidi::Instrument::AcousticGrandPiano)),
+                cxxmidi::Instrument(cxxmidi::Instrument::kAcousticGrandPiano)),
             0);
-  EXPECT_EQ(static_cast<int>(cxxmidi::Instrument(cxxmidi::Instrument::Gunshot)),
+  EXPECT_EQ(static_cast<int>(cxxmidi::Instrument(cxxmidi::Instrument::kGunshot)),
             127);
 }

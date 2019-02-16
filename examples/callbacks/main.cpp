@@ -21,10 +21,10 @@ void ClbkHearbeat(void *context) {
   cxxmidi::player::Abstract *player =
       reinterpret_cast<cxxmidi::player::Synchronous *>(context);
 
-  std::cerr << player->CurrentTimePos() << std::endl;
+  std::cout << player->CurrentTimePos() << std::endl;
 }
 
-void FunctionFinished(void *) { std::cerr << "finished!" << std::endl; }
+void FunctionFinished(void *) { std::cout << "finished!" << std::endl; }
 
 void Example1CStyleCallbacks() {
   cxxmidi::output::Default output(0);
@@ -48,7 +48,7 @@ class MyHeartbeatCallback : public cxxmidi::Callback {
       : _player(player) {}
 
   virtual void operator()() {
-    std::cerr << _player->CurrentTimePos() << " (MyHeartbeatCallback)"
+    std::cout << _player->CurrentTimePos() << " (MyHeartbeatCallback)"
               << std::endl;
   }
 
@@ -61,7 +61,7 @@ class MyFinishedCallback : public cxxmidi::Callback {
   MyFinishedCallback() {}
 
   virtual void operator()() {
-    std::cerr << "done! (MyFinishedCallback)" << std::endl;
+    std::cout << "done! (MyFinishedCallback)" << std::endl;
   }
 };
 
@@ -85,7 +85,7 @@ void Example2CppStyleCallbacks() {
 // Example 3: C++11 style callbacks
 
 void callbackHearbeat(cxxmidi::player::Synchronous *player) {
-  std::cerr << player->CurrentTimePos() << " (C++11)" << std::endl;
+  std::cout << player->CurrentTimePos() << " (C++11)" << std::endl;
 }
 
 void Example3Cpp11StyleCallbacks() {
@@ -100,7 +100,7 @@ void Example3Cpp11StyleCallbacks() {
   player.SetCallbackHeartbeat(myHeartbeatCallback);
 
   player.SetCallbackFinished(
-      []() { std::cerr << "finished! (C++11)" << std::endl; });
+      []() { std::cout << "finished! (C++11)" << std::endl; });
 
   player.Play();
 #endif  // __cplusplus > 199711L

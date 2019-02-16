@@ -57,7 +57,7 @@ class Abstract {
 
  protected:
   inline virtual void Initialize() = 0;
-  bool _connected;
+  bool connected_;
 };
 
 }  // namespace Output
@@ -68,7 +68,7 @@ class Abstract {
 namespace cxxmidi {
 namespace output {
 
-Abstract::Abstract() : _connected(false) {}
+Abstract::Abstract() : connected_(false) {}
 
 Abstract::~Abstract() {}
 

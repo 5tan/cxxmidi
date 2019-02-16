@@ -9,22 +9,22 @@ namespace utils {
 
 inline uint32_t ExtractTempo(uint8_t v0, uint8_t v1, uint8_t v2) {
   union {
-    uint32_t oneTempo;
-    uint8_t tabTempo[3];
+    uint32_t one_tempo;
+    uint8_t tab_tempo[3];
   };
-  oneTempo = 0;
+  one_tempo = 0;
 
   if (guts::endianness::MachineIsLittleEndian()) {
-    tabTempo[0] = v2;
-    tabTempo[1] = v1;
-    tabTempo[2] = v0;
+    tab_tempo[0] = v2;
+    tab_tempo[1] = v1;
+    tab_tempo[2] = v0;
   } else {
-    tabTempo[0] = v0;
-    tabTempo[1] = v1;
-    tabTempo[2] = v2;
+    tab_tempo[0] = v0;
+    tab_tempo[1] = v1;
+    tab_tempo[2] = v2;
   }
 
-  return oneTempo;
+  return one_tempo;
 }
 
 inline constexpr unsigned int UsPerTick(unsigned int tempo_uspq,
