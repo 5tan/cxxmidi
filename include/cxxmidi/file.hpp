@@ -462,6 +462,7 @@ void File::readEvent(std::fstream & file_,
                           << std::hex << metaEventType << std::endl;
 #endif
             }
+                break;
             case Event::SequenceNumber: // size always 2
             case Event::Text:
             case Event::Copyright:
