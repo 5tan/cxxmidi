@@ -91,17 +91,17 @@ void MainWindow::CreateMenuBar() {
           SLOT(OnOutputSelected(QAction*)));
 }
 
-void MainWindow::OnOutputSelected(QAction* action_) {
-  int num = action_->text().split(".")[0].toInt();
+void MainWindow::OnOutputSelected(QAction* action) {
+  int num = action->text().split(".")[0].toInt();
   this->SetOutput(num);
 }
 
-void MainWindow::SetOutput(int num_) {
+void MainWindow::SetOutput(int num) {
   bool wasPlaying = _midiPlayer->IsPlaying();
 
   if (wasPlaying) _midiPlayer->Pause();
   cxxmidi::time::Point tp = _midiPlayer->CurrentTimePos();
-  _midiOutput->OpenPort(num_);
+  _midiOutput->OpenPort(num);
   _midiPlayer->GoTo(tp);
   if (wasPlaying) _midiPlayer->Play();
 }
@@ -116,12 +116,12 @@ void MainWindow::OpenFile() {
   }
 }
 
-void MainWindow::OpenFile(const QString& path_) {
+void MainWindow::OpenFile(const QString& path) {
   if (_midiPlayer->IsPlaying()) _midiPlayer->Pause();
 
   if (_midiFile) delete _midiFile;
 
-  _midiFile = new cxxmidi::File(path_.toStdString().c_str());
+  _midiFile = new cxxmidi::File(path.toStdString().c_str());
   _midiPlayer->SetFile(_midiFile);
 
   _finalTimePoint = _midiFile->Duration().ToPoint();
@@ -139,9 +139,9 @@ void MainWindow::PlayerFinished() {
   _midiPlayer->Play();
 }
 
-void MainWindow::updateTimeCode(cxxmidi::time::Point time_) {
-  _currentTimePoint = time_;
-  _ui->labelTime->setText(time_.ToTimecode().c_str());
+void MainWindow::updateTimeCode(cxxmidi::time::Point time) {
+  _currentTimePoint = time;
+  _ui->labelTime->setText(time.ToTimecode().c_str());
 
   if (!_sliderLocked) {
     double normPos = _currentTimePoint / _finalTimePoint;
@@ -149,7 +149,7 @@ void MainWindow::updateTimeCode(cxxmidi::time::Point time_) {
   }
 }
 
-void MainWindow::OnSpeedChange(double speed_) { _midiPlayer->SetSpeed(speed_); }
+void MainWindow::OnSpeedChange(double speed) { _midiPlayer->SetSpeed(speed); }
 
 void MainWindow::OnTimeSliderPressed() { _sliderLocked = true; }
 
