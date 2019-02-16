@@ -61,30 +61,30 @@ void MainWindow::CreateMenu() {
   //! @TODO ask if save changes
 }
 
-void MainWindow::OnRequestAddTrack(int num_) {
+void MainWindow::OnRequestAddTrack(int num) {
   //! @TODO there should be a command history (Undo/Redo)
 
   _trackModel.SetTrack(0);  // address may change
-  _fileModel.AddTrack(num_);
+  _fileModel.AddTrack(num);
 }
 
-void MainWindow::OnRequestDeleteTrack(int num_) {
+void MainWindow::OnRequestDeleteTrack(int num) {
   //! @TODO there should be a command history (Undo/Redo)
 
   _trackModel.SetTrack(0);  // address may change
-  _fileModel.RemoveTrack(num_);
+  _fileModel.RemoveTrack(num);
 }
 
-void MainWindow::OnRequestAddEvent(int num_) {
+void MainWindow::OnRequestAddEvent(int num) {
   //! @TODO there should be a command history (Undo/Redo)
 
-  _trackModel.AddEvent(num_);
+  _trackModel.AddEvent(num);
 }
 
-void MainWindow::OnRequestDeleteEvent(int num_) {
+void MainWindow::OnRequestDeleteEvent(int num) {
   //! @TODO there should be a command history (Undo/Redo)
 
-  _trackModel.RemoveEvent(num_);
+  _trackModel.RemoveEvent(num);
 }
 
 void MainWindow::OnOpenFile() {
@@ -110,8 +110,8 @@ void MainWindow::OnSaveAs() {
   }
 }
 
-void MainWindow::OnTrackSelected(QModelIndex index_) {
-  _trackModel.SetTrack(&_file.at(index_.row()));
+void MainWindow::OnTrackSelected(QModelIndex index) {
+  _trackModel.SetTrack(&_file.at(index.row()));
   _trackView.setModel(&_trackModel);
 }
 
