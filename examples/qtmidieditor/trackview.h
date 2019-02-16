@@ -11,11 +11,11 @@ class TrackView : public QTableView {
   virtual ~TrackView();
 
  signals:
-  void RequestAddEvent(int num_);
-  void RequestDeleteEvent(int num_);
+  void RequestAddEvent(int num);
+  void RequestDeleteEvent(int num);
 
  public slots:
-  void ShowContextMenu(const QPoint& pos_);
+  void ShowContextMenu(const QPoint& pos);
 };
 
 #endif  // TRACKVIEW_H

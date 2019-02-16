@@ -1,6 +1,6 @@
 #include "playerfinishedcallback.h"
 
-PlayerFinishedCallback::PlayerFinishedCallback(QObject *parent_)
-    : QObject(parent_) {}
+PlayerFinishedCallback::PlayerFinishedCallback(QObject *parent)
+    : QObject(parent) {}
 
 void PlayerFinishedCallback::operator()() { /*emit*/ this->PlayerFinished(); }
