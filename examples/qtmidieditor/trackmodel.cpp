@@ -9,37 +9,37 @@
 const char* TrackModel::columnNames[] = {"Dt [ticks]", "Data", "Type",
                                          "Description"};
 
-TrackModel::TrackModel(QObject* parent_)
-    : QAbstractTableModel(parent_), _track(0) {}
+TrackModel::TrackModel(QObject* parent)
+    : QAbstractTableModel(parent), _track(0) {}
 
 TrackModel::~TrackModel() {}
 
-Qt::ItemFlags TrackModel::flags(const QModelIndex& index_) const {
-  if ((index_.column() == COLUMN_DT) || (index_.column() == COLUMN_DATA))
+Qt::ItemFlags TrackModel::flags(const QModelIndex& index) const {
+  if ((index.column() == COLUMN_DT) || (index.column() == COLUMN_DATA))
     return Qt::ItemIsSelectable | Qt::ItemIsEditable | Qt::ItemIsEnabled;
 
   return Qt::ItemIsSelectable | Qt::ItemIsEnabled;
 }
 
-int TrackModel::rowCount(const QModelIndex& /*index_*/) const {
+int TrackModel::rowCount(const QModelIndex& /*index*/) const {
   if (_track) return static_cast<int>(_track->size());
 
   return 0;
 }
 
-bool TrackModel::setData(const QModelIndex& index_, const QVariant& value_,
-                         int role_) {
+bool TrackModel::setData(const QModelIndex& index, const QVariant& value,
+                         int role) {
   //! @TODO there should be a command history (Undo/Redo)
 
-  if (role_ == Qt::EditRole) {
-    switch (index_.column()) {
+  if (role == Qt::EditRole) {
+    switch (index.column()) {
       case COLUMN_DT: {
-        uint32_t value = value_.toUInt();
-        _track->at(index_.row()).SetDt(value);
+        uint32_t val = value.toUInt();
+        _track->at(index.row()).SetDt(val);
         return true;
       }
       case COLUMN_DATA: {
-        QString in = value_.toString();
+        QString in = value.toString();
 
         if (in.isEmpty()) return false;
 
@@ -48,7 +48,7 @@ bool TrackModel::setData(const QModelIndex& index_, const QVariant& value_,
         in.remove(' ');
         QStringList list = in.split(',');
 
-        cxxmidi::Event& event = _track->at(index_.row());
+        cxxmidi::Event& event = _track->at(index.row());
         event.clear();
 
         for (int i = 0; i < list.size(); i++) {
@@ -72,17 +72,17 @@ bool TrackModel::setData(const QModelIndex& index_, const QVariant& value_,
   return false;
 }
 
-int TrackModel::columnCount(const QModelIndex& /*index_*/) const {
+int TrackModel::columnCount(const QModelIndex& /*index*/) const {
   return COLUMN_TOTAL;
 }
 
-QVariant TrackModel::data(const QModelIndex& index_, int role_) const {
-  if (!index_.isValid()) return QVariant();
+QVariant TrackModel::data(const QModelIndex& index, int role) const {
+  if (!index.isValid()) return QVariant();
 
-  int col = index_.column();
-  int row = index_.row();
+  int col = index.column();
+  int row = index.row();
 
-  if (role_ == Qt::DisplayRole) {
+  if (role == Qt::DisplayRole) {
     QString r;
 
     const cxxmidi::Event* event = &_track->at(row);
@@ -197,38 +197,38 @@ QVariant TrackModel::data(const QModelIndex& index_, int role_) const {
   return QVariant();
 }
 
-void TrackModel::SetTrack(cxxmidi::Track* track_) {
-  _track = track_;
+void TrackModel::SetTrack(cxxmidi::Track* track) {
+  _track = track;
   this->layoutChanged();
 }
 
-void TrackModel::AddEvent(int num_) {
-  this->beginInsertRows(QModelIndex(), num_, num_);
-  std::cerr << "num_: " << num_ << std::endl;
-  cxxmidi::Track::iterator it = _track->begin() + num_;
+void TrackModel::AddEvent(int num) {
+  this->beginInsertRows(QModelIndex(), num, num);
+  std::cerr << "num_: " << num << std::endl;
+  cxxmidi::Track::iterator it = _track->begin() + num;
   _track->insert(it, cxxmidi::Event());
   this->endInsertRows();
 }
 
-void TrackModel::RemoveEvent(int num_) {
-  this->beginRemoveRows(QModelIndex(), num_, num_);
-  cxxmidi::Track::iterator it = _track->begin() + num_;
+void TrackModel::RemoveEvent(int num) {
+  this->beginRemoveRows(QModelIndex(), num, num);
+  cxxmidi::Track::iterator it = _track->begin() + num;
   _track->erase(it);
   this->endRemoveRows();
 }
 
-QVariant TrackModel::headerData(int section_, Qt::Orientation orientation_,
-                                int role_) const {
-  if (orientation_ == Qt::Vertical)
-    if (role_ == Qt::DisplayRole) return QVariant(section_);
+QVariant TrackModel::headerData(int section, Qt::Orientation orientation,
+                                int role) const {
+  if (orientation == Qt::Vertical)
+    if (role == Qt::DisplayRole) return QVariant(section);
 
   // => orientation_ == Qt::Horizontal
-  if (role_ == Qt::DisplayRole) switch (section_) {
+  if (role == Qt::DisplayRole) switch (section) {
       case COLUMN_DATA:
       case COLUMN_DT:
       case COLUMN_DESCR:
       case COLUMN_TYPE:
-        return QVariant(columnNames[section_]);
+        return QVariant(columnNames[section]);
       default:
         return QVariant();
     }

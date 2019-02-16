@@ -2,7 +2,7 @@
 
 #include <QMenu>
 
-TrackView::TrackView(QWidget* parent_) : QTableView(parent_) {
+TrackView::TrackView(QWidget* parent) : QTableView(parent) {
   this->setContextMenuPolicy(Qt::CustomContextMenu);
 
   connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this,

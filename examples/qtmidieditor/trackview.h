@@ -7,7 +7,7 @@
 class TrackView : public QTableView {
   Q_OBJECT
  public:
-  TrackView(QWidget* parent_ = 0);
+  TrackView(QWidget* parent = 0);
   virtual ~TrackView();
 
  signals:

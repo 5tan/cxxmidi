@@ -20,24 +20,24 @@ class TrackModel : public QAbstractTableModel {
   static const char* columnNames[];
 
  public:
-  TrackModel(QObject* parent_ = 0);
+  TrackModel(QObject* parent = 0);
 
   virtual ~TrackModel();
 
   Qt::ItemFlags flags(const QModelIndex& /*index*/) const;
-  virtual int rowCount(const QModelIndex& index_) const;
-  virtual int columnCount(const QModelIndex& index_) const;
-  virtual QVariant data(const QModelIndex& index_,
-                        int role_ = Qt::DisplayRole) const;
-  virtual QVariant headerData(int section_, Qt::Orientation orientation_,
-                              int role_ = Qt::DisplayRole) const;
+  virtual int rowCount(const QModelIndex& index) const;
+  virtual int columnCount(const QModelIndex& index) const;
+  virtual QVariant data(const QModelIndex& index,
+                        int role = Qt::DisplayRole) const;
+  virtual QVariant headerData(int section, Qt::Orientation orientation,
+                              int role = Qt::DisplayRole) const;
 
-  bool setData(const QModelIndex& index_, const QVariant& value_, int role_);
+  bool setData(const QModelIndex& index, const QVariant& value, int role);
 
-  void SetTrack(cxxmidi::Track* track_);
+  void SetTrack(cxxmidi::Track* track);
 
-  void AddEvent(int num_);
-  void RemoveEvent(int num_);
+  void AddEvent(int num);
+  void RemoveEvent(int num);
 
  private:
   cxxmidi::Track* _track;
