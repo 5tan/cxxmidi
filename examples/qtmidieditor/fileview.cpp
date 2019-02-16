@@ -2,7 +2,7 @@
 
 #include <QMenu>
 
-FileView::FileView(QWidget* parent_) : QListView(parent_) {
+FileView::FileView(QWidget* parent) : QListView(parent) {
   this->setContextMenuPolicy(Qt::CustomContextMenu);
 
   connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this,
@@ -11,13 +11,13 @@ FileView::FileView(QWidget* parent_) : QListView(parent_) {
 
 FileView::~FileView() {}
 
-void FileView::ShowContextMenu(const QPoint& pos_) {
+void FileView::ShowContextMenu(const QPoint& pos) {
   QAction* action;
-  int pos = this->indexAt(pos_).row();
+  int p = this->indexAt(pos).row();
 
   QMenu myMenu;
 
-  if (pos == -1) {
+  if (p == -1) {
     action = myMenu.addAction(tr("Add track"));
     action->setData(0);
   } else {
@@ -29,7 +29,7 @@ void FileView::ShowContextMenu(const QPoint& pos_) {
     action->setData(3);
   }
 
-  QPoint globalPos = this->mapToGlobal(pos_);
+  QPoint globalPos = this->mapToGlobal(pos);
   QAction* selectedItem = myMenu.exec(globalPos);
 
   if (selectedItem) {
@@ -38,13 +38,13 @@ void FileView::ShowContextMenu(const QPoint& pos_) {
         RequestAddTrack(0);
         break;
       case 1:
-        RequestAddTrack(pos);
+        RequestAddTrack(p);
         break;
       case 2:
-        RequestAddTrack(pos + 1);
+        RequestAddTrack(p + 1);
         break;
       case 3:
-        RequestDeleteTrack(pos);
+        RequestDeleteTrack(p);
         break;
       default:
         break;
