@@ -35,7 +35,7 @@ bool TrackModel::setData(const QModelIndex& index_, const QVariant& value_,
     switch (index_.column()) {
       case COLUMN_DT: {
         uint32_t value = value_.toUInt();
-        _track->at(index_.row()).setDt(value);
+        _track->at(index_.row()).SetDt(value);
         return true;
       }
       case COLUMN_DATA: {
@@ -88,9 +88,9 @@ QVariant TrackModel::data(const QModelIndex& index_, int role_) const {
     const cxxmidi::Event* event = &_track->at(row);
     switch (col) {
       case COLUMN_DT:
-        return QVariant((unsigned int)event->dt());
+        return QVariant((unsigned int)event->Dt());
       case COLUMN_TYPE:
-        return event->name().c_str();
+        return event->GetName().c_str();
       case COLUMN_DESCR: {
         uint8_t type;
         if (event->size())
@@ -98,16 +98,16 @@ QVariant TrackModel::data(const QModelIndex& index_, int role_) const {
         else
           break;
 
-        if (event->containsText()) {
-          r = QString("\"" + QString(event->text().c_str()) + "\" ");
+        if (event->ContainsText()) {
+          r = QString("\"" + QString(event->GetText().c_str()) + "\" ");
           break;
         }
 
-        if (event->isMeta(cxxmidi::Event::Tempo)) {
+        if (event->IsMeta(cxxmidi::Event::Tempo)) {
           int tempo = 0;
 
           if (event->size() >= 5)
-            tempo = cxxmidi::utils::extractTempo(event->at(2), event->at(3),
+            tempo = cxxmidi::utils::ExtractTempo(event->at(2), event->at(3),
                                                  event->at(4));
 
           r += QString(" tempo=%1us/qn").arg(tempo);
@@ -115,7 +115,7 @@ QVariant TrackModel::data(const QModelIndex& index_, int role_) const {
           break;
         }
 
-        if (event->isMeta()) break;
+        if (event->IsMeta()) break;
 
         r += QString("Ch=%1 ").arg(type & 0x0f);
 
@@ -123,7 +123,7 @@ QVariant TrackModel::data(const QModelIndex& index_, int role_) const {
 
         switch (type & 0xf0) {
           case cxxmidi::Event::ProgramChange: {
-            QString name = cxxmidi::Instrument::name(event->at(1)).c_str();
+            QString name = cxxmidi::Instrument::Name(event->at(1)).c_str();
             r += QString("Prog=\"%1\" ").arg(name);
             break;
           }
@@ -197,12 +197,12 @@ QVariant TrackModel::data(const QModelIndex& index_, int role_) const {
   return QVariant();
 }
 
-void TrackModel::setTrack(cxxmidi::Track* track_) {
+void TrackModel::SetTrack(cxxmidi::Track* track_) {
   _track = track_;
   this->layoutChanged();
 }
 
-void TrackModel::addEvent(int num_) {
+void TrackModel::AddEvent(int num_) {
   this->beginInsertRows(QModelIndex(), num_, num_);
   std::cerr << "num_: " << num_ << std::endl;
   cxxmidi::Track::iterator it = _track->begin() + num_;
@@ -210,7 +210,7 @@ void TrackModel::addEvent(int num_) {
   this->endInsertRows();
 }
 
-void TrackModel::removeEvent(int num_) {
+void TrackModel::RemoveEvent(int num_) {
   this->beginRemoveRows(QModelIndex(), num_, num_);
   cxxmidi::Track::iterator it = _track->begin() + num_;
   _track->erase(it);

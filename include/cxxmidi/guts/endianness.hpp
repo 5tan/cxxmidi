@@ -9,7 +9,7 @@ namespace cxxmidi {
 namespace guts {
 namespace endianness {
 
-inline bool machineIsLittleEndian() {
+inline bool MachineIsLittleEndian() {
   static const uint32_t num = 1;
   static const bool r = *(uint8_t *)&num == 1;
   return r;
@@ -18,7 +18,7 @@ inline bool machineIsLittleEndian() {
 }
 
 template <typename T>
-T fix(const T &v_) {
+T Fix(const T &v_) {
   T r = 0;
 
   for (size_t i = 0; i < sizeof(v_); i++) {
@@ -36,20 +36,20 @@ T fix(const T &v_) {
 }
 
 template <typename T>
-T readBE(std::fstream &file_) {
+T ReadBe(std::fstream &file_) {
   T r;
   file_.read(reinterpret_cast<char *>(&r), sizeof(T));
 
-  if (machineIsLittleEndian()) r = fix<T>(r);
+  if (MachineIsLittleEndian()) r = Fix<T>(r);
 
   return r;
 }
 
 template <typename T>
-size_t writeBE(std::ofstream &file_, T val_) {
+size_t writeBe(std::ofstream &file_, T val_) {
   size_t size = sizeof(val_);
 
-  if (machineIsLittleEndian()) val_ = fix<T>(val_);
+  if (MachineIsLittleEndian()) val_ = Fix<T>(val_);
 
   file_.write(reinterpret_cast<char *>(&val_), size);
 

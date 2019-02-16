@@ -66,17 +66,17 @@ class Message : public std::vector<uint8_t> {
   inline Message(uint8_t b1_, uint8_t b2_);
   inline Message(uint8_t b1_, uint8_t b2_, uint8_t b3_);
 
-  inline Message::Type type() const;
-  inline bool isVoiceCategory() const;
-  inline bool isSystemCommon() const;
-  inline bool isSysex() const;
-  inline bool isRealtime() const;
-  inline bool isMeta() const;
-  inline bool isMeta(MetaType metaType_) const;
-  inline bool containsText() const;
+  inline Message::Type GetType() const;
+  inline bool IsVoiceCategory() const;
+  inline bool IsSystemCommon() const;
+  inline bool IsSysex() const;
+  inline bool IsRealtime() const;
+  inline bool IsMeta() const;
+  inline bool IsMeta(MetaType metaType_) const;
+  inline bool ContainsText() const;
 
-  inline std::string text() const;
-  inline std::string name() const;
+  inline std::string GetText() const;
+  inline std::string GetName() const;
 
  private:
 };
@@ -102,42 +102,42 @@ Message::Message(uint8_t b1_, uint8_t b2_, uint8_t b3_) {
   this->push_back(b3_);
 }
 
-Message::Type Message::type() const {
+Message::Type Message::GetType() const {
   if (!this->empty()) return static_cast<Type>((*this)[0]);
   return Undefined;
 }
 
-bool Message::isMeta() const {
+bool Message::IsMeta() const {
   if (this->size() >= 2) return ((*this)[0] == 0xff);
   return false;
 }
 
-bool Message::isMeta(MetaType metaType_) const {
-  return this->isMeta() && ((*this)[1] == metaType_);
+bool Message::IsMeta(MetaType metaType_) const {
+  return this->IsMeta() && ((*this)[1] == metaType_);
 }
 
-bool Message::isSysex() const {
+bool Message::IsSysex() const {
   if (!this->empty())
     return ((*this)[0] == SysExBegin) || ((*this)[0] == SysExEnd);
   return false;
 }
 
-bool Message::isRealtime() const {
+bool Message::IsRealtime() const {
   if (!this->empty()) return (*this)[0] >= 0xf8;
   return false;
 }
 
-bool Message::isVoiceCategory() const {
+bool Message::IsVoiceCategory() const {
   if (!this->empty()) return ((*this)[0] >= 0x80) && ((*this)[0] <= 0xef);
   return false;
 }
 
-bool Message::isSystemCommon() const {
+bool Message::IsSystemCommon() const {
   if (!this->empty()) return ((*this)[0] >= 0xf0) && ((*this)[0] <= 0xf7);
   return false;
 }
 
-bool Message::containsText() const {
+bool Message::ContainsText() const {
   if (this->size() > 1)
     return ((*this)[0] == 0xff) &&
            (((*this)[1] == Text) || ((*this)[1] == Lyrics) ||
@@ -146,16 +146,16 @@ bool Message::containsText() const {
   return false;
 }
 
-std::string Message::text() const {
+std::string Message::GetText() const {
   std::string r;
-  if (this->containsText())
+  if (this->ContainsText())
     for (size_t i = 2; i < this->size(); i++)
       r += static_cast<char>((*this)[i]);
   return r;
 }
 
-std::string Message::name() const {
-  if (this->isMeta()) {
+std::string Message::GetName() const {
+  if (this->IsMeta()) {
     switch ((*this)[1]) {
       case SequenceNumber:
         return "SequenceNumber";

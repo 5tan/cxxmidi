@@ -10,9 +10,9 @@ namespace cxxmidi {
 
 class Track : public std::vector<Event> {
  public:
-  inline Event& addEvent();
+  inline Event& AddEvent();
 
-  inline std::string getName() const;
+  inline std::string GetName() const;
 
  private:
 };
@@ -23,20 +23,20 @@ class Track : public std::vector<Event> {
 
 namespace cxxmidi {
 
-Event& Track::addEvent() {
+Event& Track::AddEvent() {
   this->push_back(Event());
   return this->back();
 }
 
-std::string Track::getName() const {
+std::string Track::GetName() const {
   std::string r;
 
   for (size_t i = 0; i < this->size(); i++) {
     const Event* event = &this->at(i);
-    if (event->isMeta())
+    if (event->IsMeta())
       if (event->at(1) == Event::TrackName) {
         if (!r.empty()) r += ", ";
-        r += event->text();
+        r += event->GetText();
       }
   }
 

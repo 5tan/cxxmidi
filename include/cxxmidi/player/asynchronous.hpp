@@ -21,38 +21,38 @@ class Asynchronous : public player::Abstract {
   Asynchronous& operator=(Asynchronous&&) = default;
 #endif  // __cplusplus > 199711L
 
-  inline virtual void play();
-  inline virtual void pause();
+  inline virtual void Play();
+  inline virtual void Pause();
 
-  inline void goTo(const time::Point& pos_);
-  inline time::Point currentTimePos();
+  inline void GoTo(const time::Point& pos_);
+  inline time::Point CurrentTimePos();
 
-  inline void setFile(const File* file_);
-  inline void setOutput(output::Abstract* output_);
+  inline void SetFile(const File* file_);
+  inline void SetOutput(output::Abstract* output_);
   inline output::Abstract* output();
 
-  inline bool finished();
+  inline bool Finished();
 
-  inline bool isPlaying();
-  inline bool isPaused();
+  inline bool IsPlaying();
+  inline bool IsPaused();
 
-  inline void setSpeed(float speed_);
-  inline float speed();
+  inline void SetSpeed(float speed_);
+  inline float Speed();
 
-  inline void setCallbackHeartbeat(void (*callback_)(void*), void* context_);
-  inline void setCallbackFinished(void (*callback_)(void*), void* context_);
+  inline void SetCallbackHeartbeat(void (*callback_)(void*), void* context_);
+  inline void SetCallbackFinished(void (*callback_)(void*), void* context_);
 
-  inline void setCallbackHeartbeat(Callback* callback_);
-  inline void setCallbackFinished(Callback* callback_);
+  inline void SetCallbackHeartbeat(Callback* callback_);
+  inline void SetCallbackFinished(Callback* callback_);
 #if __cplusplus > 199711L
-  inline void setCallbackHeartbeat(const std::function<void()>& callback_);
-  inline void setCallbackFinished(const std::function<void()>& callback_);
+  inline void SetCallbackHeartbeat(const std::function<void()>& callback_);
+  inline void SetCallbackFinished(const std::function<void()>& callback_);
 #endif  // __cplusplus > 199711L
 
  private:
   bool _pauseRequest;
 
-  inline static void* playerLoop(void* caller_);
+  inline static void* PlayerLoop(void* caller_);
 
   cxxmidi::guts::Mutex _mutex;
   cxxmidi::guts::Thread* _thread;
@@ -78,7 +78,7 @@ Asynchronous::~Asynchronous() {
   if (_thread) delete _thread;
 }
 
-void Asynchronous::play() {
+void Asynchronous::Play() {
   bool reject = false;
 
   _mutex.lock();
@@ -92,10 +92,10 @@ void Asynchronous::play() {
   if (reject) return;
 
   if (_thread) delete _thread;
-  _thread = new cxxmidi::guts::Thread(Asynchronous::playerLoop, this);
+  _thread = new cxxmidi::guts::Thread(Asynchronous::PlayerLoop, this);
 }
 
-void Asynchronous::pause() {
+void Asynchronous::Pause() {
   _mutex.lock();
   _pauseRequest = true;
   _mutex.unlock();
@@ -105,7 +105,7 @@ void Asynchronous::pause() {
   _thread = 0;
 }
 
-void* Asynchronous::playerLoop(void* caller_) {
+void* Asynchronous::PlayerLoop(void* caller_) {
   Asynchronous* that = reinterpret_cast<Asynchronous*>(caller_);
 
   bool finished = false;
@@ -135,11 +135,11 @@ void* Asynchronous::playerLoop(void* caller_) {
     // copy player data
     that->_mutex.lock();
     if (!(pauseRequest = that->_pauseRequest)) {
-      if (!(finished = that->Abstract::finished())) {
-        trackNum = that->Abstract::trackPending();
+      if (!(finished = that->Abstract::Finished())) {
+        trackNum = that->Abstract::TrackPending();
         eventNum = that->_playerState[trackNum].trackPointer;
         dt = that->_playerState[trackNum].trackDt;
-        us = converters::dt2us(dt, that->_tempo, that->_file->timeDivision());
+        us = converters::Dt2us(dt, that->_tempo, that->_file->TimeDivision());
         speed = that->_speed;
 
         clbkFunPtrHeartbeat = that->_clbkFunPtrHeartbeat;
@@ -211,9 +211,9 @@ void* Asynchronous::playerLoop(void* caller_) {
         return 0;
       }
 
-      sleep::us(partial / speed);
+      sleep::SleepUs(partial / speed);
       that->_mutex.lock();
-      that->_currentTimePos.addUs(partial);
+      that->_currentTimePos.AddUs(partial);
       that->_mutex.unlock();
 
       if (clbkFunPtrHeartbeat) (*clbkFunPtrHeartbeat)(clbkFunCtxHeartbeat);
@@ -225,36 +225,36 @@ void* Asynchronous::playerLoop(void* caller_) {
 #endif  // __cplusplus > 199711L
     }
 
-    sleep::us(us / speed);
+    sleep::SleepUs(us / speed);
     that->_heartbeatHelper += us;
 
     that->_mutex.lock();
-    that->_currentTimePos.addUs(us);
-    that->execEvent((*that->_file)[trackNum][eventNum]);
-    that->updatePlayerState(trackNum, dt);
+    that->_currentTimePos.AddUs(us);
+    that->ExecEvent((*that->_file)[trackNum][eventNum]);
+    that->UpdatePlayerState(trackNum, dt);
     that->_mutex.unlock();
   }
 
   return 0;
 }
 
-void Asynchronous::goTo(const time::Point& pos_) {
+void Asynchronous::GoTo(const time::Point& pos_) {
   //! @TODO If goTo is called from player's callback, different impl is needed
 
   _mutex.lock();
   bool wasPlaying = _isPlaying;
   _mutex.unlock();
 
-  if (wasPlaying) this->pause();
+  if (wasPlaying) this->Pause();
 
   _mutex.lock();
-  Abstract::goTo(pos_);
+  Abstract::GoTo(pos_);
   _mutex.unlock();
 
-  if (wasPlaying) this->play();
+  if (wasPlaying) this->Play();
 }
 
-time::Point Asynchronous::currentTimePos() {
+time::Point Asynchronous::CurrentTimePos() {
   time::Point r;
   _mutex.lock();
   r = _currentTimePos;
@@ -262,13 +262,13 @@ time::Point Asynchronous::currentTimePos() {
   return r;
 }
 
-void Asynchronous::setFile(const File* file_) {
+void Asynchronous::SetFile(const File* file_) {
   _mutex.lock();
-  Abstract::setFile(file_);
+  Abstract::SetFile(file_);
   _mutex.unlock();
 }
 
-void Asynchronous::setOutput(output::Abstract* output_) {
+void Asynchronous::SetOutput(output::Abstract* output_) {
   _mutex.lock();
   _output = output_;
   _mutex.unlock();
@@ -282,15 +282,15 @@ output::Abstract* Asynchronous::output() {
   return r;
 }
 
-bool Asynchronous::finished() {
+bool Asynchronous::Finished() {
   bool r;
   _mutex.lock();
-  r = player::Abstract::finished();
+  r = player::Abstract::Finished();
   _mutex.unlock();
   return r;
 }
 
-bool Asynchronous::isPlaying() {
+bool Asynchronous::IsPlaying() {
   bool r;
   _mutex.lock();
   r = _isPlaying;
@@ -298,7 +298,7 @@ bool Asynchronous::isPlaying() {
   return r;
 }
 
-bool Asynchronous::isPaused() {
+bool Asynchronous::IsPaused() {
   bool r;
   _mutex.lock();
   r = !_isPlaying;
@@ -306,13 +306,13 @@ bool Asynchronous::isPaused() {
   return r;
 }
 
-void Asynchronous::setSpeed(float speed_) {
+void Asynchronous::SetSpeed(float speed_) {
   _mutex.lock();
   _speed = speed_;
   _mutex.unlock();
 }
 
-float Asynchronous::speed() {
+float Asynchronous::Speed() {
   float r;
   _mutex.lock();
   r = _speed;
@@ -321,7 +321,7 @@ float Asynchronous::speed() {
   return r;
 }
 
-void Asynchronous::setCallbackHeartbeat(void (*callback_)(void*),
+void Asynchronous::SetCallbackHeartbeat(void (*callback_)(void*),
                                         void* context_) {
   _mutex.lock();
   _clbkFunPtrHeartbeat = callback_;
@@ -329,7 +329,7 @@ void Asynchronous::setCallbackHeartbeat(void (*callback_)(void*),
   _mutex.unlock();
 }
 
-void Asynchronous::setCallbackFinished(void (*callback_)(void*),
+void Asynchronous::SetCallbackFinished(void (*callback_)(void*),
                                        void* context_) {
   _mutex.lock();
   _clbkFunPtrFinished = callback_;
@@ -337,27 +337,27 @@ void Asynchronous::setCallbackFinished(void (*callback_)(void*),
   _mutex.unlock();
 }
 
-void Asynchronous::setCallbackHeartbeat(Callback* callback_) {
+void Asynchronous::SetCallbackHeartbeat(Callback* callback_) {
   _mutex.lock();
   _clbkObjPtrHeartbeat = callback_;
   _mutex.unlock();
 }
 
-void Asynchronous::setCallbackFinished(Callback* callback_) {
+void Asynchronous::SetCallbackFinished(Callback* callback_) {
   _mutex.lock();
   _clbkObjPtrFinished = callback_;
   _mutex.unlock();
 }
 
 #if __cplusplus > 199711L
-void Asynchronous::setCallbackHeartbeat(
+void Asynchronous::SetCallbackHeartbeat(
     const std::function<void()>& callback_) {
   _mutex.lock();
   _clbkFunHeartbeat = callback_;
   _mutex.unlock();
 }
 
-void Asynchronous::setCallbackFinished(const std::function<void()>& callback_) {
+void Asynchronous::SetCallbackFinished(const std::function<void()>& callback_) {
   _mutex.lock();
   _clbkFunFinished = callback_;
   _mutex.unlock();

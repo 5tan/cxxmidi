@@ -8,9 +8,9 @@ int main(int /*argc*/, char** /*argv*/) {
   cxxmidi::player::Asynchronous player(&output);
 
   cxxmidi::File file("/home/sch/sample.mid");
-  player.setFile(&file);
+  player.SetFile(&file);
 
-  player.play();
-  cxxmidi::sleep::us(1000 * 1000 * 5);  // 5 sec
-  player.pause();
+  player.Play();
+  cxxmidi::sleep::SleepUs(1000 * 1000 * 5);  // 5 sec
+  player.Pause();
 }

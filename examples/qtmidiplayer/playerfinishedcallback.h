@@ -15,7 +15,7 @@ class PlayerFinishedCallback : public QObject, public cxxmidi::Callback {
   virtual void operator()();
 
  signals:
-  void playerFinished();
+  void PlayerFinished();
 };
 
 #endif  // PLAYERFINISHEDCALLBACK_H

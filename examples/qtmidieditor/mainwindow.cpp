@@ -15,23 +15,23 @@ MainWindow::MainWindow(QWidget *parent_)
     _file = cxxmidi::File(fileName.toStdString().c_str());
   }
 
-  _fileModel.setFile(&_file);
+  _fileModel.SetFile(&_file);
   _fileView.setModel(&_fileModel);
 
   connect(&_fileView, SIGNAL(activated(QModelIndex)), this,
-          SLOT(onTrackSelected(QModelIndex)));
+          SLOT(OnTrackSelected(QModelIndex)));
   connect(&_fileView, SIGNAL(clicked(QModelIndex)), this,
-          SLOT(onTrackSelected(QModelIndex)));
+          SLOT(OnTrackSelected(QModelIndex)));
   connect(&_fileView, SIGNAL(requestAddTrack(int)), this,
-          SLOT(onRequestAddTrack(int)));
+          SLOT(OnRequestAddTrack(int)));
   connect(&_fileView, SIGNAL(requestDeleteTrack(int)), this,
-          SLOT(onRequestDeleteTrack(int)));
+          SLOT(OnRequestDeleteTrack(int)));
   connect(&_trackView, SIGNAL(requestAddEvent(int)), this,
-          SLOT(onRequestAddEvent(int)));
+          SLOT(OnRequestAddEvent(int)));
   connect(&_trackView, SIGNAL(requestDeleteEvent(int)), this,
-          SLOT(onRequestDeleteEvent(int)));
+          SLOT(OnRequestDeleteEvent(int)));
 
-  _trackModel.setTrack(0);
+  _trackModel.SetTrack(0);
   _trackView.setModel(&_trackModel);
 
   QSplitter *splitter = new QSplitter;
@@ -41,17 +41,17 @@ MainWindow::MainWindow(QWidget *parent_)
 
   this->setCentralWidget(splitter);
 
-  this->createMenu();
+  this->CreateMenu();
 }
 
-void MainWindow::createMenu() {
+void MainWindow::CreateMenu() {
   QMenu *fileMenu = this->menuBar()->addMenu(tr("&File"));
 
   QAction *action = fileMenu->addAction(tr("&Open"));
-  connect(action, SIGNAL(triggered()), this, SLOT(onOpenFile()));
+  connect(action, SIGNAL(triggered()), this, SLOT(OnOpenFile()));
 
   action = fileMenu->addAction(tr("&Save as"));
-  connect(action, SIGNAL(triggered()), this, SLOT(onSaveAs()));
+  connect(action, SIGNAL(triggered()), this, SLOT(OnSaveAs()));
 
   fileMenu->addSeparator();
 
@@ -61,42 +61,42 @@ void MainWindow::createMenu() {
   //! @TODO ask if save changes
 }
 
-void MainWindow::onRequestAddTrack(int num_) {
+void MainWindow::OnRequestAddTrack(int num_) {
   //! @TODO there should be a command history (Undo/Redo)
 
-  _trackModel.setTrack(0);  // address may change
-  _fileModel.addTrack(num_);
+  _trackModel.SetTrack(0);  // address may change
+  _fileModel.AddTrack(num_);
 }
 
-void MainWindow::onRequestDeleteTrack(int num_) {
+void MainWindow::OnRequestDeleteTrack(int num_) {
   //! @TODO there should be a command history (Undo/Redo)
 
-  _trackModel.setTrack(0);  // address may change
-  _fileModel.removeTrack(num_);
+  _trackModel.SetTrack(0);  // address may change
+  _fileModel.RemoveTrack(num_);
 }
 
-void MainWindow::onRequestAddEvent(int num_) {
+void MainWindow::OnRequestAddEvent(int num_) {
   //! @TODO there should be a command history (Undo/Redo)
 
-  _trackModel.addEvent(num_);
+  _trackModel.AddEvent(num_);
 }
 
-void MainWindow::onRequestDeleteEvent(int num_) {
+void MainWindow::OnRequestDeleteEvent(int num_) {
   //! @TODO there should be a command history (Undo/Redo)
 
-  _trackModel.removeEvent(num_);
+  _trackModel.RemoveEvent(num_);
 }
 
-void MainWindow::onOpenFile() {
+void MainWindow::OnOpenFile() {
   QString fileName = QFileDialog::getOpenFileName(
       this, tr("Open file"), ".",
       tr("MIDI files (*.mid *.midi);;Any files (*)"));
 
   _file = cxxmidi::File(fileName.toStdString().c_str());
-  _fileModel.setFile(&_file);
+  _fileModel.SetFile(&_file);
 }
 
-void MainWindow::onSaveAs() {
+void MainWindow::OnSaveAs() {
   QFileDialog dialog(NULL, tr("Save As"));
   dialog.setAcceptMode(QFileDialog::AcceptSave);
   dialog.setNameFilter(tr("MIDI files (*.mid *.midi);;Any files (*)"));
@@ -106,12 +106,12 @@ void MainWindow::onSaveAs() {
 
     //! @TODO ask if overwrite
 
-    _file.saveAs(fileName.toStdString().c_str());
+    _file.SaveAs(fileName.toStdString().c_str());
   }
 }
 
-void MainWindow::onTrackSelected(QModelIndex index_) {
-  _trackModel.setTrack(&_file.at(index_.row()));
+void MainWindow::OnTrackSelected(QModelIndex index_) {
+  _trackModel.SetTrack(&_file.at(index_.row()));
   _trackView.setModel(&_trackModel);
 }
 

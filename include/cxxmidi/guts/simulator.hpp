@@ -11,13 +11,13 @@ namespace guts {
 
 class Simulator : public player::Abstract {
  public:
-  inline time::Duration duration(const File &file_);
+  inline time::Duration Duration(const File &file_);
 
  private:
-  inline virtual void play() {}
-  inline virtual void play(const File * /*file_*/) {}
-  inline virtual void pause() {}
-  inline virtual void resume() {}
+  inline virtual void Play() {}
+  inline virtual void Play(const File * /*file_*/) {}
+  inline virtual void Pause() {}
+  inline virtual void Resume() {}
 };
 
 }  // namespace Guts
@@ -29,20 +29,20 @@ class Simulator : public player::Abstract {
 namespace cxxmidi {
 namespace guts {
 
-time::Duration Simulator::duration(const File &file_) {
+time::Duration Simulator::Duration(const File &file_) {
   time::Duration r;
 
   _tempo = 500000;  // default tempo
   _file = &file_;
-  this->initPlayerState();
+  this->InitPlayerState();
 
-  while (!this->finished()) {
-    unsigned int trackNum = this->trackPending();
+  while (!this->Finished()) {
+    unsigned int trackNum = this->TrackPending();
     unsigned int eventNum = _playerState[trackNum].trackPointer;
     uint32_t dt = _playerState[trackNum].trackDt;
-    r.addUs(converters::dt2us(dt, _tempo, _file->timeDivision()));
-    this->execEvent((*_file)[trackNum][eventNum]);
-    this->updatePlayerState(trackNum, dt);
+    r.AddUs(converters::Dt2us(dt, _tempo, _file->TimeDivision()));
+    this->ExecEvent((*_file)[trackNum][eventNum]);
+    this->UpdatePlayerState(trackNum, dt);
   }
 
   return r;
