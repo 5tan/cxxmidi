@@ -1,7 +1,7 @@
 #ifndef CXXMIDI_GUTS_HPP
 #define CXXMIDI_GUTS_HPP
 
-#include <cxxmidi/guts/stdint.hpp>
+#include <cstdint>
 #include <cxxmidi/guts/endianness.hpp>
 
 

@@ -39,7 +39,7 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
-#include <cxxmidi/guts/stdint.hpp>
+#include <cstdint>
 
 #include <cxxmidi/output/abstract.hpp>
 

@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <string>
-#include <cxxmidi/guts/stdint.hpp>
+#include <cstdint>
 
 namespace CxxMidi {
 
