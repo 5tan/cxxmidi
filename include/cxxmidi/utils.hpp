@@ -7,7 +7,7 @@
 namespace cxxmidi {
 namespace utils {
 
-inline uint32_t ExtractTempo(uint8_t v0_, uint8_t v1_, uint8_t v2_) {
+inline uint32_t ExtractTempo(uint8_t v0, uint8_t v1, uint8_t v2) {
   union {
     uint32_t oneTempo;
     uint8_t tabTempo[3];
@@ -15,50 +15,50 @@ inline uint32_t ExtractTempo(uint8_t v0_, uint8_t v1_, uint8_t v2_) {
   oneTempo = 0;
 
   if (guts::endianness::MachineIsLittleEndian()) {
-    tabTempo[0] = v2_;
-    tabTempo[1] = v1_;
-    tabTempo[2] = v0_;
+    tabTempo[0] = v2;
+    tabTempo[1] = v1;
+    tabTempo[2] = v0;
   } else {
-    tabTempo[0] = v0_;
-    tabTempo[1] = v1_;
-    tabTempo[2] = v2_;
+    tabTempo[0] = v0;
+    tabTempo[1] = v1;
+    tabTempo[2] = v2;
   }
 
   return oneTempo;
 }
 
-inline constexpr unsigned int UsPerTick(unsigned int tempo_uspq_,
-                                        uint16_t timeDiv_) {
-  return tempo_uspq_ / timeDiv_;
+inline constexpr unsigned int UsPerTick(unsigned int tempo_uspq,
+                                        uint16_t timeDiv) {
+  return tempo_uspq / timeDiv;
 }
 
-inline uint32_t GetVlq(std::fstream &file_) {
+inline uint32_t GetVlq(std::fstream &file) {
   uint32_t r = 0;
   uint8_t c;
 
   do {
-    file_.read(reinterpret_cast<char *>(&c), 1);
+    file.read(reinterpret_cast<char *>(&c), 1);
     r = (r << 7) + (c & 0x7f);
   } while (c & 0x80);
 
   return r;
 }
 
-inline size_t SaveVlq(std::ofstream &outputFile_, unsigned int _val) {
+inline size_t SaveVlq(std::ofstream &outputFile, unsigned int val) {
   size_t r = 0;
-  uint32_t vlq = _val & 0x7f;
+  uint32_t vlq = val & 0x7f;
 
   // prepare variable-length quantity
-  while ((_val >>= 7) > 0) {
+  while ((val >>= 7) > 0) {
     vlq <<= 8;
     vlq |= 0x80;
-    vlq += (_val & 0x7f);
+    vlq += (val & 0x7f);
   }
 
   // save variable-length quantity
   while (true) {
     r++;
-    outputFile_.write(reinterpret_cast<char *>(&vlq), 1);
+    outputFile.write(reinterpret_cast<char *>(&vlq), 1);
     if (vlq & 0x80)
       vlq >>= 8;
     else
