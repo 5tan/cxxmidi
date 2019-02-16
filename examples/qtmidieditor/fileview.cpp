@@ -15,25 +15,25 @@ void FileView::ShowContextMenu(const QPoint& pos) {
   QAction* action;
   int p = this->indexAt(pos).row();
 
-  QMenu myMenu;
+  QMenu my_menu;
 
   if (p == -1) {
-    action = myMenu.addAction(tr("Add track"));
+    action = my_menu.addAction(tr("Add track"));
     action->setData(0);
   } else {
-    action = myMenu.addAction(tr("Add track before"));
+    action = my_menu.addAction(tr("Add track before"));
     action->setData(1);
-    action = myMenu.addAction(tr("Add track after"));
+    action = my_menu.addAction(tr("Add track after"));
     action->setData(2);
-    action = myMenu.addAction(tr("Delete track"));
+    action = my_menu.addAction(tr("Delete track"));
     action->setData(3);
   }
 
-  QPoint globalPos = this->mapToGlobal(pos);
-  QAction* selectedItem = myMenu.exec(globalPos);
+  QPoint global_pos = this->mapToGlobal(pos);
+  QAction* selected_item = my_menu.exec(global_pos);
 
-  if (selectedItem) {
-    switch (selectedItem->data().toInt()) {
+  if (selected_item) {
+    switch (selected_item->data().toInt()) {
       case 0:
         RequestAddTrack(0);
         break;
