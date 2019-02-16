@@ -1,7 +1,7 @@
 #ifndef CXXMIDI_CONVERTERS_HPP
 #define CXXMIDI_CONVERTERS_HPP
 
-#include <cxxmidi/guts/compiler.hpp>
+
 #include <cxxmidi/utils.hpp>
 
 namespace CxxMidi {

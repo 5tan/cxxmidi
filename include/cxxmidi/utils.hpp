@@ -3,7 +3,7 @@
 
 #include <cxxmidi/guts/stdint.hpp>
 #include <cxxmidi/guts/endianness.hpp>
-#include <cxxmidi/guts/compiler.hpp>
+
 
 namespace CxxMidi {
 namespace Utils {
