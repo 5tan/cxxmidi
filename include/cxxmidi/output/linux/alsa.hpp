@@ -34,7 +34,7 @@
 #include <sys/time.h>
 #include <alsa/asoundlib.h>
 
-#include <cxxmidi/guts/stdint.hpp>
+#include <cstdint>
 #include <cxxmidi/output/abstract.hpp>
 
 namespace CxxMidi {
