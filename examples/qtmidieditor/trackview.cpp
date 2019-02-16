@@ -16,27 +16,27 @@ void TrackView::ShowContextMenu(const QPoint& pos) {
 
   int p = this->indexAt(pos).row();
 
-  QMenu myMenu;
+  QMenu my_menu;
 
   if (p == -1) {
-    action = myMenu.addAction(tr("Add event"));
+    action = my_menu.addAction(tr("Add event"));
     action->setData(0);
   } else {
-    action = myMenu.addAction(tr("Delete event"));
+    action = my_menu.addAction(tr("Delete event"));
     action->setData(1);
-    action = myMenu.addAction(tr("Add event before"));
+    action = my_menu.addAction(tr("Add event before"));
     action->setData(2);
-    action = myMenu.addAction(tr("Add event after"));
+    action = my_menu.addAction(tr("Add event after"));
     action->setData(3);
   }
 
   //! @FIXME menu should not be shown if there is no track selected
 
-  QPoint globalPos = this->mapToGlobal(pos);
-  QAction* selectedItem = myMenu.exec(globalPos);
+  QPoint global_pos = this->mapToGlobal(pos);
+  QAction* selected_item = my_menu.exec(global_pos);
 
-  if (selectedItem) {
-    switch (selectedItem->data().toInt()) {
+  if (selected_item) {
+    switch (selected_item->data().toInt()) {
       case 0:
         this->RequestAddEvent(0);
         break;
