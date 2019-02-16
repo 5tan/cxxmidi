@@ -36,7 +36,7 @@ inline uint32_t extractTempo(uint8_t v0_,
     return oneTempo;
 }
 
-inline CXXMIDI_CONSTEXPR unsigned int usPerTick(unsigned int tempo_uspq_,
+inline constexpr unsigned int usPerTick(unsigned int tempo_uspq_,
                                                 uint16_t timeDiv_)
 {
     return tempo_uspq_/timeDiv_;
