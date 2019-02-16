@@ -46,13 +46,13 @@ class Abstract {
   Abstract &operator=(Abstract &&) = default;
 #endif  // __cplusplus > 199711L
 
-  virtual void OpenPort(unsigned int portNumber_ = 0) = 0;
+  virtual void OpenPort(unsigned int port_num = 0) = 0;
   virtual void ClosePort() = 0;
   virtual void OpenVirtualPort(
-      const std::string &portName_ = std::string("RtMidi Virtual Output")) = 0;
+      const std::string &port_name = std::string("RtMidi Virtual Output")) = 0;
   virtual size_t GetPortCount() = 0;
-  virtual std::string GetPortName(unsigned int portNumber_ = 0) = 0;
-  virtual void SendMessage(const std::vector<uint8_t> *msg_) = 0;
+  virtual std::string GetPortName(unsigned int port_num = 0) = 0;
+  virtual void SendMessage(const std::vector<uint8_t> *msg) = 0;
   inline void Reset();
 
  protected:
