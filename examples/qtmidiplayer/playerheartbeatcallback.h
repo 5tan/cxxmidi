@@ -7,19 +7,19 @@
 #include <cxxmidi/player/abstract.hpp>
 #include <cxxmidi/time/point.hpp>
 
-class PlayerHeartbeatCallback : public QObject, public CxxMidi::Callback {
+class PlayerHeartbeatCallback : public QObject, public cxxmidi::Callback {
   Q_OBJECT
 
  public:
-  PlayerHeartbeatCallback(CxxMidi::Player::Abstract *player_,
+  PlayerHeartbeatCallback(cxxmidi::player::Abstract *player_,
                           QObject *parent_ = 0);
   virtual void operator()();
 
  signals:
-  void playerTimeChanged(CxxMidi::Time::Point time_);
+  void playerTimeChanged(cxxmidi::time::Point time_);
 
  private:
-  CxxMidi::Player::Abstract *_player;
+  cxxmidi::player::Abstract *_player;
 };
 
 #endif  // PLAYERHEARTBEATCALLBACK_H

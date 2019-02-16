@@ -4,13 +4,13 @@
 #include <cxxmidi/player/asynchronous.hpp>
 
 int main(int /*argc*/, char** /*argv*/) {
-  CxxMidi::Output::Default output(0);
-  CxxMidi::Player::Asynchronous player(&output);
+  cxxmidi::output::Default output(0);
+  cxxmidi::player::Asynchronous player(&output);
 
-  CxxMidi::File file("/home/sch/sample.mid");
+  cxxmidi::File file("/home/sch/sample.mid");
   player.setFile(&file);
 
   player.play();
-  CxxMidi::Sleep::us(1000 * 1000 * 5);  // 5 sec
+  cxxmidi::sleep::us(1000 * 1000 * 5);  // 5 sec
   player.pause();
 }

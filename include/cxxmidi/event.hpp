@@ -5,7 +5,7 @@
 
 #include <cxxmidi/message.hpp>
 
-namespace CxxMidi {
+namespace cxxmidi {
 
 class Event : public Message {
  public:
@@ -25,7 +25,7 @@ class Event : public Message {
 
 }  // namespace CxxMidi
 
-namespace CxxMidi {
+namespace cxxmidi {
 
 Event::Event() {}
 

@@ -3,15 +3,15 @@
 
 #include <cxxmidi/player/abstract.hpp>
 
-namespace CxxMidi {
-namespace Time {
+namespace cxxmidi {
+namespace time {
 class Duration;
 }
-namespace Guts {
+namespace guts {
 
-class Simulator : public Player::Abstract {
+class Simulator : public player::Abstract {
  public:
-  inline Time::Duration duration(const File &file_);
+  inline time::Duration duration(const File &file_);
 
  private:
   inline virtual void play() {}
@@ -26,11 +26,11 @@ class Simulator : public Player::Abstract {
 #include <cxxmidi/converters.hpp>
 #include <cxxmidi/time/duration.hpp>
 
-namespace CxxMidi {
-namespace Guts {
+namespace cxxmidi {
+namespace guts {
 
-Time::Duration Simulator::duration(const File &file_) {
-  Time::Duration r;
+time::Duration Simulator::duration(const File &file_) {
+  time::Duration r;
 
   _tempo = 500000;  // default tempo
   _file = &file_;
@@ -40,7 +40,7 @@ Time::Duration Simulator::duration(const File &file_) {
     unsigned int trackNum = this->trackPending();
     unsigned int eventNum = _playerState[trackNum].trackPointer;
     uint32_t dt = _playerState[trackNum].trackDt;
-    r.addUs(Converters::dt2us(dt, _tempo, _file->timeDivision()));
+    r.addUs(converters::dt2us(dt, _tempo, _file->timeDivision()));
     this->execEvent((*_file)[trackNum][eventNum]);
     this->updatePlayerState(trackNum, dt);
   }

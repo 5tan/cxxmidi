@@ -14,16 +14,16 @@
 #include <functional>
 #endif  // __cplusplus > 199711L
 
-namespace CxxMidi {
-namespace Time {
+namespace cxxmidi {
+namespace time {
 class Period;
 }  // namespace Time
-namespace Output {
+namespace output {
 class Abstract;
 }  // namespace Output
 class File;
 class Event;
-namespace Player {
+namespace player {
 
 class Abstract {
  public:
@@ -35,18 +35,18 @@ class Abstract {
 #endif  // __cplusplus > 199711L
 
   inline Abstract();
-  inline Abstract(Output::Abstract* output_);
+  inline Abstract(output::Abstract* output_);
   inline virtual ~Abstract();
 
   virtual void play() = 0;
   virtual void pause() = 0;
 
-  inline void goTo(const Time::Point& pos_);
-  inline Time::Point currentTimePos() const { return _currentTimePos; }
+  inline void goTo(const time::Point& pos_);
+  inline time::Point currentTimePos() const { return _currentTimePos; }
 
   inline void setFile(const File* file_);
-  inline void setOutput(Output::Abstract* output_);
-  inline Output::Abstract* output() { return _output; }
+  inline void setOutput(output::Abstract* output_);
+  inline output::Abstract* output() { return _output; }
 
   inline bool finished() const;
 
@@ -74,7 +74,7 @@ class Abstract {
   bool _isPlaying;
   float _speed;
   const File* _file;
-  Time::Point _currentTimePos;
+  time::Point _currentTimePos;
 
   inline void execEvent(const Event& event_);
 
@@ -89,7 +89,7 @@ class Abstract {
   std::vector<PlayerStateElem> _playerState;
   inline void initPlayerState();
   inline void updatePlayerState(unsigned int trackNum_, unsigned int dt_);
-  Output::Abstract* _output;
+  output::Abstract* _output;
 
   int _heartbeatHelper;
 
@@ -125,8 +125,8 @@ class Abstract {
 #include <cxxmidi/time/period.hpp>
 #include <cxxmidi/utils.hpp>
 
-namespace CxxMidi {
-namespace Player {
+namespace cxxmidi {
+namespace player {
 
 Abstract::Abstract()
     : _tempo(500000),
@@ -144,7 +144,7 @@ Abstract::Abstract()
   Abstract::setupWindowsTimers();
 }
 
-Abstract::Abstract(Output::Abstract* output_)
+Abstract::Abstract(output::Abstract* output_)
     : _tempo(500000),
       _isPlaying(false),
       _speed(1),
@@ -182,27 +182,27 @@ Abstract::~Abstract() {}
 void Abstract::setFile(const File* file_) {
   _file = file_;
   _playerState.clear();
-  _currentTimePos = Time::Point::zero();
+  _currentTimePos = time::Point::zero();
   _heartbeatHelper = 0;
   _tempo = 500000;
   _output->reset();
   this->initPlayerState();
 }
 
-void Abstract::goTo(const Time::Point& pos_) {
+void Abstract::goTo(const time::Point& pos_) {
   if (!_file || !_output) return;
 
   _tempo = 500000;
   _output->reset();
   this->initPlayerState();
-  _currentTimePos = Time::Point::zero();
+  _currentTimePos = time::Point::zero();
   _heartbeatHelper = 0;
 
   while (!this->finished()) {
     unsigned int trackNum = this->trackPending();
     unsigned int eventNum = _playerState[trackNum].trackPointer;
     uint32_t dt = _playerState[trackNum].trackDt;
-    unsigned int us = Converters::dt2us(dt, _tempo, _file->timeDivision());
+    unsigned int us = converters::dt2us(dt, _tempo, _file->timeDivision());
     _currentTimePos.addUs(us);
 
     Event event = (*_file)[trackNum][eventNum];
@@ -218,7 +218,7 @@ Abstract::PlayerStateElem::PlayerStateElem(unsigned int trackPointer_,
                                            uint32_t trackDt_)
     : trackPointer(trackPointer_), trackDt(trackDt_) {}
 
-void Abstract::setOutput(Output::Abstract* output_) { _output = output_; }
+void Abstract::setOutput(output::Abstract* output_) { _output = output_; }
 
 void Abstract::initPlayerState() {
   if (!_file) return;
@@ -296,7 +296,7 @@ void Abstract::updatePlayerState(unsigned int trackNum_, unsigned int dt_) {
 void Abstract::execEvent(const Event& event_) {
   if (event_.isMeta()) {
     if (event_.isMeta(Event::Tempo))
-      _tempo = CxxMidi::Utils::extractTempo(event_[2], event_[3], event_[4]);
+      _tempo = cxxmidi::utils::extractTempo(event_[2], event_[3], event_[4]);
 
     return;  // ignore other META events (?)
   }

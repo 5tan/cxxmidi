@@ -37,11 +37,11 @@
 #include <cstdint>
 #include <cxxmidi/output/abstract.hpp>
 
-namespace CxxMidi {
-namespace Output {
-namespace Linux {
+namespace cxxmidi {
+namespace output {
+namespace linuxo {
 
-class Alsa : public Output::Abstract {
+class Alsa : public output::Abstract {
   struct AlsaMidiData {
     snd_seq_t *seq;
     int vport;
@@ -88,9 +88,9 @@ class Alsa : public Output::Abstract {
 }  // namespace Output
 }  // namespace CxxMidi
 
-namespace CxxMidi {
-namespace Output {
-namespace Linux {
+namespace cxxmidi {
+namespace output {
+namespace linuxo {
 
 Alsa::Alsa() : _apiData(0) { this->initialize(); }
 

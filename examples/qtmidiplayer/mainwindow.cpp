@@ -6,8 +6,8 @@
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent),
       _ui(new Ui::MainWindow),
-      _midiOutput(new CxxMidi::Output::Default(0)),
-      _midiPlayer(new CxxMidi::Player::Asynchronous(_midiOutput)),
+      _midiOutput(new cxxmidi::output::Default(0)),
+      _midiPlayer(new cxxmidi::player::Asynchronous(_midiOutput)),
       _midiFile(0),
       _playerHeartbeatCallback(_midiPlayer),
       _sliderLocked(false) {
@@ -19,8 +19,8 @@ MainWindow::MainWindow(QWidget* parent)
 
   _midiPlayer->setCallbackHeartbeat(&_playerHeartbeatCallback);
   connect(&_playerHeartbeatCallback,
-          SIGNAL(playerTimeChanged(CxxMidi::Time::Point)), this,
-          SLOT(updateTimeCode(CxxMidi::Time::Point)), Qt::QueuedConnection);
+          SIGNAL(playerTimeChanged(cxxmidi::time::Point)), this,
+          SLOT(updateTimeCode(cxxmidi::time::Point)), Qt::QueuedConnection);
 
   _midiPlayer->setCallbackFinished(&_playerFinishedCallback);
   connect(&_playerFinishedCallback, SIGNAL(playerFinished()), this,
@@ -100,7 +100,7 @@ void MainWindow::setOutput(int num_) {
   bool wasPlaying = _midiPlayer->isPlaying();
 
   if (wasPlaying) _midiPlayer->pause();
-  CxxMidi::Time::Point tp = _midiPlayer->currentTimePos();
+  cxxmidi::time::Point tp = _midiPlayer->currentTimePos();
   _midiOutput->openPort(num_);
   _midiPlayer->goTo(tp);
   if (wasPlaying) _midiPlayer->play();
@@ -121,7 +121,7 @@ void MainWindow::openFile(const QString& path_) {
 
   if (_midiFile) delete _midiFile;
 
-  _midiFile = new CxxMidi::File(path_.toStdString().c_str());
+  _midiFile = new cxxmidi::File(path_.toStdString().c_str());
   _midiPlayer->setFile(_midiFile);
 
   _finalTimePoint = _midiFile->duration().toPoint();
@@ -135,11 +135,11 @@ void MainWindow::onPlayClicked() { _midiPlayer->play(); }
 void MainWindow::onPauseClicked() { _midiPlayer->pause(); }
 
 void MainWindow::playerFinished() {
-  _midiPlayer->goTo(CxxMidi::Time::Point::zero());
+  _midiPlayer->goTo(cxxmidi::time::Point::zero());
   _midiPlayer->play();
 }
 
-void MainWindow::updateTimeCode(CxxMidi::Time::Point time_) {
+void MainWindow::updateTimeCode(cxxmidi::time::Point time_) {
   _currentTimePoint = time_;
   _ui->labelTime->setText(time_.toTimecode().c_str());
 
@@ -157,7 +157,7 @@ void MainWindow::onTimeSliderReleased() {
   double val = _ui->sliderTimeline->value();
   double size = _ui->sliderTimeline->maximum();
   double pos = val / size;
-  CxxMidi::Time::Point tp = _midiFile->duration().toPoint();
+  cxxmidi::time::Point tp = _midiFile->duration().toPoint();
   tp *= pos;
 
   bool wasPlaying = _midiPlayer->isPlaying();

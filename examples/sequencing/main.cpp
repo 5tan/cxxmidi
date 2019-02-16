@@ -10,31 +10,31 @@ int main(int /*argc*/, char ** /*argv*/) {
 
   // Default MIDI time division is 500ticks/quarternote.
   // Default MIDI tempo is 500000us per quarternote
-  dt = CxxMidi::Converters::us2dt(500000,  // 0.5s
+  dt = cxxmidi::converters::us2dt(500000,  // 0.5s
                                   500000,  // tempo [us/quarternote]
                                   500);    // time division [us/quarternote]
 
-  CxxMidi::File myFile;
-  CxxMidi::Track &track = myFile.addTrack();
+  cxxmidi::File myFile;
+  cxxmidi::Track &track = myFile.addTrack();
 
   // Chromatic scale starting on C4
   for (int i = 0; i < 13; i++) {
-    track.push_back(CxxMidi::Event(0,                         // deltatime
-                                   CxxMidi::Message::NoteOn,  // message type
-                                   CxxMidi::Note::MiddleC() + i,  // note
+    track.push_back(cxxmidi::Event(0,                         // deltatime
+                                   cxxmidi::Message::NoteOn,  // message type
+                                   cxxmidi::Note::MiddleC() + i,  // note
                                    100));  // velocity [0...127]
-    track.push_back(CxxMidi::Event(dt,     // deltatime
-                                   CxxMidi::Message::NoteOn,  // message type
-                                   CxxMidi::Note::MiddleC() + i,  // note
+    track.push_back(cxxmidi::Event(dt,     // deltatime
+                                   cxxmidi::Message::NoteOn,  // message type
+                                   cxxmidi::Note::MiddleC() + i,  // note
                                    0));  // velocity=0 => note off
   }
-  track.push_back(CxxMidi::Event(0,  // deltatime
-                                 CxxMidi::Message::Meta,
-                                 CxxMidi::Message::EndOfTrack));
+  track.push_back(cxxmidi::Event(0,  // deltatime
+                                 cxxmidi::Message::Meta,
+                                 cxxmidi::Message::EndOfTrack));
 
   // play the file
-  CxxMidi::Output::Default output(0);
-  CxxMidi::Player::Synchronous player(&output);
+  cxxmidi::output::Default output(0);
+  cxxmidi::player::Synchronous player(&output);
   player.setFile(&myFile);
   player.play();
 

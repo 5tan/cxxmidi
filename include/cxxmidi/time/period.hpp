@@ -5,8 +5,8 @@
 
 #include <cxxmidi/time/point.hpp>
 
-namespace CxxMidi {
-namespace Time {
+namespace cxxmidi {
+namespace time {
 
 class Duration;
 
@@ -27,14 +27,14 @@ class Period : public std::pair<Point, Point> {
 #include <cxxmidi/time/duration.hpp>
 
 inline std::ostream& operator<<(std::ostream& os_,
-                                const CxxMidi::Time::Period& tp_) {
+                                const cxxmidi::time::Period& tp_) {
   os_ << '[' << tp_.first.toTimecode(true) << '-' << tp_.second.toTimecode(true)
       << ']';
   return os_;
 }
 
-namespace CxxMidi {
-namespace Time {
+namespace cxxmidi {
+namespace time {
 
 Period::Period() {}
 

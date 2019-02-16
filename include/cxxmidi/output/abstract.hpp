@@ -31,8 +31,8 @@
 #include <string>
 #include <vector>
 
-namespace CxxMidi {
-namespace Output {
+namespace cxxmidi {
+namespace output {
 
 class Abstract {
  public:
@@ -65,8 +65,8 @@ class Abstract {
 
 #include <cstdint>
 
-namespace CxxMidi {
-namespace Output {
+namespace cxxmidi {
+namespace output {
 
 Abstract::Abstract() : _connected(false) {}
 

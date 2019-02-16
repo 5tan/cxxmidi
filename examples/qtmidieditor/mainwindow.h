@@ -40,7 +40,7 @@ class MainWindow : public QMainWindow {
   TrackModel _trackModel;
   TrackView _trackView;
 
-  CxxMidi::File _file;
+  cxxmidi::File _file;
 };
 
 #endif  // MAINWINDOW_H

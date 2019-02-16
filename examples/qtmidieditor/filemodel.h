@@ -17,13 +17,13 @@ class FileModel : public QAbstractListModel {
   virtual QVariant data(const QModelIndex &index_,
                         int role_ = Qt::DisplayRole) const;
 
-  void setFile(CxxMidi::File *file_);
+  void setFile(cxxmidi::File *file_);
 
   void removeTrack(int num_);
   void addTrack(int num_);
 
  private:
-  CxxMidi::File *_file;
+  cxxmidi::File *_file;
 };
 
 #endif /* FILEMODEL_H */

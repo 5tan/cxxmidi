@@ -12,9 +12,9 @@ typedef Output::Windows Default;
 #error "CxxMidi: OSX Midi output not yet implemented"
 #elif __unix  // Linux, *BSD, Mac OS X
 #include <cxxmidi/output/linux/alsa.hpp>
-namespace CxxMidi {
-namespace Output {
-typedef Output::Linux::Alsa Default;
+namespace cxxmidi {
+namespace output {
+typedef output::linuxo::Alsa Default;
 }  // namespace Output
 }  // namespace CxxMidi
 #else
