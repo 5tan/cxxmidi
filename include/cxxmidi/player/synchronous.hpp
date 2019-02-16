@@ -19,11 +19,11 @@ class Synchronous : public player::Abstract {
   Synchronous& operator=(Synchronous&&) = default;
 #endif  // __cplusplus > 199711L
 
-  inline virtual void play();
+  inline virtual void Play();
 
  private:
-  inline void playerLoop();
-  inline virtual void pause() {}
+  inline void PlayerLoop();
+  inline virtual void Pause() {}
 };
 
 }  // namespace Player
@@ -43,26 +43,26 @@ Synchronous::Synchronous(output::Abstract* output_) : Abstract(output_) {}
 
 Synchronous::~Synchronous() {}
 
-void Synchronous::play() {
+void Synchronous::Play() {
   if (!_output || !_file) return;
 
-  this->playerLoop();
+  this->PlayerLoop();
 }
 
-void Synchronous::playerLoop() {
-  while (!this->finished()) {
-    unsigned int trackNum = this->trackPending();
+void Synchronous::PlayerLoop() {
+  while (!this->Finished()) {
+    unsigned int trackNum = this->TrackPending();
     unsigned int eventNum = _playerState[trackNum].trackPointer;
     uint32_t dt = _playerState[trackNum].trackDt;
-    unsigned int us = converters::dt2us(dt, _tempo, _file->timeDivision());
+    unsigned int us = converters::Dt2us(dt, _tempo, _file->TimeDivision());
 
     while ((_heartbeatHelper + us) >= 10000) {
       unsigned int partial = 10000 - _heartbeatHelper;
       _heartbeatHelper = 0;
       us -= partial;
 
-      sleep::us(partial / _speed);
-      _currentTimePos.addUs(partial);
+      sleep::SleepUs(partial / _speed);
+      _currentTimePos.AddUs(partial);
 
       if (_clbkFunPtrHeartbeat) (*_clbkFunPtrHeartbeat)(_clbkFunCtxHeartbeat);
 
@@ -73,11 +73,11 @@ void Synchronous::playerLoop() {
 #endif  // __cplusplus > 199711L
     }
 
-    sleep::us(us / _speed);
+    sleep::SleepUs(us / _speed);
     _heartbeatHelper += us;
-    _currentTimePos.addUs(us);
-    this->execEvent((*_file)[trackNum][eventNum]);
-    this->updatePlayerState(trackNum, dt);
+    _currentTimePos.AddUs(us);
+    this->ExecEvent((*_file)[trackNum][eventNum]);
+    this->UpdatePlayerState(trackNum, dt);
   }
 
   if (_clbkFunPtrFinished) (*_clbkFunPtrFinished)(_clbkFunCtxFinished);

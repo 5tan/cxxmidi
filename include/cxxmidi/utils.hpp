@@ -7,14 +7,14 @@
 namespace cxxmidi {
 namespace utils {
 
-inline uint32_t extractTempo(uint8_t v0_, uint8_t v1_, uint8_t v2_) {
+inline uint32_t ExtractTempo(uint8_t v0_, uint8_t v1_, uint8_t v2_) {
   union {
     uint32_t oneTempo;
     uint8_t tabTempo[3];
   };
   oneTempo = 0;
 
-  if (guts::endianness::machineIsLittleEndian()) {
+  if (guts::endianness::MachineIsLittleEndian()) {
     tabTempo[0] = v2_;
     tabTempo[1] = v1_;
     tabTempo[2] = v0_;
@@ -27,12 +27,12 @@ inline uint32_t extractTempo(uint8_t v0_, uint8_t v1_, uint8_t v2_) {
   return oneTempo;
 }
 
-inline constexpr unsigned int usPerTick(unsigned int tempo_uspq_,
+inline constexpr unsigned int UsPerTick(unsigned int tempo_uspq_,
                                         uint16_t timeDiv_) {
   return tempo_uspq_ / timeDiv_;
 }
 
-inline uint32_t getVlq(std::fstream &file_) {
+inline uint32_t GetVlq(std::fstream &file_) {
   uint32_t r = 0;
   uint8_t c;
 
@@ -44,7 +44,7 @@ inline uint32_t getVlq(std::fstream &file_) {
   return r;
 }
 
-inline size_t saveVlq(std::ofstream &outputFile_, unsigned int _val) {
+inline size_t SaveVlq(std::ofstream &outputFile_, unsigned int _val) {
   size_t r = 0;
   uint32_t vlq = _val & 0x7f;
 

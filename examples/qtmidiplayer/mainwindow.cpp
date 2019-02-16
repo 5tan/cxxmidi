@@ -13,58 +13,58 @@ MainWindow::MainWindow(QWidget* parent)
       _sliderLocked(false) {
   _ui->setupUi(this);
 
-  this->createMenuBar();
+  this->CreateMenuBar();
   this->centralWidget()->setDisabled(true);
   this->resize(this->minimumSizeHint());
 
-  _midiPlayer->setCallbackHeartbeat(&_playerHeartbeatCallback);
+  _midiPlayer->SetCallbackHeartbeat(&_playerHeartbeatCallback);
   connect(&_playerHeartbeatCallback,
           SIGNAL(playerTimeChanged(cxxmidi::time::Point)), this,
           SLOT(updateTimeCode(cxxmidi::time::Point)), Qt::QueuedConnection);
 
-  _midiPlayer->setCallbackFinished(&_playerFinishedCallback);
-  connect(&_playerFinishedCallback, SIGNAL(playerFinished()), this,
-          SLOT(playerFinished()), Qt::QueuedConnection);
+  _midiPlayer->SetCallbackFinished(&_playerFinishedCallback);
+  connect(&_playerFinishedCallback, SIGNAL(PlayerFinished()), this,
+          SLOT(PlayerFinished()), Qt::QueuedConnection);
 
   connect(_ui->doubleSpinBoxSpeed, SIGNAL(valueChanged(double)), this,
-          SLOT(onSpeedChange(double)));
+          SLOT(OnSpeedChange(double)));
 
-  connect(_ui->pushButtonPlay, SIGNAL(clicked()), this, SLOT(onPlayClicked()));
+  connect(_ui->pushButtonPlay, SIGNAL(clicked()), this, SLOT(OnPlayClicked()));
 
   connect(_ui->pushButtonPause, SIGNAL(clicked()), this,
-          SLOT(onPauseClicked()));
+          SLOT(OnPauseClicked()));
 
   connect(_ui->sliderTimeline, SIGNAL(sliderPressed()), this,
-          SLOT(onTimeSliderPressed()));
+          SLOT(OnTimeSliderPressed()));
 
   connect(_ui->sliderTimeline, SIGNAL(sliderReleased()), this,
-          SLOT(onTimeSliderReleased()));
+          SLOT(OnTimeSliderReleased()));
 
   // first argument is file name
   if (QApplication::arguments().size() >= 2) {
     QString fileName = QApplication::arguments().at(1);
-    this->openFile(fileName);
+    this->OpenFile(fileName);
   }
 
   // second argument is output num
   if (QApplication::arguments().size() >= 3) {
     int num = QApplication::arguments().at(2).toInt();
-    this->setOutput(num);
+    this->SetOutput(num);
     _outputsActionGroup->actions()[num]->setChecked(true);
   }
 
   // auto play
-  if (QApplication::arguments().size() >= 2) _midiPlayer->play();
+  if (QApplication::arguments().size() >= 2) _midiPlayer->Play();
 }
 
 MainWindow::~MainWindow() { delete _ui; }
 
-void MainWindow::createMenuBar() {
+void MainWindow::CreateMenuBar() {
   // file menu
   QMenu* fileMenu = this->menuBar()->addMenu(tr("&File"));
   QAction* action = fileMenu->addAction("&Open");
 
-  connect(action, SIGNAL(triggered()), this, SLOT(openFile()));
+  connect(action, SIGNAL(triggered()), this, SLOT(OpenFile()));
 
   fileMenu->addSeparator();
 
@@ -77,8 +77,8 @@ void MainWindow::createMenuBar() {
   _outputsActionGroup->setExclusive(true);
 
   QString name;
-  for (size_t i = 0; i < _midiOutput->getPortCount(); i++) {
-    name = QString("%1. %2").arg(i).arg(_midiOutput->getPortName(i).c_str());
+  for (size_t i = 0; i < _midiOutput->GetPortCount(); i++) {
+    name = QString("%1. %2").arg(i).arg(_midiOutput->GetPortName(i).c_str());
     action = _outputsActionGroup->addAction(name);
     action->setCheckable(true);
     if (!i)  // first is opened
@@ -88,60 +88,60 @@ void MainWindow::createMenuBar() {
   outputMenu->addActions(_outputsActionGroup->actions());
 
   connect(_outputsActionGroup, SIGNAL(triggered(QAction*)), this,
-          SLOT(onOutputSelected(QAction*)));
+          SLOT(OnOutputSelected(QAction*)));
 }
 
-void MainWindow::onOutputSelected(QAction* action_) {
+void MainWindow::OnOutputSelected(QAction* action_) {
   int num = action_->text().split(".")[0].toInt();
-  this->setOutput(num);
+  this->SetOutput(num);
 }
 
-void MainWindow::setOutput(int num_) {
-  bool wasPlaying = _midiPlayer->isPlaying();
+void MainWindow::SetOutput(int num_) {
+  bool wasPlaying = _midiPlayer->IsPlaying();
 
-  if (wasPlaying) _midiPlayer->pause();
-  cxxmidi::time::Point tp = _midiPlayer->currentTimePos();
-  _midiOutput->openPort(num_);
-  _midiPlayer->goTo(tp);
-  if (wasPlaying) _midiPlayer->play();
+  if (wasPlaying) _midiPlayer->Pause();
+  cxxmidi::time::Point tp = _midiPlayer->CurrentTimePos();
+  _midiOutput->OpenPort(num_);
+  _midiPlayer->GoTo(tp);
+  if (wasPlaying) _midiPlayer->Play();
 }
 
-void MainWindow::openFile() {
+void MainWindow::OpenFile() {
   QString fileName = QFileDialog::getOpenFileName(
       this, tr("Open file"), ".",
       tr("MIDI files (*.mid *.midi);;Any files (*)"));
   if (fileName.size()) {
-    this->openFile(fileName);
-    _midiPlayer->play();
+    this->OpenFile(fileName);
+    _midiPlayer->Play();
   }
 }
 
-void MainWindow::openFile(const QString& path_) {
-  if (_midiPlayer->isPlaying()) _midiPlayer->pause();
+void MainWindow::OpenFile(const QString& path_) {
+  if (_midiPlayer->IsPlaying()) _midiPlayer->Pause();
 
   if (_midiFile) delete _midiFile;
 
   _midiFile = new cxxmidi::File(path_.toStdString().c_str());
-  _midiPlayer->setFile(_midiFile);
+  _midiPlayer->SetFile(_midiFile);
 
-  _finalTimePoint = _midiFile->duration().toPoint();
-  _ui->labelTotal->setText(_finalTimePoint.toTimecode().c_str());
+  _finalTimePoint = _midiFile->Duration().ToPoint();
+  _ui->labelTotal->setText(_finalTimePoint.ToTimecode().c_str());
 
   this->centralWidget()->setDisabled(false);
 }
 
-void MainWindow::onPlayClicked() { _midiPlayer->play(); }
+void MainWindow::OnPlayClicked() { _midiPlayer->Play(); }
 
-void MainWindow::onPauseClicked() { _midiPlayer->pause(); }
+void MainWindow::OnPauseClicked() { _midiPlayer->Pause(); }
 
-void MainWindow::playerFinished() {
-  _midiPlayer->goTo(cxxmidi::time::Point::zero());
-  _midiPlayer->play();
+void MainWindow::PlayerFinished() {
+  _midiPlayer->GoTo(cxxmidi::time::Point::Zero());
+  _midiPlayer->Play();
 }
 
 void MainWindow::updateTimeCode(cxxmidi::time::Point time_) {
   _currentTimePoint = time_;
-  _ui->labelTime->setText(time_.toTimecode().c_str());
+  _ui->labelTime->setText(time_.ToTimecode().c_str());
 
   if (!_sliderLocked) {
     double normPos = _currentTimePoint / _finalTimePoint;
@@ -149,21 +149,21 @@ void MainWindow::updateTimeCode(cxxmidi::time::Point time_) {
   }
 }
 
-void MainWindow::onSpeedChange(double speed_) { _midiPlayer->setSpeed(speed_); }
+void MainWindow::OnSpeedChange(double speed_) { _midiPlayer->SetSpeed(speed_); }
 
-void MainWindow::onTimeSliderPressed() { _sliderLocked = true; }
+void MainWindow::OnTimeSliderPressed() { _sliderLocked = true; }
 
-void MainWindow::onTimeSliderReleased() {
+void MainWindow::OnTimeSliderReleased() {
   double val = _ui->sliderTimeline->value();
   double size = _ui->sliderTimeline->maximum();
   double pos = val / size;
-  cxxmidi::time::Point tp = _midiFile->duration().toPoint();
+  cxxmidi::time::Point tp = _midiFile->Duration().ToPoint();
   tp *= pos;
 
-  bool wasPlaying = _midiPlayer->isPlaying();
-  _midiPlayer->pause();
-  _midiPlayer->goTo(tp);
-  if (wasPlaying) _midiPlayer->play();
+  bool wasPlaying = _midiPlayer->IsPlaying();
+  _midiPlayer->Pause();
+  _midiPlayer->GoTo(tp);
+  if (wasPlaying) _midiPlayer->Play();
 
   _sliderLocked = false;
 }

@@ -14,12 +14,12 @@ class Duration {
   inline Duration(const Period& period_);
   inline Duration(const Point& p1_, const Point& p2_);
 
-  inline void addS(int s_);
-  inline void addMs(int ms_);
-  inline void addUs(int us_);
+  inline void AddS(int s_);
+  inline void AddMs(int ms_);
+  inline void AddUs(int us_);
 
-  inline Point toPoint() const;
-  inline std::string toTimecode(bool includeUs_ = false) const;
+  inline Point ToPoint() const;
+  inline std::string ToTimecode(bool includeUs_ = false) const;
 
  private:
   Point _point;
@@ -34,7 +34,7 @@ class Duration {
 
 inline std::ostream& operator<<(std::ostream& os_,
                                 const cxxmidi::time::Duration& td_) {
-  os_ << td_.toTimecode(true);
+  os_ << td_.ToTimecode(true);
   return os_;
 }
 
@@ -45,25 +45,25 @@ Duration::Duration() {}
 
 Duration::Duration(const Period& period_) {
   _point = period_.first - period_.second;
-  if (_point.negative()) _point.flipSign();
+  if (_point.Negative()) _point.FlipSign();
 }
 
 Duration::Duration(const Point& p1_, const Point& p2_) {
   _point = p1_ - p2_;
-  if (_point.negative()) _point.flipSign();
+  if (_point.Negative()) _point.FlipSign();
 }
 
-Point Duration::toPoint() const { return _point; }
+Point Duration::ToPoint() const { return _point; }
 
-std::string Duration::toTimecode(bool includeUs_) const {
-  return _point.toTimecode(includeUs_);
+std::string Duration::ToTimecode(bool includeUs_) const {
+  return _point.ToTimecode(includeUs_);
 }
 
-void Duration::addS(int s_) { _point += Point::fromS(s_); }
+void Duration::AddS(int s_) { _point += Point::FromS(s_); }
 
-void Duration::addMs(int ms_) { _point += Point::fromMs(ms_); }
+void Duration::AddMs(int ms_) { _point += Point::FromMs(ms_); }
 
-void Duration::addUs(int us_) { _point += Point::fromUs(us_); }
+void Duration::AddUs(int us_) { _point += Point::FromUs(us_); }
 
 }  // namespace Time
 }  // namespace CxxMidi

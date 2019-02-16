@@ -17,10 +17,10 @@ class FileModel : public QAbstractListModel {
   virtual QVariant data(const QModelIndex &index_,
                         int role_ = Qt::DisplayRole) const;
 
-  void setFile(cxxmidi::File *file_);
+  void SetFile(cxxmidi::File *file_);
 
-  void removeTrack(int num_);
-  void addTrack(int num_);
+  void RemoveTrack(int num_);
+  void AddTrack(int num_);
 
  private:
   cxxmidi::File *_file;

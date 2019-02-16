@@ -7,5 +7,5 @@ PlayerHeartbeatCallback::PlayerHeartbeatCallback(
     : QObject(parent_), _player(player_) {}
 
 void PlayerHeartbeatCallback::operator()() {
-  /*emit*/ this->playerTimeChanged(_player->currentTimePos());
+  /*emit*/ this->PlayerTimeChanged(_player->CurrentTimePos());
 }

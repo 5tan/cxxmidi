@@ -8,7 +8,7 @@ int main(int /*argc*/, char** /*argv*/) {
   cxxmidi::player::Synchronous player(&output);
 
   cxxmidi::File file("music/chopin.mid");
-  player.setFile(&file);
+  player.SetFile(&file);
 
-  player.play();
+  player.Play();
 }

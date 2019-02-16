@@ -71,16 +71,16 @@ class Windows : public Output::Abstract {
   Windows &operator=(Windows &&) = default;
 #endif  // __cplusplus > 199711L
 
-  inline virtual void openPort(unsigned int portNumber_ = 0);
-  inline virtual void closePort();
-  inline virtual void openVirtualPort(
+  inline virtual void OpenPort(unsigned int portNumber_ = 0);
+  inline virtual void ClosePort();
+  inline virtual void OpenVirtualPort(
       const std::string &portName_ = std::string("CxxMidi Output"));
-  inline virtual size_t getPortCount();
-  inline virtual std::string getPortName(unsigned int portNumber_ = 0);
-  inline virtual void sendMessage(const std::vector<uint8_t> *msg_);
+  inline virtual size_t GetPortCount();
+  inline virtual std::string GetPortName(unsigned int portNumber_ = 0);
+  inline virtual void SendMessage(const std::vector<uint8_t> *msg_);
 
  protected:
-  inline virtual void initialize();
+  inline virtual void Initialize();
 
  private:
   void *_apiData;
@@ -92,25 +92,25 @@ class Windows : public Output::Abstract {
 namespace cxxmidi {
 namespace Output {
 
-Windows::Windows() { this->initialize(); }
+Windows::Windows() { this->Initialize(); }
 
 Windows::Windows(unsigned int initialPort_) {
-  this->initialize();
-  this->openPort(initialPort_);
+  this->Initialize();
+  this->OpenPort(initialPort_);
 }
 
 Windows::~Windows() {
   // Close a connection if it exists.
-  this->closePort();
+  this->ClosePort();
 
   // Cleanup
   WinMidiData *data = static_cast<WinMidiData *>(_apiData);
   delete data;
 }
 
-size_t Windows::getPortCount() { return midiOutGetNumDevs(); }
+size_t Windows::GetPortCount() { return midiOutGetNumDevs(); }
 
-std::string Windows::getPortName(unsigned int portNumber_) {
+std::string Windows::GetPortName(unsigned int portNumber_) {
   std::string stringName;
   unsigned int nDevices = midiOutGetNumDevs();
   if (portNumber_ >= nDevices) {
@@ -134,10 +134,10 @@ std::string Windows::getPortName(unsigned int portNumber_) {
   return stringName;
 }
 
-void Windows::initialize() {
+void Windows::Initialize() {
   // We'll issue a warning here if no devices are available but not
   // throw an error since the user can plug something in later.
-  size_t nDevices = this->getPortCount();
+  size_t nDevices = this->GetPortCount();
 #ifndef CXXMIDI_QUIET
   if (nDevices == 0) std::cerr << "CxxMidi: no devices available" << std::endl;
 #endif
@@ -147,7 +147,7 @@ void Windows::initialize() {
   _apiData = (void *)data;
 }
 
-void Windows::openPort(unsigned int portNumber_) {
+void Windows::OpenPort(unsigned int portNumber_) {
   if (_connected) {
 #ifndef CXXMIDI_QUIET
     std::cerr << "CxxMidi: a valid connection already exists" << std::endl;
@@ -155,7 +155,7 @@ void Windows::openPort(unsigned int portNumber_) {
     return;
   }
 
-  size_t nDevices = this->getPortCount();
+  size_t nDevices = this->GetPortCount();
 #ifndef CXXMIDI_QUIET
   if (nDevices < 1)
     std::cerr << "CxxMidi: no MIDI output destinations found" << std::endl;
@@ -174,7 +174,7 @@ void Windows::openPort(unsigned int portNumber_) {
   _connected = true;
 }
 
-void Windows::closePort() {
+void Windows::ClosePort() {
   if (_connected) {
     WinMidiData *data = static_cast<WinMidiData *>(_apiData);
     midiOutReset(data->outHandle);
@@ -183,7 +183,7 @@ void Windows::closePort() {
   }
 }
 
-void Windows::openVirtualPort(const std::string & /*portName_ */) {
+void Windows::OpenVirtualPort(const std::string & /*portName_ */) {
   // This function cannot be implemented for the Windows MM MIDI API
 
 #ifndef CXXMIDI_QUIET
@@ -192,7 +192,7 @@ void Windows::openVirtualPort(const std::string & /*portName_ */) {
 #endif
 }
 
-void Windows::sendMessage(const std::vector<uint8_t> *msg_) {
+void Windows::SendMessage(const std::vector<uint8_t> *msg_) {
   unsigned int nBytes = static_cast<unsigned int>(msg_->size());
   if (nBytes == 0) {
 #ifndef CXXMIDI_QUIET

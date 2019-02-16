@@ -46,17 +46,17 @@ class Abstract {
   Abstract &operator=(Abstract &&) = default;
 #endif  // __cplusplus > 199711L
 
-  virtual void openPort(unsigned int portNumber_ = 0) = 0;
-  virtual void closePort() = 0;
-  virtual void openVirtualPort(
+  virtual void OpenPort(unsigned int portNumber_ = 0) = 0;
+  virtual void ClosePort() = 0;
+  virtual void OpenVirtualPort(
       const std::string &portName_ = std::string("RtMidi Virtual Output")) = 0;
-  virtual size_t getPortCount() = 0;
-  virtual std::string getPortName(unsigned int portNumber_ = 0) = 0;
-  virtual void sendMessage(const std::vector<uint8_t> *msg_) = 0;
-  inline void reset();
+  virtual size_t GetPortCount() = 0;
+  virtual std::string GetPortName(unsigned int portNumber_ = 0) = 0;
+  virtual void SendMessage(const std::vector<uint8_t> *msg_) = 0;
+  inline void Reset();
 
  protected:
-  inline virtual void initialize() = 0;
+  inline virtual void Initialize() = 0;
   bool _connected;
 };
 
@@ -72,23 +72,23 @@ Abstract::Abstract() : _connected(false) {}
 
 Abstract::~Abstract() {}
 
-void Abstract::reset() {
+void Abstract::Reset() {
   std::vector<uint8_t> message(3);
   message[2] = 0;
 
   for (int i = 176; i <= 191; i++) {
     message[0] = i;
     message[1] = 120;  // all sound off
-    this->sendMessage(&message);
+    this->SendMessage(&message);
 
     message[1] = 121;  // reset all controllers
-    this->sendMessage(&message);
+    this->SendMessage(&message);
 
     message[1] = 122;  // local control off
-    this->sendMessage(&message);
+    this->SendMessage(&message);
 
     message[1] = 123;  // all notes off
-    this->sendMessage(&message);
+    this->SendMessage(&message);
   }
 }
 

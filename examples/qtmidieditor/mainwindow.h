@@ -22,16 +22,16 @@ class MainWindow : public QMainWindow {
   ~MainWindow();
 
  private slots:
-  void onTrackSelected(QModelIndex index_);
-  void onOpenFile();
-  void onSaveAs();
-  void onRequestAddTrack(int num_);
-  void onRequestDeleteTrack(int num_);
-  void onRequestAddEvent(int num_);
-  void onRequestDeleteEvent(int num_);
+  void OnTrackSelected(QModelIndex index_);
+  void OnOpenFile();
+  void OnSaveAs();
+  void OnRequestAddTrack(int num_);
+  void OnRequestDeleteTrack(int num_);
+  void OnRequestAddEvent(int num_);
+  void OnRequestDeleteEvent(int num_);
 
  private:
-  void createMenu();
+  void CreateMenu();
 
   Ui::MainWindow *_ui;
 

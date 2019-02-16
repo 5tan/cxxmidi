@@ -6,12 +6,12 @@ TrackView::TrackView(QWidget* parent_) : QTableView(parent_) {
   this->setContextMenuPolicy(Qt::CustomContextMenu);
 
   connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this,
-          SLOT(showContextMenu(const QPoint&)));
+          SLOT(ShowContextMenu(const QPoint&)));
 }
 
 TrackView::~TrackView() {}
 
-void TrackView::showContextMenu(const QPoint& pos_) {
+void TrackView::ShowContextMenu(const QPoint& pos_) {
   QAction* action;
 
   int pos = this->indexAt(pos_).row();
@@ -38,16 +38,16 @@ void TrackView::showContextMenu(const QPoint& pos_) {
   if (selectedItem) {
     switch (selectedItem->data().toInt()) {
       case 0:
-        this->requestAddEvent(0);
+        this->RequestAddEvent(0);
         break;
       case 1:
-        this->requestDeleteEvent(pos);
+        this->RequestDeleteEvent(pos);
         break;
       case 2:
-        this->requestAddEvent(pos);
+        this->RequestAddEvent(pos);
         break;
       case 3:
-        this->requestAddEvent(pos + 1);
+        this->RequestAddEvent(pos + 1);
         break;
       default:
         break;
