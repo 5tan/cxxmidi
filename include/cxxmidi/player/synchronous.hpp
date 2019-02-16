@@ -3,13 +3,13 @@
 
 #include <cxxmidi/player/abstract.hpp>
 
-namespace CxxMidi {
+namespace cxxmidi {
 class File;
-namespace Player {
+namespace player {
 
-class Synchronous : public Player::Abstract {
+class Synchronous : public player::Abstract {
  public:
-  inline Synchronous(Output::Abstract* output_);
+  inline Synchronous(output::Abstract* output_);
   inline virtual ~Synchronous();
 
   // Synchronous(const Synchronous&); // default is ok
@@ -36,10 +36,10 @@ class Synchronous : public Player::Abstract {
 #include <cxxmidi/sleep.hpp>
 #include <cxxmidi/utils.hpp>
 
-namespace CxxMidi {
-namespace Player {
+namespace cxxmidi {
+namespace player {
 
-Synchronous::Synchronous(Output::Abstract* output_) : Abstract(output_) {}
+Synchronous::Synchronous(output::Abstract* output_) : Abstract(output_) {}
 
 Synchronous::~Synchronous() {}
 
@@ -54,14 +54,14 @@ void Synchronous::playerLoop() {
     unsigned int trackNum = this->trackPending();
     unsigned int eventNum = _playerState[trackNum].trackPointer;
     uint32_t dt = _playerState[trackNum].trackDt;
-    unsigned int us = Converters::dt2us(dt, _tempo, _file->timeDivision());
+    unsigned int us = converters::dt2us(dt, _tempo, _file->timeDivision());
 
     while ((_heartbeatHelper + us) >= 10000) {
       unsigned int partial = 10000 - _heartbeatHelper;
       _heartbeatHelper = 0;
       us -= partial;
 
-      Sleep::us(partial / _speed);
+      sleep::us(partial / _speed);
       _currentTimePos.addUs(partial);
 
       if (_clbkFunPtrHeartbeat) (*_clbkFunPtrHeartbeat)(_clbkFunCtxHeartbeat);
@@ -73,7 +73,7 @@ void Synchronous::playerLoop() {
 #endif  // __cplusplus > 199711L
     }
 
-    Sleep::us(us / _speed);
+    sleep::us(us / _speed);
     _heartbeatHelper += us;
     _currentTimePos.addUs(us);
     this->execEvent((*_file)[trackNum][eventNum]);

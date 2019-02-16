@@ -6,7 +6,7 @@
 
 #include <cxxmidi/event.hpp>
 
-namespace CxxMidi {
+namespace cxxmidi {
 
 class Track : public std::vector<Event> {
  public:
@@ -21,7 +21,7 @@ class Track : public std::vector<Event> {
 
 #include <cxxmidi/event.hpp>
 
-namespace CxxMidi {
+namespace cxxmidi {
 
 Event& Track::addEvent() {
   this->push_back(Event());

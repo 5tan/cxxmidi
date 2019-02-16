@@ -8,8 +8,8 @@
 #include <unistd.h>
 #endif  // __unix
 
-namespace CxxMidi {
-namespace Sleep {
+namespace cxxmidi {
+namespace sleep {
 
 template <typename T>
 inline void us(T us_) {

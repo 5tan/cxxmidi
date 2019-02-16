@@ -43,8 +43,8 @@
 
 #include <cxxmidi/output/abstract.hpp>
 
-namespace CxxMidi {
-namespace Output {
+namespace cxxmidi {
+namespace output {
 
 class Windows : public Output::Abstract {
   static const int RT_SYSEX_BUFFER_SIZE = 1024;
@@ -89,7 +89,7 @@ class Windows : public Output::Abstract {
 }  // namespace Output
 }  // namespace CxxMidi
 
-namespace CxxMidi {
+namespace cxxmidi {
 namespace Output {
 
 Windows::Windows() { this->initialize(); }

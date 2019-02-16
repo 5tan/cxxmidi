@@ -15,8 +15,8 @@ typedef pthread_mutex_t NativeMutex;
 #endif  // __unix
 #endif  // __cplusplus > 199711L
 
-namespace CxxMidi {
-namespace Guts {
+namespace cxxmidi {
+namespace guts {
 
 class Mutex {
  public:
@@ -40,8 +40,8 @@ class Mutex {
 }  // namespace Guts
 }  // namespace CxxMidi
 
-namespace CxxMidi {
-namespace Guts {
+namespace cxxmidi {
+namespace guts {
 
 Mutex::Mutex() {
 #if __cplusplus > 199711L

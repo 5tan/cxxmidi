@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent_)
 
   if (QApplication::instance()->arguments().size() >= 2) {
     QString fileName = QApplication::instance()->arguments().at(1);
-    _file = CxxMidi::File(fileName.toStdString().c_str());
+    _file = cxxmidi::File(fileName.toStdString().c_str());
   }
 
   _fileModel.setFile(&_file);
@@ -92,7 +92,7 @@ void MainWindow::onOpenFile() {
       this, tr("Open file"), ".",
       tr("MIDI files (*.mid *.midi);;Any files (*)"));
 
-  _file = CxxMidi::File(fileName.toStdString().c_str());
+  _file = cxxmidi::File(fileName.toStdString().c_str());
   _fileModel.setFile(&_file);
 }
 

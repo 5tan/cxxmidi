@@ -3,8 +3,8 @@
 
 #include <cstdint>
 
-namespace CxxMidi {
-namespace Time {
+namespace cxxmidi {
+namespace time {
 
 class Point {
  public:
@@ -66,13 +66,13 @@ inline Point operator*(double lhs_, const Point& rhs_);
 #include <sstream>
 
 inline std::ostream& operator<<(std::ostream& os_,
-                                const CxxMidi::Time::Point& tp_) {
+                                const cxxmidi::time::Point& tp_) {
   os_ << tp_.toTimecode(true);
   return os_;
 }
 
-namespace CxxMidi {
-namespace Time {
+namespace cxxmidi {
+namespace time {
 
 Point::Point() : _negative(false), _s(0), _us(0) {}
 

@@ -10,7 +10,7 @@ int FileModel::rowCount(const QModelIndex & /* index_ */) const {
   return 0;
 }
 
-void FileModel::setFile(CxxMidi::File *file_) {
+void FileModel::setFile(cxxmidi::File *file_) {
   _file = file_;
   this->layoutChanged();
 }
@@ -23,8 +23,8 @@ void FileModel::removeTrack(int num_) {
 
 void FileModel::addTrack(int num_) {
   this->beginInsertRows(QModelIndex(), num_, num_);
-  CxxMidi::File::iterator it = _file->begin() + num_;
-  _file->insert(it, CxxMidi::Track());
+  cxxmidi::File::iterator it = _file->begin() + num_;
+  _file->insert(it, cxxmidi::Track());
   this->endInsertRows();
 }
 
@@ -34,7 +34,7 @@ QVariant FileModel::data(const QModelIndex &index_, int role_) const {
   int row = index_.row();
 
   if (role_ == Qt::DisplayRole) {
-    CxxMidi::Track *track = &_file->at(row);
+    cxxmidi::Track *track = &_file->at(row);
     return QVariant(QString("%1. %2").arg(row).arg(track->getName().c_str()));
   }
 

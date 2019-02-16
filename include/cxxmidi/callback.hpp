@@ -1,7 +1,7 @@
 #ifndef CXXMIDI_CALLBACK_HPP
 #define CXXMIDI_CALLBACK_HPP
 
-namespace CxxMidi {
+namespace cxxmidi {
 
 class Callback {
  public:

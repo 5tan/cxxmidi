@@ -15,8 +15,8 @@ typedef pthread_t NativeThread;
 #endif  // __unix
 #endif  // __cplusplus > 199711L
 
-namespace CxxMidi {
-namespace Guts {
+namespace cxxmidi {
+namespace guts {
 
 class Thread {
  public:
@@ -40,8 +40,8 @@ class Thread {
 }  // namespace Guts
 }  // namespace CxxMidi
 
-namespace CxxMidi {
-namespace Guts {
+namespace cxxmidi {
+namespace guts {
 
 Thread::Thread(void* (*fun_)(void*), void* ctx_) {
 #if __cplusplus > 199711L

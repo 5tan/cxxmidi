@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace CxxMidi {
+namespace cxxmidi {
 
 class Note {
  public:
@@ -230,7 +230,7 @@ class Note {
 
 }  // namespace CxxMidi
 
-namespace CxxMidi {
+namespace cxxmidi {
 
 Note::Note() : _val(Undefined) {}
 

@@ -4,8 +4,8 @@
 #include <cstdint>
 #include <cxxmidi/guts/endianness.hpp>
 
-namespace CxxMidi {
-namespace Utils {
+namespace cxxmidi {
+namespace utils {
 
 inline uint32_t extractTempo(uint8_t v0_, uint8_t v1_, uint8_t v2_) {
   union {
@@ -14,7 +14,7 @@ inline uint32_t extractTempo(uint8_t v0_, uint8_t v1_, uint8_t v2_) {
   };
   oneTempo = 0;
 
-  if (Guts::Endianness::machineIsLittleEndian()) {
+  if (guts::endianness::machineIsLittleEndian()) {
     tabTempo[0] = v2_;
     tabTempo[1] = v1_;
     tabTempo[2] = v0_;

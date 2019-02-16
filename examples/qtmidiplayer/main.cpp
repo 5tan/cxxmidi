@@ -3,7 +3,7 @@
 #include "mainwindow.h"
 
 int main(int argc, char** argv) {
-  qRegisterMetaType<CxxMidi::Time::Point>("CxxMidi::Time::Point");
+  qRegisterMetaType<cxxmidi::time::Point>("CxxMidi::Time::Point");
 
   QApplication app(argc, argv);
 

@@ -5,13 +5,13 @@
 #include <cxxmidi/guts/thread.hpp>
 #include <cxxmidi/player/abstract.hpp>
 
-namespace CxxMidi {
+namespace cxxmidi {
 class File;
-namespace Player {
+namespace player {
 
-class Asynchronous : public Player::Abstract {
+class Asynchronous : public player::Abstract {
  public:
-  inline Asynchronous(Output::Abstract* output_);
+  inline Asynchronous(output::Abstract* output_);
   inline virtual ~Asynchronous();
 
   Asynchronous(const Asynchronous&);             // non-copyable
@@ -24,12 +24,12 @@ class Asynchronous : public Player::Abstract {
   inline virtual void play();
   inline virtual void pause();
 
-  inline void goTo(const Time::Point& pos_);
-  inline Time::Point currentTimePos();
+  inline void goTo(const time::Point& pos_);
+  inline time::Point currentTimePos();
 
   inline void setFile(const File* file_);
-  inline void setOutput(Output::Abstract* output_);
-  inline Output::Abstract* output();
+  inline void setOutput(output::Abstract* output_);
+  inline output::Abstract* output();
 
   inline bool finished();
 
@@ -54,8 +54,8 @@ class Asynchronous : public Player::Abstract {
 
   inline static void* playerLoop(void* caller_);
 
-  CxxMidi::Guts::Mutex _mutex;
-  CxxMidi::Guts::Thread* _thread;
+  cxxmidi::guts::Mutex _mutex;
+  cxxmidi::guts::Thread* _thread;
 };
 
 }  // namespace Player
@@ -68,10 +68,10 @@ class Asynchronous : public Player::Abstract {
 #include <cxxmidi/sleep.hpp>
 #include <cxxmidi/utils.hpp>
 
-namespace CxxMidi {
-namespace Player {
+namespace cxxmidi {
+namespace player {
 
-Asynchronous::Asynchronous(Output::Abstract* output_)
+Asynchronous::Asynchronous(output::Abstract* output_)
     : Abstract(output_), _pauseRequest(false), _thread(0) {}
 
 Asynchronous::~Asynchronous() {
@@ -92,7 +92,7 @@ void Asynchronous::play() {
   if (reject) return;
 
   if (_thread) delete _thread;
-  _thread = new CxxMidi::Guts::Thread(Asynchronous::playerLoop, this);
+  _thread = new cxxmidi::guts::Thread(Asynchronous::playerLoop, this);
 }
 
 void Asynchronous::pause() {
@@ -139,7 +139,7 @@ void* Asynchronous::playerLoop(void* caller_) {
         trackNum = that->Abstract::trackPending();
         eventNum = that->_playerState[trackNum].trackPointer;
         dt = that->_playerState[trackNum].trackDt;
-        us = Converters::dt2us(dt, that->_tempo, that->_file->timeDivision());
+        us = converters::dt2us(dt, that->_tempo, that->_file->timeDivision());
         speed = that->_speed;
 
         clbkFunPtrHeartbeat = that->_clbkFunPtrHeartbeat;
@@ -211,7 +211,7 @@ void* Asynchronous::playerLoop(void* caller_) {
         return 0;
       }
 
-      Sleep::us(partial / speed);
+      sleep::us(partial / speed);
       that->_mutex.lock();
       that->_currentTimePos.addUs(partial);
       that->_mutex.unlock();
@@ -225,7 +225,7 @@ void* Asynchronous::playerLoop(void* caller_) {
 #endif  // __cplusplus > 199711L
     }
 
-    Sleep::us(us / speed);
+    sleep::us(us / speed);
     that->_heartbeatHelper += us;
 
     that->_mutex.lock();
@@ -238,7 +238,7 @@ void* Asynchronous::playerLoop(void* caller_) {
   return 0;
 }
 
-void Asynchronous::goTo(const Time::Point& pos_) {
+void Asynchronous::goTo(const time::Point& pos_) {
   //! @TODO If goTo is called from player's callback, different impl is needed
 
   _mutex.lock();
@@ -254,8 +254,8 @@ void Asynchronous::goTo(const Time::Point& pos_) {
   if (wasPlaying) this->play();
 }
 
-Time::Point Asynchronous::currentTimePos() {
-  Time::Point r;
+time::Point Asynchronous::currentTimePos() {
+  time::Point r;
   _mutex.lock();
   r = _currentTimePos;
   _mutex.unlock();
@@ -268,14 +268,14 @@ void Asynchronous::setFile(const File* file_) {
   _mutex.unlock();
 }
 
-void Asynchronous::setOutput(Output::Abstract* output_) {
+void Asynchronous::setOutput(output::Abstract* output_) {
   _mutex.lock();
   _output = output_;
   _mutex.unlock();
 }
 
-Output::Abstract* Asynchronous::output() {
-  Output::Abstract* r;
+output::Abstract* Asynchronous::output() {
+  output::Abstract* r;
   _mutex.lock();
   r = _output;
   _mutex.unlock();
@@ -285,7 +285,7 @@ Output::Abstract* Asynchronous::output() {
 bool Asynchronous::finished() {
   bool r;
   _mutex.lock();
-  r = Player::Abstract::finished();
+  r = player::Abstract::finished();
   _mutex.unlock();
   return r;
 }

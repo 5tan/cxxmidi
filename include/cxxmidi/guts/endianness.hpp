@@ -5,9 +5,9 @@
 #include <fstream>
 #include <iostream>
 
-namespace CxxMidi {
-namespace Guts {
-namespace Endianness {
+namespace cxxmidi {
+namespace guts {
+namespace endianness {
 
 inline bool machineIsLittleEndian() {
   static const uint32_t num = 1;
