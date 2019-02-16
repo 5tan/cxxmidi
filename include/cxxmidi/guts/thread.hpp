@@ -1,7 +1,7 @@
 #ifndef CXXMIDI_GUTS_THREAD_HPP
 #define CXXMIDI_GUTS_THREAD_HPP
 
-#include <cxxmidi/guts/compiler.hpp>
+
 
 #if __cplusplus > 199711L
 #    include <thread>
