@@ -72,7 +72,7 @@ class Message : public std::vector<uint8_t> {
   inline bool IsSysex() const;
   inline bool IsRealtime() const;
   inline bool IsMeta() const;
-  inline bool IsMeta(MetaType metaType_) const;
+  inline bool IsMeta(MetaType meta_type) const;
   inline bool ContainsText() const;
 
   inline std::string GetText() const;
@@ -112,8 +112,8 @@ bool Message::IsMeta() const {
   return false;
 }
 
-bool Message::IsMeta(MetaType metaType_) const {
-  return this->IsMeta() && ((*this)[1] == metaType_);
+bool Message::IsMeta(MetaType meta_type) const {
+  return this->IsMeta() && ((*this)[1] == meta_type);
 }
 
 bool Message::IsSysex() const {
