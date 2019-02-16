@@ -26,14 +26,14 @@ class MainWindow : public QMainWindow {
  private slots:
   void OnTimeSliderReleased();
   void OnTimeSliderPressed();
-  void OnSpeedChange(double speed_);
-  void updateTimeCode(cxxmidi::time::Point time_);
+  void OnSpeedChange(double speed);
+  void updateTimeCode(cxxmidi::time::Point time);
   void OnPauseClicked();
   void OnPlayClicked();
-  void OpenFile(const QString& path_);
+  void OpenFile(const QString& path);
   void OpenFile();
-  void SetOutput(int num_);
-  void OnOutputSelected(QAction* action_);
+  void SetOutput(int num);
+  void OnOutputSelected(QAction* action);
   void PlayerFinished();
 
  private:
