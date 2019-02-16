@@ -156,7 +156,7 @@ std::string Alsa::GetPortName(unsigned int port_num) {
   snd_seq_client_info_alloca(&cinfo);
   snd_seq_port_info_alloca(&pinfo);
 
-  std::string stringName;
+  std::string string_name;
   if (portInfo(_apiData->seq, pinfo,
                SND_SEQ_PORT_CAP_WRITE | SND_SEQ_PORT_CAP_SUBS_WRITE,
                (int)port_num)) {
@@ -166,14 +166,14 @@ std::string Alsa::GetPortName(unsigned int port_num) {
     os << snd_seq_client_info_get_name(cinfo);
     os << ":";
     os << snd_seq_port_info_get_port(pinfo);
-    stringName = os.str();
-    return stringName;
+    string_name = os.str();
+    return string_name;
   }
 
 #ifndef CXXMIDI_QUIET
   std::cerr << "CxxMidi: get port name error" << std::endl;
 #endif
-  return stringName;
+  return string_name;
 }
 
 void Alsa::Initialize() {

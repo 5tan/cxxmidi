@@ -109,68 +109,68 @@ void* Asynchronous::PlayerLoop(void* caller) {
   Asynchronous* that = reinterpret_cast<Asynchronous*>(caller);
 
   bool finished = false;
-  bool pauseRequest = false;
-  unsigned int trackNum = 0;
-  unsigned int eventNum = 0;
+  bool pause_request = false;
+  unsigned int track_num = 0;
+  unsigned int event_num = 0;
   uint32_t dt = 0;
   unsigned int us = 0;
   float speed = 0;
   // C style callbacks
-  void (*clbkFunPtrHeartbeat)(void*) = 0;
-  void* clbkFunCtxHeartbeat;
-  void (*clbkFunPtrFinished)(void*) = 0;
-  void* clbkFunCtxFinished = 0;
+  void (*clbk_fun_ptr_heartbeat)(void*) = 0;
+  void* clbk_fun_ctx_heartbeat;
+  void (*clbk_fun_ptr_finished)(void*) = 0;
+  void* clbk_fun_ctx_finished = 0;
 
   // C++ style callbacs
-  Callback* clbkObjPtrHeartbeat = 0;
-  Callback* clbkObjPtrFinished = 0;
+  Callback* clbk_obj_ptr_heartbeat = 0;
+  Callback* clbk_obj_ptr_finished = 0;
 
 #if __cplusplus > 199711L
   // C++11 style callbacks
-  std::function<void()> clbkFunHeartbeat;
-  std::function<void()> clbkFunFinished;
+  std::function<void()> clbk_fun_heartbeat;
+  std::function<void()> clbk_fun_finished;
 #endif  // __cplusplus > 199711L
 
   while (true) {
     // copy player data
     that->_mutex.lock();
-    if (!(pauseRequest = that->_pauseRequest)) {
+    if (!(pause_request = that->_pauseRequest)) {
       if (!(finished = that->Abstract::Finished())) {
-        trackNum = that->Abstract::TrackPending();
-        eventNum = that->_playerState[trackNum].trackPointer;
-        dt = that->_playerState[trackNum].trackDt;
+        track_num = that->Abstract::TrackPending();
+        event_num = that->_playerState[track_num].trackPointer;
+        dt = that->_playerState[track_num].trackDt;
         us = converters::Dt2us(dt, that->_tempo, that->_file->TimeDivision());
         speed = that->_speed;
 
-        clbkFunPtrHeartbeat = that->_clbkFunPtrHeartbeat;
-        clbkFunCtxHeartbeat = that->_clbkFunCtxHeartbeat;
-        clbkFunPtrFinished = that->_clbkFunPtrFinished;
-        clbkFunCtxFinished = that->_clbkFunCtxFinished;
+        clbk_fun_ptr_heartbeat = that->_clbkFunPtrHeartbeat;
+        clbk_fun_ctx_heartbeat = that->_clbkFunCtxHeartbeat;
+        clbk_fun_ptr_finished = that->_clbkFunPtrFinished;
+        clbk_fun_ctx_finished = that->_clbkFunCtxFinished;
 
-        clbkObjPtrHeartbeat = that->_clbkObjPtrHeartbeat;
-        clbkObjPtrFinished = that->_clbkObjPtrFinished;
+        clbk_obj_ptr_heartbeat = that->_clbkObjPtrHeartbeat;
+        clbk_obj_ptr_finished = that->_clbkObjPtrFinished;
 
 #if __cplusplus > 199711L
-        clbkFunHeartbeat = that->_clbkFunHeartbeat;
-        clbkFunFinished = that->_clbkFunFinished;
+        clbk_fun_heartbeat = that->_clbkFunHeartbeat;
+        clbk_fun_finished = that->_clbkFunFinished;
 #endif  // __cplusplus > 199711L
       }
     }
     that->_mutex.unlock();
 
-    if (pauseRequest || finished) {
+    if (pause_request || finished) {
       that->_mutex.lock();
       that->_pauseRequest = false;
       that->_isPlaying = false;
       that->_mutex.unlock();
 
       if (finished) {
-        if (clbkFunPtrFinished) (*clbkFunPtrFinished)(clbkFunCtxFinished);
+        if (clbk_fun_ptr_finished) (*clbk_fun_ptr_finished)(clbk_fun_ctx_finished);
 
-        if (clbkObjPtrFinished) (*clbkObjPtrFinished)();
+        if (clbk_obj_ptr_finished) (*clbk_obj_ptr_finished)();
 
 #if __cplusplus > 199711L
-        if (clbkFunFinished) clbkFunFinished();
+        if (clbk_fun_finished) clbk_fun_finished();
 #endif  // __cplusplus > 199711L
       }
 
@@ -187,23 +187,23 @@ void* Asynchronous::PlayerLoop(void* caller) {
 
       // update player data before sleep
       that->_mutex.lock();
-      pauseRequest = that->_pauseRequest;
+      pause_request = that->_pauseRequest;
       speed = that->_speed;
 
-      clbkFunPtrHeartbeat = that->_clbkFunPtrHeartbeat;
-      clbkFunCtxHeartbeat = that->_clbkFunCtxHeartbeat;
-      clbkFunPtrFinished = that->_clbkFunPtrFinished;
-      clbkFunCtxFinished = that->_clbkFunCtxFinished;
+      clbk_fun_ptr_heartbeat = that->_clbkFunPtrHeartbeat;
+      clbk_fun_ctx_heartbeat = that->_clbkFunCtxHeartbeat;
+      clbk_fun_ptr_finished = that->_clbkFunPtrFinished;
+      clbk_fun_ctx_finished = that->_clbkFunCtxFinished;
 
-      clbkObjPtrHeartbeat = that->_clbkObjPtrHeartbeat;
-      clbkObjPtrFinished = that->_clbkObjPtrFinished;
+      clbk_obj_ptr_heartbeat = that->_clbkObjPtrHeartbeat;
+      clbk_obj_ptr_finished = that->_clbkObjPtrFinished;
 #if __cplusplus > 199711L
-      clbkFunHeartbeat = that->_clbkFunHeartbeat;
-      clbkFunFinished = that->_clbkFunFinished;
+      clbk_fun_heartbeat = that->_clbkFunHeartbeat;
+      clbk_fun_finished = that->_clbkFunFinished;
 #endif  // __cplusplus > 199711L
       that->_mutex.unlock();
 
-      if (pauseRequest) {
+      if (pause_request) {
         that->_mutex.lock();
         that->_pauseRequest = false;
         that->_isPlaying = false;
@@ -216,12 +216,12 @@ void* Asynchronous::PlayerLoop(void* caller) {
       that->_currentTimePos.AddUs(partial);
       that->_mutex.unlock();
 
-      if (clbkFunPtrHeartbeat) (*clbkFunPtrHeartbeat)(clbkFunCtxHeartbeat);
+      if (clbk_fun_ptr_heartbeat) (*clbk_fun_ptr_heartbeat)(clbk_fun_ctx_heartbeat);
 
-      if (clbkObjPtrHeartbeat) (*clbkObjPtrHeartbeat)();
+      if (clbk_obj_ptr_heartbeat) (*clbk_obj_ptr_heartbeat)();
 
 #if __cplusplus > 199711L
-      if (clbkFunHeartbeat) clbkFunHeartbeat();
+      if (clbk_fun_heartbeat) clbk_fun_heartbeat();
 #endif  // __cplusplus > 199711L
     }
 
@@ -230,8 +230,8 @@ void* Asynchronous::PlayerLoop(void* caller) {
 
     that->_mutex.lock();
     that->_currentTimePos.AddUs(us);
-    that->ExecEvent((*that->_file)[trackNum][eventNum]);
-    that->UpdatePlayerState(trackNum, dt);
+    that->ExecEvent((*that->_file)[track_num][event_num]);
+    that->UpdatePlayerState(track_num, dt);
     that->_mutex.unlock();
   }
 
@@ -242,16 +242,16 @@ void Asynchronous::GoTo(const time::Point& pos) {
   //! @TODO If goTo is called from player's callback, different impl is needed
 
   _mutex.lock();
-  bool wasPlaying = _isPlaying;
+  bool was_playing = _isPlaying;
   _mutex.unlock();
 
-  if (wasPlaying) this->Pause();
+  if (was_playing) this->Pause();
 
   _mutex.lock();
   Abstract::GoTo(pos);
   _mutex.unlock();
 
-  if (wasPlaying) this->Play();
+  if (was_playing) this->Play();
 }
 
 time::Point Asynchronous::CurrentTimePos() {
