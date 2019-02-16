@@ -7,7 +7,7 @@ namespace cxxmidi {
 
 class Instrument {
  public:
-  enum GetName {
+  enum Name {
     AcousticGrandPiano = 0,
     BrightAcousticPiano = 1,
     ElectricGrandPiano = 2,
@@ -202,11 +202,11 @@ class Instrument {
   };
 
   inline Instrument();
-  inline Instrument(int val_);
+  inline Instrument(int val);
 
   inline operator int() const;
 
-  inline static std::string GetName(int instrument_, int channel_ = -1);
+  inline static std::string GetName(int instrument, int channel = -1);
 
  protected:
   int _val;  // 0 ... 128
@@ -218,12 +218,12 @@ namespace cxxmidi {
 
 Instrument::Instrument() : _val(Undefined) {}
 
-Instrument::Instrument(int val_) : _val(val_) {}
+Instrument::Instrument(int val) : _val(val) {}
 
 Instrument::operator int() const { return _val; }
 
-std::string Instrument::GetName(int instrument_, int channel_) {
-  if (channel_ == 10) switch (instrument_) {
+std::string Instrument::GetName(int instrument, int channel) {
+  if (channel == 10) switch (instrument) {
       case AcousticBassDrum:
         return "Acoustic Bass Drum";
       case BassDrum1:
@@ -322,8 +322,8 @@ std::string Instrument::GetName(int instrument_, int channel_) {
         break;
     }
 
-  if (channel_ == -1)  // undefined channel
-    switch (instrument_) {
+  if (channel == -1)  // undefined channel
+    switch (instrument) {
       case FretlessBass:
         return "Fretless Bass / Acoustic Bass Drum";
       case SlapBass1:
@@ -422,7 +422,7 @@ std::string Instrument::GetName(int instrument_, int channel_) {
         break;
     }
 
-  switch (instrument_) {
+  switch (instrument) {
     case AcousticGrandPiano:
       return "Acoustic Grand Piano";
     case BrightAcousticPiano:
