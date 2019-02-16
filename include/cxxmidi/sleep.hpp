@@ -12,15 +12,15 @@ namespace cxxmidi {
 namespace sleep {
 
 template <typename T>
-inline void SleepUs(T us_) {
+inline void SleepUs(T us) {
 #ifdef _WIN32
-  __int64 us = static_cast<__int64>(us_);
+  __int64 us64 = static_cast<__int64>(us_);
 
   HANDLE timer;
   LARGE_INTEGER ft;
 
   // Convert to 100 nanosecond interval
-  ft.QuadPart = -(10 * us);
+  ft.QuadPart = -(10 * us64);
   // negative value indicates relative time
 
   timer = CreateWaitableTimer(NULL, TRUE, NULL);
@@ -29,7 +29,7 @@ inline void SleepUs(T us_) {
   CloseHandle(timer);
 #endif
 #ifdef __unix
-  usleep(static_cast<unsigned int>(us_));
+  usleep(static_cast<unsigned int>(us));
 #endif  // __unix
 }
 
