@@ -2,14 +2,13 @@
 
 #include "mainwindow.h"
 
-int main(int argc, char ** argv)
-{
-    qRegisterMetaType<CxxMidi::Time::Point>("CxxMidi::Time::Point");
+int main(int argc, char** argv) {
+  qRegisterMetaType<CxxMidi::Time::Point>("CxxMidi::Time::Point");
 
-    QApplication app(argc,argv);
+  QApplication app(argc, argv);
 
-    MainWindow mainWindow;
-    mainWindow.show();
+  MainWindow mainWindow;
+  mainWindow.show();
 
-    return app.exec();
+  return app.exec();
 }

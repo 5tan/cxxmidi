@@ -3,22 +3,19 @@
 
 #include <QObject>
 
-#include <cxxmidi/player/abstract.hpp>
 #include <cxxmidi/callback.hpp>
+#include <cxxmidi/player/abstract.hpp>
 
-class PlayerFinishedCallback
-        : public QObject
-        , public CxxMidi::Callback
-{
-    Q_OBJECT
+class PlayerFinishedCallback : public QObject, public CxxMidi::Callback {
+  Q_OBJECT
 
-public:
-    PlayerFinishedCallback(QObject *parent_=0);
+ public:
+  PlayerFinishedCallback(QObject *parent_ = 0);
 
-    virtual void operator()();
+  virtual void operator()();
 
-signals:
-    void playerFinished();
+ signals:
+  void playerFinished();
 };
 
-#endif // PLAYERFINISHEDCALLBACK_H
+#endif  // PLAYERFINISHEDCALLBACK_H

@@ -3,14 +3,13 @@
 
 namespace CxxMidi {
 
-class Callback
-{
-public:
-    inline Callback(){}
+class Callback {
+ public:
+  inline Callback() {}
 
-    virtual void operator()()=0;
+  virtual void operator()() = 0;
 };
 
-} // namespace CxxMidi
+}  // namespace CxxMidi
 
-#endif // CXXMIDI_CALLBACK_HPP
+#endif  // CXXMIDI_CALLBACK_HPP
