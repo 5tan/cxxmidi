@@ -9,7 +9,7 @@ namespace player {
 
 class Synchronous : public player::Abstract {
  public:
-  inline Synchronous(output::Abstract* output_);
+  inline Synchronous(output::Abstract* output);
   inline virtual ~Synchronous();
 
   // Synchronous(const Synchronous&); // default is ok
@@ -39,7 +39,7 @@ class Synchronous : public player::Abstract {
 namespace cxxmidi {
 namespace player {
 
-Synchronous::Synchronous(output::Abstract* output_) : Abstract(output_) {}
+Synchronous::Synchronous(output::Abstract* output) : Abstract(output) {}
 
 Synchronous::~Synchronous() {}
 
