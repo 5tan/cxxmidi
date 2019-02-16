@@ -199,16 +199,16 @@ void Abstract::GoTo(const time::Point& pos) {
   _heartbeatHelper = 0;
 
   while (!this->Finished()) {
-    unsigned int trackNum = this->TrackPending();
-    unsigned int eventNum = _playerState[trackNum].trackPointer;
-    uint32_t dt = _playerState[trackNum].trackDt;
+    unsigned int track_mum = this->TrackPending();
+    unsigned int event_num = _playerState[track_mum].trackPointer;
+    uint32_t dt = _playerState[track_mum].trackDt;
     unsigned int us = converters::Dt2us(dt, _tempo, _file->TimeDivision());
     _currentTimePos.AddUs(us);
 
-    Event event = (*_file)[trackNum][eventNum];
+    Event event = (*_file)[track_mum][event_num];
     if (event[0] != Message::NoteOn) this->ExecEvent(event);
 
-    this->UpdatePlayerState(trackNum, dt);
+    this->UpdatePlayerState(track_mum, dt);
 
     if (_currentTimePos >= pos) break;
   }
