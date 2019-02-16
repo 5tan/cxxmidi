@@ -62,9 +62,9 @@ class Message : public std::vector<uint8_t> {
   };
 
   inline Message();
-  inline Message(uint8_t b1_);
-  inline Message(uint8_t b1_, uint8_t b2_);
-  inline Message(uint8_t b1_, uint8_t b2_, uint8_t b3_);
+  inline Message(uint8_t b1);
+  inline Message(uint8_t b1, uint8_t b2);
+  inline Message(uint8_t b1, uint8_t b2, uint8_t b3);
 
   inline Message::Type GetType() const;
   inline bool IsVoiceCategory() const;
@@ -87,19 +87,19 @@ namespace cxxmidi {
 
 Message::Message() {}
 
-Message::Message(uint8_t b1_) { this->push_back(b1_); }
+Message::Message(uint8_t b1) { this->push_back(b1); }
 
-Message::Message(uint8_t b1_, uint8_t b2_) {
+Message::Message(uint8_t b1, uint8_t b2) {
   this->reserve(2);
-  this->push_back(b1_);
-  this->push_back(b2_);
+  this->push_back(b1);
+  this->push_back(b2);
 }
 
-Message::Message(uint8_t b1_, uint8_t b2_, uint8_t b3_) {
+Message::Message(uint8_t b1, uint8_t b2, uint8_t b3) {
   this->reserve(3);
-  this->push_back(b1_);
-  this->push_back(b2_);
-  this->push_back(b3_);
+  this->push_back(b1);
+  this->push_back(b2);
+  this->push_back(b3);
 }
 
 Message::Type Message::GetType() const {
