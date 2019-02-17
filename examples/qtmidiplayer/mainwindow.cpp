@@ -19,26 +19,28 @@ MainWindow::MainWindow(QWidget* parent)
 
   midi_player_->SetCallbackHeartbeat(&player_heartbeat_callback_);
   connect(&player_heartbeat_callback_,
-          SIGNAL(playerTimeChanged(cxxmidi::time::Point)), this,
-          SLOT(updateTimeCode(cxxmidi::time::Point)), Qt::QueuedConnection);
+          &PlayerHeartbeatCallback::PlayerTimeChanged,
+          this, &MainWindow::UpdateTimeCode, Qt::QueuedConnection);
 
   midi_player_->SetCallbackFinished(&player_finished_callback_);
-  connect(&player_finished_callback_, SIGNAL(PlayerFinished()), this,
-          SLOT(PlayerFinished()), Qt::QueuedConnection);
+  connect(&player_finished_callback_, &PlayerFinishedCallback::PlayerFinished,
+          this,
+          &MainWindow::PlayerFinished, Qt::QueuedConnection);
 
-  connect(ui_->doubleSpinBoxSpeed, SIGNAL(valueChanged(double)), this,
-          SLOT(OnSpeedChange(double)));
+  connect(ui_->doubleSpinBoxSpeed, qOverload<double>(&QDoubleSpinBox::valueChanged),
+          this, &MainWindow::OnSpeedChange);
 
-  connect(ui_->pushButtonPlay, SIGNAL(clicked()), this, SLOT(OnPlayClicked()));
+  connect(ui_->pushButtonPlay, &QPushButton::clicked,
+          this, &MainWindow::OnPlayClicked);
 
-  connect(ui_->pushButtonPause, SIGNAL(clicked()), this,
-          SLOT(OnPauseClicked()));
+  connect(ui_->pushButtonPause, &QPushButton::clicked, this,
+          &MainWindow::OnPauseClicked);
 
-  connect(ui_->sliderTimeline, SIGNAL(sliderPressed()), this,
-          SLOT(OnTimeSliderPressed()));
+  connect(ui_->sliderTimeline, &QSlider::sliderPressed, this,
+          &MainWindow::OnTimeSliderPressed);
 
-  connect(ui_->sliderTimeline, SIGNAL(sliderReleased()), this,
-          SLOT(OnTimeSliderReleased()));
+  connect(ui_->sliderTimeline, &QSlider::sliderReleased, this,
+          &MainWindow::OnTimeSliderReleased);
 
   // first argument is file name
   if (QApplication::arguments().size() >= 2) {
@@ -64,12 +66,12 @@ void MainWindow::CreateMenuBar() {
   QMenu* file_menu = this->menuBar()->addMenu(tr("&File"));
   QAction* action = file_menu->addAction("&Open");
 
-  connect(action, SIGNAL(triggered()), this, SLOT(OpenFile()));
+  connect(action, &QAction::triggered, this, [this](bool){ OpenFile(); });
 
   file_menu->addSeparator();
 
   action = file_menu->addAction("&Exit");
-  connect(action, SIGNAL(triggered()), QApplication::instance(), SLOT(quit()));
+  connect(action, &QAction::triggered, QApplication::instance(), &QApplication::quit);
 
   // output menu
   QMenu* output_menu = this->menuBar()->addMenu(tr("&Output"));
@@ -87,8 +89,8 @@ void MainWindow::CreateMenuBar() {
 
   output_menu->addActions(outputs_action_group_->actions());
 
-  connect(outputs_action_group_, SIGNAL(triggered(QAction*)), this,
-          SLOT(OnOutputSelected(QAction*)));
+  connect(outputs_action_group_, &QActionGroup::triggered, this,
+          &MainWindow::OnOutputSelected);
 }
 
 void MainWindow::OnOutputSelected(QAction* action) {
@@ -139,7 +141,7 @@ void MainWindow::PlayerFinished() {
   midi_player_->Play();
 }
 
-void MainWindow::updateTimeCode(cxxmidi::time::Point time) {
+void MainWindow::UpdateTimeCode(cxxmidi::time::Point time) {
   current_time_point_ = time;
   ui_->labelTime->setText(time.ToTimecode().c_str());
 

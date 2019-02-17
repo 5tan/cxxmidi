@@ -5,8 +5,8 @@
 FileView::FileView(QWidget* parent) : QListView(parent) {
   this->setContextMenuPolicy(Qt::CustomContextMenu);
 
-  connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this,
-          SLOT(ShowContextMenu(const QPoint&)));
+  connect(this, &QListView::customContextMenuRequested,
+          this, &FileView::ShowContextMenu);
 }
 
 FileView::~FileView() {}
