@@ -18,18 +18,18 @@ MainWindow::MainWindow(QWidget *parent_)
   file_model_.SetFile(&_file);
   file_view_.setModel(&file_model_);
 
-  connect(&file_view_, SIGNAL(activated(QModelIndex)), this,
-          SLOT(OnTrackSelected(QModelIndex)));
-  connect(&file_view_, SIGNAL(clicked(QModelIndex)), this,
-          SLOT(OnTrackSelected(QModelIndex)));
-  connect(&file_view_, SIGNAL(requestAddTrack(int)), this,
-          SLOT(OnRequestAddTrack(int)));
-  connect(&file_view_, SIGNAL(requestDeleteTrack(int)), this,
-          SLOT(OnRequestDeleteTrack(int)));
-  connect(&track_view_, SIGNAL(requestAddEvent(int)), this,
-          SLOT(OnRequestAddEvent(int)));
-  connect(&track_view_, SIGNAL(requestDeleteEvent(int)), this,
-          SLOT(OnRequestDeleteEvent(int)));
+  connect(&file_view_, &FileView::activated,
+          this, &MainWindow::OnTrackSelected);
+  connect(&file_view_, &FileView::clicked,
+          this, &MainWindow::OnTrackSelected);
+  connect(&file_view_, &FileView::RequestAddTrack,
+          this, &MainWindow::OnRequestAddTrack);
+  connect(&file_view_, &FileView::RequestDeleteTrack,
+          this, &MainWindow::OnRequestDeleteTrack);
+  connect(&track_view_, &TrackView::RequestAddEvent,
+          this, &MainWindow::OnRequestAddEvent);
+  connect(&track_view_, &TrackView::RequestDeleteEvent,
+          this, &MainWindow::OnRequestDeleteEvent);
 
   track_model_.SetTrack(0);
   track_view_.setModel(&track_model_);
@@ -48,16 +48,16 @@ void MainWindow::CreateMenu() {
   QMenu *file_menu = this->menuBar()->addMenu(tr("&File"));
 
   QAction *action = file_menu->addAction(tr("&Open"));
-  connect(action, SIGNAL(triggered()), this, SLOT(OnOpenFile()));
+  connect(action, &QAction::triggered, this, &MainWindow::OnOpenFile);
 
   action = file_menu->addAction(tr("&Save as"));
-  connect(action, SIGNAL(triggered()), this, SLOT(OnSaveAs()));
+  connect(action, &QAction::triggered, this, &MainWindow::OnSaveAs);
 
   file_menu->addSeparator();
 
   action = file_menu->addAction(tr("&Exit"));
-  QObject::connect(action, SIGNAL(triggered()), QApplication::instance(),
-                   SLOT(quit()));
+  QObject::connect(action, &QAction::triggered,
+                   QApplication::instance(), &QApplication::quit);
   //! @TODO ask if save changes
 }
 
