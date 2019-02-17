@@ -1,9 +1,10 @@
 #ifndef CXXMIDI_PLAYER_ASYNCHRONOUS_HPP
 #define CXXMIDI_PLAYER_ASYNCHRONOUS_HPP
 
-#include <cxxmidi/guts/mutex.hpp>
-#include <cxxmidi/guts/thread.hpp>
 #include <cxxmidi/player/abstract.hpp>
+
+#include <thread>
+#include <mutex>
 
 namespace cxxmidi {
 class File;
@@ -54,8 +55,8 @@ class Asynchronous : public player::Abstract {
 
   inline static void* PlayerLoop(void* caller);
 
-  cxxmidi::guts::Mutex mutex_;
-  cxxmidi::guts::Thread* thread_;
+  std::mutex mutex_;
+  std::thread* thread_;
 };
 
 }  // namespace Player
@@ -92,7 +93,7 @@ void Asynchronous::Play() {
   if (reject) return;
 
   if (thread_) delete thread_;
-  thread_ = new cxxmidi::guts::Thread(Asynchronous::PlayerLoop, this);
+  thread_ = new std::thread(Asynchronous::PlayerLoop, this);
 }
 
 void Asynchronous::Pause() {
