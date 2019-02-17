@@ -27,7 +27,7 @@ class MainWindow : public QMainWindow {
   void OnTimeSliderReleased();
   void OnTimeSliderPressed();
   void OnSpeedChange(double speed);
-  void updateTimeCode(cxxmidi::time::Point time);
+  void UpdateTimeCode(cxxmidi::time::Point time);
   void OnPauseClicked();
   void OnPlayClicked();
   void OpenFile(const QString& path);
