@@ -25,7 +25,7 @@ class File : public std::vector<Track> {
   inline uint16_t TimeDivision() const;
   inline void SetTimeDivision(uint16_t time_division);
 
-  inline std::chrono::microseconds Duration2() const;
+  inline std::chrono::microseconds Duration() const;
 
  private:
   uint16_t time_division_;  // [ticks per quarternote]
@@ -195,9 +195,9 @@ void File::SaveHeaderChunk(std::ofstream &output_file) const {
   guts::endianness::WriteBe<uint16_t>(output_file, time_division_);
 }
 
-std::chrono::microseconds File::Duration2() const {
+std::chrono::microseconds File::Duration() const {
   guts::Simulator simulator;
-  return simulator.Duration2(*this);
+  return simulator.Duration(*this);
 }
 
 Track &File::AddTrack() {

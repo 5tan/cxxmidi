@@ -55,7 +55,7 @@ void Synchronous::PlayerLoop() {
     unsigned int track_num = this->TrackPending();
     unsigned int event_num = player_state_[track_num].track_pointer_;
     uint32_t dt = player_state_[track_num].track_dt_;
-    auto us = converters::Dt2us2(dt, tempo_, file_->TimeDivision());
+    auto us = converters::Dt2us(dt, tempo_, file_->TimeDivision());
 
     while ((heartbeat_helper_ + us.count()) >= 10000) {
       unsigned int partial = 10000 - heartbeat_helper_;
