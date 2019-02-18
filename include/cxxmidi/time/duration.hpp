@@ -6,12 +6,10 @@
 namespace cxxmidi {
 namespace time {
 
-class Period;
 
 class Duration {
  public:
   inline Duration();
-  inline Duration(const Period& period_);
   inline Duration(const Point& p1_, const Point& p2_);
 
   inline void AddS(int s_);
@@ -30,8 +28,6 @@ class Duration {
 
 #include <ostream>
 
-#include <cxxmidi/time/period.hpp>
-
 inline std::ostream& operator<<(std::ostream& os_,
                                 const cxxmidi::time::Duration& td_) {
   os_ << td_.ToTimecode(true);
@@ -42,11 +38,6 @@ namespace cxxmidi {
 namespace time {
 
 Duration::Duration() {}
-
-Duration::Duration(const Period& period_) {
-  _point = period_.first - period_.second;
-  if (_point.Negative()) _point.FlipSign();
-}
 
 Duration::Duration(const Point& p1_, const Point& p2_) {
   _point = p1_ - p2_;

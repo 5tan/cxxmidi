@@ -15,9 +15,6 @@
 #endif  // __cplusplus > 199711L
 
 namespace cxxmidi {
-namespace time {
-class Period;
-}  // namespace Time
 namespace output {
 class Abstract;
 }  // namespace Output
@@ -122,7 +119,6 @@ class Abstract {
 #include <cxxmidi/event.hpp>
 #include <cxxmidi/file.hpp>
 #include <cxxmidi/output/abstract.hpp>
-#include <cxxmidi/time/period.hpp>
 #include <cxxmidi/utils.hpp>
 
 namespace cxxmidi {
