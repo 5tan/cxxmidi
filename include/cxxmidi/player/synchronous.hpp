@@ -2,6 +2,7 @@
 #define CXXMIDI_PLAYER_SYNCHRONOUS_HPP
 
 #include <cxxmidi/player/abstract.hpp>
+#include <thread>
 
 namespace cxxmidi {
 class File;
@@ -54,15 +55,15 @@ void Synchronous::PlayerLoop() {
     unsigned int track_num = this->TrackPending();
     unsigned int event_num = player_state_[track_num].track_pointer_;
     uint32_t dt = player_state_[track_num].track_dt_;
-    unsigned int us = converters::Dt2us(dt, tempo_, file_->TimeDivision());
+    auto us = converters::Dt2us2(dt, tempo_, file_->TimeDivision());
 
-    while ((heartbeat_helper_ + us) >= 10000) {
+    while ((heartbeat_helper_ + us.count()) >= 10000) {
       unsigned int partial = 10000 - heartbeat_helper_;
       heartbeat_helper_ = 0;
-      us -= partial;
+      us -= std::chrono::microseconds(partial);
 
-      sleep::SleepUs(partial / speed_);
-      current_time_pos_.AddUs(partial);
+      unsigned int wait = partial / speed_;
+      std::this_thread::sleep_for(std::chrono::microseconds(wait));
       played_us_ += std::chrono::microseconds(partial);
 
       if (clbk_fun_ptr_heartbeat_) (*clbk_fun_ptr_heartbeat_)(clbk_fun_ctx_heartbeat_);
@@ -74,9 +75,9 @@ void Synchronous::PlayerLoop() {
 #endif  // __cplusplus > 199711L
     }
 
-    sleep::SleepUs(us / speed_);
-    heartbeat_helper_ += us;
-    current_time_pos_.AddUs(us);
+    unsigned int wait = us.count() / speed_;
+    std::this_thread::sleep_for(std::chrono::microseconds(wait));
+    heartbeat_helper_ += us.count();
     played_us_ += std::chrono::microseconds(us);
     this->ExecEvent((*file_)[track_num][event_num]);
     this->UpdatePlayerState(track_num, dt);

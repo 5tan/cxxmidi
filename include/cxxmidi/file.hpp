@@ -10,9 +10,6 @@
 #include <cxxmidi/track.hpp>
 
 namespace cxxmidi {
-namespace time {
-class Duration;
-}  // namespace Time
 
 class File : public std::vector<Track> {
  public:
@@ -28,7 +25,6 @@ class File : public std::vector<Track> {
   inline uint16_t TimeDivision() const;
   inline void SetTimeDivision(uint16_t time_division);
 
-  inline time::Duration Duration() const;
   inline std::chrono::microseconds Duration2() const;
 
  private:
@@ -197,11 +193,6 @@ void File::SaveHeaderChunk(std::ofstream &output_file) const {
 
   // save time division
   guts::endianness::WriteBe<uint16_t>(output_file, time_division_);
-}
-
-time::Duration File::Duration() const {
-  guts::Simulator simulator;
-  return simulator.Duration(*this);
 }
 
 std::chrono::microseconds File::Duration2() const {

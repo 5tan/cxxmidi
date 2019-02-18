@@ -8,6 +8,8 @@
 #include <unistd.h>
 #endif  // __unix
 
+#include <chrono>
+
 namespace cxxmidi {
 namespace sleep {
 
@@ -29,7 +31,6 @@ inline void SleepUs(T us) {
   CloseHandle(timer);
 #endif
 #ifdef __unix
-  usleep(static_cast<unsigned int>(us));
 #endif  // __unix
 }
 
