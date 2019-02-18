@@ -34,7 +34,7 @@ class Synchronous : public player::Abstract {
 
 #include <cxxmidi/converters.hpp>
 #include <cxxmidi/file.hpp>
-#include <cxxmidi/sleep.hpp>
+
 #include <cxxmidi/utils.hpp>
 
 namespace cxxmidi {

@@ -66,7 +66,7 @@ class Asynchronous : public player::Abstract {
 
 #include <cxxmidi/converters.hpp>
 #include <cxxmidi/file.hpp>
-#include <cxxmidi/sleep.hpp>
+
 #include <cxxmidi/utils.hpp>
 
 namespace cxxmidi {
@@ -236,7 +236,8 @@ void* Asynchronous::PlayerLoop(void* caller) {
 #endif  // __cplusplus > 199711L
     }
 
-    sleep::SleepUs(us / speed);
+    unsigned int wait = us.count() / speed;
+    std::this_thread::sleep_for(std::chrono::microseconds(wait));
     that->heartbeat_helper_ += us.count();
 
     that->mutex_.lock();

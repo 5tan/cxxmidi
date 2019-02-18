@@ -5,7 +5,7 @@
 
 #include <cxxmidi/callback.hpp>
 #include <cxxmidi/player/abstract.hpp>
-#include <cxxmidi/time/point.hpp>
+
 
 class PlayerHeartbeatCallback : public QObject, public cxxmidi::Callback {
   Q_OBJECT
@@ -16,7 +16,6 @@ class PlayerHeartbeatCallback : public QObject, public cxxmidi::Callback {
   virtual void operator()();
 
  signals:
-  void PlayerTimeChanged(cxxmidi::time::Point time);
   void PlayerTimeChanged2(std::chrono::microseconds time);
 
  private:

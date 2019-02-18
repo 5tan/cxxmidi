@@ -48,7 +48,7 @@ class File : public std::vector<Track> {
 
 #include <cxxmidi/guts/endianness.hpp>
 #include <cxxmidi/guts/simulator.hpp>
-#include <cxxmidi/time/duration.hpp>
+
 #include <cxxmidi/utils.hpp>
 
 namespace cxxmidi {
