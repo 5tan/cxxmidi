@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <chrono>
 #include <cxxmidi/callback.hpp>
-#include <cxxmidi/time/point.hpp>
+
 #include <vector>
 
 #ifdef WIN32
