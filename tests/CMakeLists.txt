@@ -15,6 +15,7 @@ include_directories(
   ../include)
 
 add_executable(tests
+  endianness.cpp
   file.cpp
   instrument.cpp
   main.cpp
