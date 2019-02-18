@@ -27,7 +27,7 @@ class MainWindow : public QMainWindow {
   void OnTimeSliderReleased();
   void OnTimeSliderPressed();
   void OnSpeedChange(double speed);
-  void UpdateTimeCode2(std::chrono::microseconds time);
+  void UpdateTimeCode(std::chrono::microseconds time);
   void OnPauseClicked();
   void OnPlayClicked();
   void OpenFile(const QString& path);

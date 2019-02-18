@@ -104,9 +104,9 @@ void MainWindow::SetOutput(int num) {
   bool was_playing = midi_player_->IsPlaying();
 
   if (was_playing) midi_player_->Pause();
-  auto tp = midi_player_->CurrentTimePos2();
+  auto tp = midi_player_->CurrentTimePos();
   midi_output_->OpenPort(num);
-  midi_player_->GoTo2(tp);
+  midi_player_->GoTo(tp);
   if (was_playing) midi_player_->Play();
 }
 
@@ -128,7 +128,7 @@ void MainWindow::OpenFile(const QString& path) {
   midi_file_ = new cxxmidi::File(path.toStdString().c_str());
   midi_player_->SetFile(midi_file_);
 
-  total_us_ = midi_file_->Duration2();
+  total_us_ = midi_file_->Duration();
   ui_->labelTotal->setText(std::to_string(total_us_.count()).c_str());
 
   this->centralWidget()->setDisabled(false);
@@ -139,11 +139,11 @@ void MainWindow::OnPlayClicked() { midi_player_->Play(); }
 void MainWindow::OnPauseClicked() { midi_player_->Pause(); }
 
 void MainWindow::PlayerFinished() {
-  midi_player_->GoTo2(std::chrono::microseconds::zero());
+  midi_player_->GoTo(std::chrono::microseconds::zero());
   midi_player_->Play();
 }
 
-void MainWindow::UpdateTimeCode2(std::chrono::microseconds time) {
+void MainWindow::UpdateTimeCode(std::chrono::microseconds time) {
   played_us_ = time;
   ui_->labelTime->setText(std::to_string(time.count()).c_str());
 
@@ -161,12 +161,12 @@ void MainWindow::OnTimeSliderReleased() {
   double val = ui_->sliderTimeline->value();
   double size = ui_->sliderTimeline->maximum();
   double pos = val / size;
-  auto tp = static_cast<double>(midi_file_->Duration2().count()) * pos;
+  auto tp = static_cast<double>(midi_file_->Duration().count()) * pos;
   auto tp2 = static_cast<std::chrono::microseconds::rep>(tp);
 
   bool wasPlaying = midi_player_->IsPlaying();
   midi_player_->Pause();
-  midi_player_->GoTo2(std::chrono::microseconds(tp2));
+  midi_player_->GoTo(std::chrono::microseconds(tp2));
   if (wasPlaying) midi_player_->Play();
 
   slider_locked_ = false;
