@@ -21,7 +21,7 @@ void ClbkHearbeat(void *context) {
   cxxmidi::player::Abstract *player =
       reinterpret_cast<cxxmidi::player::Synchronous *>(context);
 
-  std::cout << player->CurrentTimePos2().count() << std::endl;
+  std::cout << player->CurrentTimePos().count() << std::endl;
 }
 
 void FunctionFinished(void *) { std::cout << "finished!" << std::endl; }
@@ -48,7 +48,7 @@ class MyHeartbeatCallback : public cxxmidi::Callback {
       : _player(player) {}
 
   virtual void operator()() {
-    std::cout << _player->CurrentTimePos2().count() << " (MyHeartbeatCallback)"
+    std::cout << _player->CurrentTimePos().count() << " (MyHeartbeatCallback)"
               << std::endl;
   }
 
@@ -85,7 +85,7 @@ void Example2CppStyleCallbacks() {
 // Example 3: C++11 style callbacks
 
 void callbackHearbeat(cxxmidi::player::Synchronous *player) {
-  std::cout << player->CurrentTimePos2().count() << " (C++11)" << std::endl;
+  std::cout << player->CurrentTimePos().count() << " (C++11)" << std::endl;
 }
 
 void Example3Cpp11StyleCallbacks() {

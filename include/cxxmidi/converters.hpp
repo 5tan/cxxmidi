@@ -7,7 +7,7 @@
 namespace cxxmidi {
 namespace converters {
 
-inline constexpr std::chrono::microseconds Dt2us2(uint32_t dt, unsigned int tempo_uspq,
+inline constexpr std::chrono::microseconds Dt2us(uint32_t dt, unsigned int tempo_uspq,
                                     uint16_t time_div) {
   return std::chrono::microseconds(dt * utils::UsPerTick(tempo_uspq, time_div));
 }
