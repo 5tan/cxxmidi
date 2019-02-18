@@ -63,6 +63,7 @@ void Synchronous::PlayerLoop() {
 
       sleep::SleepUs(partial / speed_);
       current_time_pos_.AddUs(partial);
+      played_us_ += std::chrono::microseconds(partial);
 
       if (clbk_fun_ptr_heartbeat_) (*clbk_fun_ptr_heartbeat_)(clbk_fun_ctx_heartbeat_);
 
@@ -76,6 +77,7 @@ void Synchronous::PlayerLoop() {
     sleep::SleepUs(us / speed_);
     heartbeat_helper_ += us;
     current_time_pos_.AddUs(us);
+    played_us_ += std::chrono::microseconds(us);
     this->ExecEvent((*file_)[track_num][event_num]);
     this->UpdatePlayerState(track_num, dt);
   }
