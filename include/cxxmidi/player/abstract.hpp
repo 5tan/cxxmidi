@@ -39,9 +39,7 @@ class Abstract {
   virtual void Play() = 0;
   virtual void Pause() = 0;
 
-//  inline void GoTo(const time::Point& pos);
   inline void GoTo2(const std::chrono::microseconds& pos);
-  inline time::Point CurrentTimePos() const { return current_time_pos_; }
   inline std::chrono::microseconds CurrentTimePos2() const { return played_us_; }
 
   inline void SetFile(const File* file);
@@ -74,7 +72,6 @@ class Abstract {
   bool is_playing_;
   float speed_;
   const File* file_;
-  time::Point current_time_pos_;
   std::chrono::microseconds played_us_;
 
   inline void ExecEvent(const Event& event);
@@ -182,37 +179,12 @@ Abstract::~Abstract() {}
 void Abstract::SetFile(const File* file) {
   file_ = file;
   player_state_.clear();
-  current_time_pos_ = time::Point::Zero();
   played_us_ = std::chrono::microseconds::zero();
   heartbeat_helper_ = 0;
   tempo_ = 500000;
   output_->Reset();
   this->InitPlayerState();
 }
-
-//void Abstract::GoTo(const time::Point& pos) {
-//  if (!file_ || !output_) return;
-
-//  tempo_ = 500000;
-//  output_->Reset();
-//  this->InitPlayerState();
-//  current_time_pos_ = time::Point::Zero();
-//  heartbeat_helper_ = 0;
-
-//  while (!this->Finished()) {
-//    unsigned int track_mum = this->TrackPending();
-//    unsigned int event_num = player_state_[track_mum].track_pointer_;
-//    uint32_t dt = player_state_[track_mum].track_dt_;
-//    unsigned int us = converters::Dt2us(dt, tempo_, file_->TimeDivision());
-//    current_time_pos_.AddUs(us);
-
-//    Event event = (*file_)[track_mum][event_num];
-//    if (event[0] != Message::kNoteOn) this->ExecEvent(event);
-
-//    this->UpdatePlayerState(track_mum, dt);
-//    if (current_time_pos_ >= pos) break;
-//  }
-//}
 
 void Abstract::GoTo2(const std::chrono::microseconds &pos) {
   if (!file_ || !output_) return;

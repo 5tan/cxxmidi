@@ -25,9 +25,7 @@ class Asynchronous : public player::Abstract {
   inline virtual void Play();
   inline virtual void Pause();
 
-//  inline void GoTo(const time::Point& pos);
   inline void GoTo2(const std::chrono::microseconds& pos);
-  inline time::Point CurrentTimePos();
   inline std::chrono::microseconds CurrentTimePos2();
 
   inline void SetFile(const File* file);
@@ -125,7 +123,7 @@ void* Asynchronous::PlayerLoop(void* caller) {
   unsigned int track_num = 0;
   unsigned int event_num = 0;
   uint32_t dt = 0;
-  unsigned int us = 0;
+  auto us = std::chrono::microseconds::zero();
   float speed = 0;
   // C style callbacks
   void (*clbk_fun_ptr_heartbeat)(void*) = 0;
@@ -151,7 +149,7 @@ void* Asynchronous::PlayerLoop(void* caller) {
         track_num = that->Abstract::TrackPending();
         event_num = that->player_state_[track_num].track_pointer_;
         dt = that->player_state_[track_num].track_dt_;
-        us = converters::Dt2us(dt, that->tempo_, that->file_->TimeDivision());
+        us = converters::Dt2us2(dt, that->tempo_, that->file_->TimeDivision());
         speed = that->speed_;
 
         clbk_fun_ptr_heartbeat = that->clbk_fun_ptr_heartbeat_;
@@ -192,10 +190,10 @@ void* Asynchronous::PlayerLoop(void* caller) {
     // Note that the _heartbeatHelper is not protected by the _mutex.
     // It should be used only in Acynchronous::Asynchronous::playerLoop()
     // and in Abstract::goTo() (these two are exclusive).
-    while ((that->heartbeat_helper_ + us) >= 10000) {
+    while ((that->heartbeat_helper_ + us.count()) >= 10000) {
       unsigned int partial = 10000 - that->heartbeat_helper_;
       that->heartbeat_helper_ = 0;
-      us -= partial;
+      us -= std::chrono::microseconds(partial);
 
       // update player data before sleep
       that->mutex_.lock();
@@ -223,9 +221,9 @@ void* Asynchronous::PlayerLoop(void* caller) {
         return 0;
       }
 
-      sleep::SleepUs(partial / speed);
+      unsigned int wait = partial / speed;
+      std::this_thread::sleep_for(std::chrono::microseconds(wait));
       that->mutex_.lock();
-      that->current_time_pos_.AddUs(partial);
       that->played_us_ += std::chrono::microseconds(partial);
       that->mutex_.unlock();
 
@@ -239,10 +237,9 @@ void* Asynchronous::PlayerLoop(void* caller) {
     }
 
     sleep::SleepUs(us / speed);
-    that->heartbeat_helper_ += us;
+    that->heartbeat_helper_ += us.count();
 
     that->mutex_.lock();
-    that->current_time_pos_.AddUs(us);
     that->played_us_ += std::chrono::microseconds(us);
     that->ExecEvent((*that->file_)[track_num][event_num]);
     that->UpdatePlayerState(track_num, dt);
@@ -251,22 +248,6 @@ void* Asynchronous::PlayerLoop(void* caller) {
 
   return 0;
 }
-
-//void Asynchronous::GoTo(const time::Point& pos) {
-//  //! @TODO If goTo is called from player's callback, different impl is needed
-
-//  mutex_.lock();
-//  bool was_playing = is_playing_;
-//  mutex_.unlock();
-
-//  if (was_playing) this->Pause();
-
-//  mutex_.lock();
-//  Abstract::GoTo(pos);
-//  mutex_.unlock();
-
-//  if (was_playing) this->Play();
-//}
 
 void Asynchronous::GoTo2(const std::chrono::microseconds& pos) {
   //! @TODO If goTo is called from player's callback, different impl is needed
@@ -282,14 +263,6 @@ void Asynchronous::GoTo2(const std::chrono::microseconds& pos) {
   mutex_.unlock();
 
   if (was_playing) this->Play();
-}
-
-time::Point Asynchronous::CurrentTimePos() {
-  time::Point r;
-  mutex_.lock();
-  r = current_time_pos_;
-  mutex_.unlock();
-  return r;
 }
 
 std::chrono::microseconds Asynchronous::CurrentTimePos2() {
