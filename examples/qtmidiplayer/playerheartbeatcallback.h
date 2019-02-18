@@ -17,6 +17,7 @@ class PlayerHeartbeatCallback : public QObject, public cxxmidi::Callback {
 
  signals:
   void PlayerTimeChanged(cxxmidi::time::Point time);
+  void PlayerTimeChanged2(std::chrono::microseconds time);
 
  private:
   cxxmidi::player::Abstract *player_;
