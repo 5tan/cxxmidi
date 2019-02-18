@@ -7,7 +7,7 @@
 #include <cxxmidi/file.hpp>
 #include <cxxmidi/output/default.hpp>
 #include <cxxmidi/player/asynchronous.hpp>
-#include <cxxmidi/time/point.hpp>
+
 
 #include "playerfinishedcallback.h"
 #include "playerheartbeatcallback.h"

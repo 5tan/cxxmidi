@@ -24,7 +24,7 @@ class Simulator : public player::Abstract {
 }  // namespace CxxMidi
 
 #include <cxxmidi/converters.hpp>
-#include <cxxmidi/time/duration.hpp>
+
 
 namespace cxxmidi {
 namespace guts {
