@@ -10,17 +10,17 @@ namespace time {
 class Duration {
  public:
   inline Duration();
-  inline Duration(const Point& p1_, const Point& p2_);
+  inline Duration(const Point& p1, const Point& p2);
 
-  inline void AddS(int s_);
-  inline void AddMs(int ms_);
-  inline void AddUs(int us_);
+  inline void AddS(int s);
+  inline void AddMs(int ms);
+  inline void AddUs(int us);
 
   inline Point ToPoint() const;
-  inline std::string ToTimecode(bool includeUs_ = false) const;
+  inline std::string ToTimecode(bool includeUs = false) const;
 
  private:
-  Point _point;
+  Point point_;
 };
 
 }  // namespace Time
@@ -39,22 +39,22 @@ namespace time {
 
 Duration::Duration() {}
 
-Duration::Duration(const Point& p1_, const Point& p2_) {
-  _point = p1_ - p2_;
-  if (_point.Negative()) _point.FlipSign();
+Duration::Duration(const Point& p1, const Point& p2) {
+  point_ = p1 - p2;
+  if (point_.Negative()) point_.FlipSign();
 }
 
-Point Duration::ToPoint() const { return _point; }
+Point Duration::ToPoint() const { return point_; }
 
-std::string Duration::ToTimecode(bool includeUs_) const {
-  return _point.ToTimecode(includeUs_);
+std::string Duration::ToTimecode(bool includeUs) const {
+  return point_.ToTimecode(includeUs);
 }
 
-void Duration::AddS(int s_) { _point += Point::FromS(s_); }
+void Duration::AddS(int s) { point_ += Point::FromS(s); }
 
-void Duration::AddMs(int ms_) { _point += Point::FromMs(ms_); }
+void Duration::AddMs(int ms) { point_ += Point::FromMs(ms); }
 
-void Duration::AddUs(int us_) { _point += Point::FromUs(us_); }
+void Duration::AddUs(int us) { point_ += Point::FromUs(us); }
 
 }  // namespace Time
 }  // namespace CxxMidi
