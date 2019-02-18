@@ -40,6 +40,6 @@ class FileTestFixture : public ::testing::Test {
 
 TEST_F(FileTestFixture, Creation) {
   cxxmidi::File file = CreateTestFile();
-  EXPECT_STREQ(file.Duration().ToTimecode().c_str(), "00:00:01");
+  EXPECT_EQ(file.Duration2().count(), 1000000);
   EXPECT_EQ(file.Tracks(), static_cast<size_t>(3));
 }

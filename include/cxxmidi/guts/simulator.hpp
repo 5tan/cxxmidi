@@ -11,7 +11,6 @@ namespace guts {
 
 class Simulator : public player::Abstract {
  public:
-  inline time::Duration Duration(const File &file);
   inline std::chrono::microseconds Duration2(const File &file);
 
  private:
@@ -29,25 +28,6 @@ class Simulator : public player::Abstract {
 
 namespace cxxmidi {
 namespace guts {
-
-time::Duration Simulator::Duration(const File &file) {
-  time::Duration r;
-
-  tempo_ = 500000;  // default tempo
-  file_ = &file;
-  this->InitPlayerState();
-
-  while (!this->Finished()) {
-    unsigned int trackNum = this->TrackPending();
-    unsigned int eventNum = player_state_[trackNum].track_pointer_;
-    uint32_t dt = player_state_[trackNum].track_dt_;
-    r.AddUs(converters::Dt2us(dt, tempo_, file_->TimeDivision()));
-    this->ExecEvent((*file_)[trackNum][eventNum]);
-    this->UpdatePlayerState(trackNum, dt);
-  }
-
-  return r;
-}
 
 std::chrono::microseconds Simulator::Duration2(const File &file) {
   auto r = std::chrono::microseconds::zero();
