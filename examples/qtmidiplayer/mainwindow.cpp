@@ -6,6 +6,8 @@
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent),
       ui_(new Ui::MainWindow),
+      played_us_(std::chrono::microseconds::zero()),
+      total_us_(std::chrono::microseconds::zero()),
       midi_output_(new cxxmidi::output::Default(0)),
       midi_player_(new cxxmidi::player::Asynchronous(midi_output_)),
       midi_file_(0),
@@ -19,8 +21,8 @@ MainWindow::MainWindow(QWidget* parent)
 
   midi_player_->SetCallbackHeartbeat(&player_heartbeat_callback_);
   connect(&player_heartbeat_callback_,
-          &PlayerHeartbeatCallback::PlayerTimeChanged,
-          this, &MainWindow::UpdateTimeCode, Qt::QueuedConnection);
+          &PlayerHeartbeatCallback::PlayerTimeChanged2,
+          this, &MainWindow::UpdateTimeCode2, Qt::QueuedConnection);
 
   midi_player_->SetCallbackFinished(&player_finished_callback_);
   connect(&player_finished_callback_, &PlayerFinishedCallback::PlayerFinished,
@@ -102,9 +104,9 @@ void MainWindow::SetOutput(int num) {
   bool was_playing = midi_player_->IsPlaying();
 
   if (was_playing) midi_player_->Pause();
-  cxxmidi::time::Point tp = midi_player_->CurrentTimePos();
+  auto tp = midi_player_->CurrentTimePos2();
   midi_output_->OpenPort(num);
-  midi_player_->GoTo(tp);
+  midi_player_->GoTo2(tp);
   if (was_playing) midi_player_->Play();
 }
 
@@ -126,8 +128,8 @@ void MainWindow::OpenFile(const QString& path) {
   midi_file_ = new cxxmidi::File(path.toStdString().c_str());
   midi_player_->SetFile(midi_file_);
 
-  final_time_Point_ = midi_file_->Duration().ToPoint();
-  ui_->labelTotal->setText(final_time_Point_.ToTimecode().c_str());
+  total_us_ = midi_file_->Duration2();
+  ui_->labelTotal->setText(std::to_string(total_us_.count()).c_str());
 
   this->centralWidget()->setDisabled(false);
 }
@@ -137,16 +139,16 @@ void MainWindow::OnPlayClicked() { midi_player_->Play(); }
 void MainWindow::OnPauseClicked() { midi_player_->Pause(); }
 
 void MainWindow::PlayerFinished() {
-  midi_player_->GoTo(cxxmidi::time::Point::Zero());
+  midi_player_->GoTo2(std::chrono::microseconds::zero());
   midi_player_->Play();
 }
 
-void MainWindow::UpdateTimeCode(cxxmidi::time::Point time) {
-  current_time_point_ = time;
-  ui_->labelTime->setText(time.ToTimecode().c_str());
+void MainWindow::UpdateTimeCode2(std::chrono::microseconds time) {
+  played_us_ = time;
+  ui_->labelTime->setText(std::to_string(time.count()).c_str());
 
   if (!slider_locked_) {
-    double norm_pos = current_time_point_ / final_time_Point_;
+    auto norm_pos = static_cast<double>(played_us_.count()) / total_us_.count();
     ui_->sliderTimeline->setValue(100 * norm_pos);
   }
 }
@@ -159,12 +161,12 @@ void MainWindow::OnTimeSliderReleased() {
   double val = ui_->sliderTimeline->value();
   double size = ui_->sliderTimeline->maximum();
   double pos = val / size;
-  cxxmidi::time::Point tp = midi_file_->Duration().ToPoint();
-  tp *= pos;
+  auto tp = static_cast<double>(midi_file_->Duration2().count()) * pos;
+  auto tp2 = static_cast<std::chrono::microseconds::rep>(tp);
 
   bool wasPlaying = midi_player_->IsPlaying();
   midi_player_->Pause();
-  midi_player_->GoTo(tp);
+  midi_player_->GoTo2(std::chrono::microseconds(tp2));
   if (wasPlaying) midi_player_->Play();
 
   slider_locked_ = false;

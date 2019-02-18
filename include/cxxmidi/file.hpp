@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include <chrono>
 
 #include <cxxmidi/track.hpp>
 
@@ -28,6 +29,7 @@ class File : public std::vector<Track> {
   inline void SetTimeDivision(uint16_t time_division);
 
   inline time::Duration Duration() const;
+  inline std::chrono::microseconds Duration2() const;
 
  private:
   uint16_t time_division_;  // [ticks per quarternote]
@@ -200,6 +202,11 @@ void File::SaveHeaderChunk(std::ofstream &output_file) const {
 time::Duration File::Duration() const {
   guts::Simulator simulator;
   return simulator.Duration(*this);
+}
+
+std::chrono::microseconds File::Duration2() const {
+  guts::Simulator simulator;
+  return simulator.Duration2(*this);
 }
 
 Track &File::AddTrack() {

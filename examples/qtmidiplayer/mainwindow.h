@@ -27,7 +27,7 @@ class MainWindow : public QMainWindow {
   void OnTimeSliderReleased();
   void OnTimeSliderPressed();
   void OnSpeedChange(double speed);
-  void UpdateTimeCode(cxxmidi::time::Point time);
+  void UpdateTimeCode2(std::chrono::microseconds time);
   void OnPauseClicked();
   void OnPlayClicked();
   void OpenFile(const QString& path);
@@ -42,8 +42,8 @@ class MainWindow : public QMainWindow {
   QActionGroup* outputs_action_group_;
   Ui::MainWindow* ui_;
 
-  cxxmidi::time::Point current_time_point_;
-  cxxmidi::time::Point final_time_Point_;
+  std::chrono::microseconds played_us_;
+  std::chrono::microseconds total_us_;
 
   cxxmidi::output::Default* midi_output_;
   cxxmidi::player::Asynchronous* midi_player_;

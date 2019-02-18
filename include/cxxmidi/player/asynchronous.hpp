@@ -25,8 +25,10 @@ class Asynchronous : public player::Abstract {
   inline virtual void Play();
   inline virtual void Pause();
 
-  inline void GoTo(const time::Point& pos);
+//  inline void GoTo(const time::Point& pos);
+  inline void GoTo2(const std::chrono::microseconds& pos);
   inline time::Point CurrentTimePos();
+  inline std::chrono::microseconds CurrentTimePos2();
 
   inline void SetFile(const File* file);
   inline void SetOutput(output::Abstract* output);
@@ -76,7 +78,10 @@ Asynchronous::Asynchronous(output::Abstract* output)
     : Abstract(output), pause_request_(false), thread_(0) {}
 
 Asynchronous::~Asynchronous() {
-  if (thread_) delete thread_;
+  if (thread_) {
+      if(thread_->joinable()) thread_->join();
+      delete thread_;
+  } //! @FIXME
 }
 
 void Asynchronous::Play() {
@@ -92,7 +97,10 @@ void Asynchronous::Play() {
 
   if (reject) return;
 
-  if (thread_) delete thread_;
+  if (thread_) {
+      if(thread_->joinable()) thread_->join();
+      delete thread_;
+  } //! @FIXME
   thread_ = new std::thread(Asynchronous::PlayerLoop, this);
 }
 
@@ -101,8 +109,11 @@ void Asynchronous::Pause() {
   pause_request_ = true;
   mutex_.unlock();
 
-  thread_->join();
+  if(thread_) {
+  if(thread_->joinable())
+      thread_->join(); //! @FIXME
   delete thread_;
+  }
   thread_ = 0;
 }
 
@@ -215,6 +226,7 @@ void* Asynchronous::PlayerLoop(void* caller) {
       sleep::SleepUs(partial / speed);
       that->mutex_.lock();
       that->current_time_pos_.AddUs(partial);
+      that->played_us_ += std::chrono::microseconds(partial);
       that->mutex_.unlock();
 
       if (clbk_fun_ptr_heartbeat) (*clbk_fun_ptr_heartbeat)(clbk_fun_ctx_heartbeat);
@@ -231,6 +243,7 @@ void* Asynchronous::PlayerLoop(void* caller) {
 
     that->mutex_.lock();
     that->current_time_pos_.AddUs(us);
+    that->played_us_ += std::chrono::microseconds(us);
     that->ExecEvent((*that->file_)[track_num][event_num]);
     that->UpdatePlayerState(track_num, dt);
     that->mutex_.unlock();
@@ -239,7 +252,23 @@ void* Asynchronous::PlayerLoop(void* caller) {
   return 0;
 }
 
-void Asynchronous::GoTo(const time::Point& pos) {
+//void Asynchronous::GoTo(const time::Point& pos) {
+//  //! @TODO If goTo is called from player's callback, different impl is needed
+
+//  mutex_.lock();
+//  bool was_playing = is_playing_;
+//  mutex_.unlock();
+
+//  if (was_playing) this->Pause();
+
+//  mutex_.lock();
+//  Abstract::GoTo(pos);
+//  mutex_.unlock();
+
+//  if (was_playing) this->Play();
+//}
+
+void Asynchronous::GoTo2(const std::chrono::microseconds& pos) {
   //! @TODO If goTo is called from player's callback, different impl is needed
 
   mutex_.lock();
@@ -249,7 +278,7 @@ void Asynchronous::GoTo(const time::Point& pos) {
   if (was_playing) this->Pause();
 
   mutex_.lock();
-  Abstract::GoTo(pos);
+  Abstract::GoTo2(pos);
   mutex_.unlock();
 
   if (was_playing) this->Play();
@@ -259,6 +288,14 @@ time::Point Asynchronous::CurrentTimePos() {
   time::Point r;
   mutex_.lock();
   r = current_time_pos_;
+  mutex_.unlock();
+  return r;
+}
+
+std::chrono::microseconds Asynchronous::CurrentTimePos2() {
+  std::chrono::microseconds r;
+  mutex_.lock();
+  r = played_us_;
   mutex_.unlock();
   return r;
 }
