@@ -36,7 +36,7 @@ namespace cxxmidi {
 class File : public std::vector<Track> {
  public:
   inline File();
-  inline File(const char *path);
+  inline explicit File(const char *path);
 
   inline void Load(const char *path);
   inline void SaveAs(const char *path) const;
