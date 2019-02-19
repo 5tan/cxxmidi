@@ -25,7 +25,6 @@ SOFTWARE.
 #include <QHBoxLayout>
 #include <QSplitter>
 
-
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
