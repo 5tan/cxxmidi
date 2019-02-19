@@ -14,11 +14,3 @@ TEST(Other, NoexceptMoveCtors) {
   EXPECT_TRUE(std::is_nothrow_move_constructible<cxxmidi::Track>::value);
   EXPECT_TRUE(std::is_nothrow_move_assignable<cxxmidi::Track>::value);
 }
-
-#include <chrono>
-
-TEST(Other, Time) {
-  std::cerr << std::chrono::microseconds::min().count() / 1000 / 1000 / 60 /
-                   60 / 24 / 365
-            << std::endl;
-}
