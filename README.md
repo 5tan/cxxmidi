@@ -91,5 +91,5 @@ CxxMidi class | Required external library
 
 ## License
 
-* CxxMidi: GPLv3
+* CxxMidi: MIT
 * RtMidi: https://www.music.mcgill.ca/~gary/rtmidi/index.html#license 
