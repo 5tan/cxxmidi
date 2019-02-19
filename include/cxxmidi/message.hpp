@@ -80,11 +80,10 @@ class Message : public std::vector<uint8_t> {
     SmpteOffset = 0x54,    // size 5
     TimeSignature = 0x58,
     KeySignature = 0x59
-
   };
 
   inline Message();
-  inline Message(uint8_t b1);
+  inline explicit Message(uint8_t b1);
   inline Message(uint8_t b1, uint8_t b2);
   inline Message(uint8_t b1, uint8_t b2, uint8_t b3);
 
@@ -168,9 +167,10 @@ bool Message::ContainsText() const {
 
 std::string Message::GetText() const {
   std::string r;
-  if (this->ContainsText())
+  if (this->ContainsText()) {
     for (size_t i = 2; i < this->size(); i++)
       r += static_cast<char>((*this)[i]);
+  }
   return r;
 }
 
@@ -212,7 +212,8 @@ std::string Message::GetName() const {
     }
   }
 
-  if (this->size()) switch ((*this)[0] & 0xf0) {
+  if (this->size()) {
+      switch ((*this)[0] & 0xf0) {
       case kNoteOff:
         return "NoteOff";
       case kNoteOn:
@@ -256,6 +257,7 @@ std::string Message::GetName() const {
       default:
         break;
     }
+  }
 
   return "";
 }
