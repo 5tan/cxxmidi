@@ -79,8 +79,9 @@ bool TrackModel::setData(const QModelIndex& index, const QVariant& value,
           if (elem.contains("0x")) {
             elem.remove("0x");
             c = elem.toInt(0, 16);
-          } else
+          } else {
             c = elem.toInt();
+          }
 
           event.push_back(c);
         }
@@ -245,14 +246,16 @@ QVariant TrackModel::headerData(int section, Qt::Orientation orientation,
     if (role == Qt::DisplayRole) return QVariant(section);
 
   // => orientation_ == Qt::Horizontal
-  if (role == Qt::DisplayRole) switch (section) {
+  if (role == Qt::DisplayRole) {
+      switch (section) {
       case COLUMN_DATA:
       case COLUMN_DT:
       case COLUMN_DESCR:
       case COLUMN_TYPE:
         return QVariant(columnNames[section]);
       default:
-        return QVariant();
+        break;
     }
+  }
   return QVariant();
 }
