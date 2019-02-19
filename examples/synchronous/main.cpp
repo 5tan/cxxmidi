@@ -1,4 +1,3 @@
-#include <cxxmidi/callback.hpp>
 #include <cxxmidi/file.hpp>
 #include <cxxmidi/output/default.hpp>
 #include <cxxmidi/player/synchronous.hpp>
