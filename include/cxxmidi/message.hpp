@@ -213,7 +213,7 @@ std::string Message::GetName() const {
   }
 
   if (this->size()) {
-      switch ((*this)[0] & 0xf0) {
+    switch ((*this)[0] & 0xf0) {
       case kNoteOff:
         return "NoteOff";
       case kNoteOn:

@@ -32,11 +32,13 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <alsa/asoundlib.h>
 #include <pthread.h>
 #include <sys/time.h>
-#include <iostream>
-#include <sstream>
-#include <vector>
 
 #include <cstdint>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <vector>
+
 #include <cxxmidi/output/abstract.hpp>
 
 namespace cxxmidi {
@@ -53,13 +55,13 @@ class Alsa : public output::Abstract {
     unsigned char *buffer;
     pthread_t thread;
     // unsigned long long lastTime;
-    unsigned long lastTime;
+    uint64_t lastTime;
     int queue_id;  // an input queue is needed to get timestamped events
   };
 
  public:
   inline Alsa();
-  inline Alsa(unsigned int initial_port);
+  inline explicit Alsa(unsigned int initial_port);
   inline virtual ~Alsa();
 
   Alsa(const Alsa &);             // non-copyable
@@ -134,7 +136,7 @@ size_t Alsa::portInfo(snd_seq_t *seq, snd_seq_port_info_t *pinfo,
       if ((atyp & SND_SEQ_PORT_TYPE_MIDI_GENERIC) == 0) continue;
       unsigned int caps = snd_seq_port_info_get_capability(pinfo);
       if ((caps & type) != type) continue;
-      if ((int)count == portNumber) return 1;
+      if (static_cast<int>(count) == portNumber) return 1;
       ++count;
     }
   }
@@ -161,7 +163,7 @@ std::string Alsa::GetPortName(unsigned int port_num) {
   std::string string_name;
   if (portInfo(_apiData->seq, pinfo,
                SND_SEQ_PORT_CAP_WRITE | SND_SEQ_PORT_CAP_SUBS_WRITE,
-               (int)port_num)) {
+               static_cast<int>(port_num))) {
     int cnum = snd_seq_port_info_get_client(pinfo);
     snd_seq_get_any_client_info(_apiData->seq, cnum, cinfo);
     std::ostringstream os;
@@ -229,7 +231,7 @@ void Alsa::OpenPort(unsigned int port_num) {
 
   if (portInfo(_apiData->seq, pinfo,
                SND_SEQ_PORT_CAP_WRITE | SND_SEQ_PORT_CAP_SUBS_WRITE,
-               (int)port_num) == 0) {
+               static_cast<int>(port_num)) == 0) {
 #ifndef CXXMIDI_QUIET
     std::cerr << "CxxMidi: invalid port port: " << port_num << std::endl;
 #endif
@@ -317,9 +319,9 @@ void Alsa::SendMessage(const std::vector<uint8_t> *msg) {
   snd_seq_ev_set_subs(&ev);
   snd_seq_ev_set_direct(&ev);
   for (unsigned int i = 0; i < nBytes; ++i) _apiData->buffer[i] = msg->at(i);
-  result = snd_midi_event_encode(_apiData->coder, _apiData->buffer,
-                                 (long)nBytes, &ev);
-  if (result < (int)nBytes) {
+  result =
+      snd_midi_event_encode(_apiData->coder, _apiData->buffer, nBytes, &ev);
+  if (result < static_cast<int>(nBytes)) {
 #ifndef CXXMIDI_QUIET
     std::cerr << "CxxMidi: event parsing error" << std::endl;
 #endif

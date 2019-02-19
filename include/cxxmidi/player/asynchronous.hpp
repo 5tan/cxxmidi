@@ -23,10 +23,13 @@ SOFTWARE.
 #ifndef INCLUDE_CXXMIDI_PLAYER_ASYNCHRONOUS_HPP_
 #define INCLUDE_CXXMIDI_PLAYER_ASYNCHRONOUS_HPP_
 
-#include <cxxmidi/player/abstract.hpp>
-
+#include <assert.h>
 #include <mutex>
 #include <thread>
+#include <cxxmidi/player/abstract.hpp>
+#include <cxxmidi/converters.hpp>
+#include <cxxmidi/file.hpp>
+#include <cxxmidi/guts/utils.hpp>
 
 namespace cxxmidi {
 class File;
@@ -34,15 +37,11 @@ namespace player {
 
 class Asynchronous : public player::Abstract {
  public:
-  inline Asynchronous(output::Abstract* output);
+  inline explicit Asynchronous(output::Abstract* output);
   inline virtual ~Asynchronous();
 
   Asynchronous(const Asynchronous&);             // non-copyable
   Asynchronous& operator=(const Asynchronous&);  // non-copyable (assignment)
-#if __cplusplus > 199711L
-  Asynchronous(Asynchronous&&) = default;
-  Asynchronous& operator=(Asynchronous&&) = default;
-#endif  // __cplusplus > 199711L
 
   inline virtual void Play();
   inline virtual void Pause();
@@ -76,13 +75,6 @@ class Asynchronous : public player::Abstract {
 
 }  // namespace player
 }  // namespace cxxmidi
-
-#include <assert.h>
-
-#include <cxxmidi/converters.hpp>
-#include <cxxmidi/file.hpp>
-
-#include <cxxmidi/guts/utils.hpp>
 
 namespace cxxmidi {
 namespace player {
