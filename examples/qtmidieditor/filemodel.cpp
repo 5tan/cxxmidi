@@ -24,8 +24,6 @@ SOFTWARE.
 
 FileModel::FileModel(QObject *parent) : QAbstractListModel(parent) {}
 
-FileModel::~FileModel() {}
-
 int FileModel::rowCount(const QModelIndex & /* index */) const {
   if (file_) return static_cast<int>(file_->Tracks());
 

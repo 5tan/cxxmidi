@@ -34,7 +34,7 @@ SOFTWARE.
 
 namespace Ui {
 class MainWindow;
-} // namespace UI
+}  // namespace Ui
 
 class MainWindow : public QMainWindow {
   Q_OBJECT
