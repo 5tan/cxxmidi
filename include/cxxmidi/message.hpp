@@ -20,8 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***************************************************************************** */
 
-#ifndef CXXMIDI_MESSAGE_HPP_
-#define CXXMIDI_MESSAGE_HPP_
+#ifndef INCLUDE_CXXMIDI_MESSAGE_HPP_
+#define INCLUDE_CXXMIDI_MESSAGE_HPP_
 
 #include <cstdint>
 #include <string>
@@ -262,4 +262,4 @@ std::string Message::GetName() const {
 
 }  // namespace cxxmidi
 
-#endif  // CXXMIDI_MESSAGE_HPP_
+#endif  // INCLUDE_CXXMIDI_MESSAGE_HPP_
