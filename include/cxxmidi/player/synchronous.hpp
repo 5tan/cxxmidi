@@ -57,7 +57,7 @@ class Synchronous : public player::Abstract {
 #include <cxxmidi/converters.hpp>
 #include <cxxmidi/file.hpp>
 
-#include <cxxmidi/utils.hpp>
+#include <cxxmidi/guts/utils.hpp>
 
 namespace cxxmidi {
 namespace player {
