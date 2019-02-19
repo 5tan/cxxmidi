@@ -34,12 +34,6 @@ SOFTWARE.
 #include <functional>
 #include <vector>
 
-#include <cxxmidi/converters.hpp>
-#include <cxxmidi/event.hpp>
-#include <cxxmidi/file.hpp>
-#include <cxxmidi/guts/utils.hpp>
-#include <cxxmidi/output/abstract.hpp>
-
 namespace cxxmidi {
 namespace output {
 class Abstract;
@@ -111,6 +105,12 @@ class Abstract {
 
 }  // namespace player
 }  // namespace cxxmidi
+
+#include <cxxmidi/output/abstract.hpp>
+#include <cxxmidi/event.hpp>
+#include <cxxmidi/file.hpp>
+#include <cxxmidi/converters.hpp>
+#include <cxxmidi/guts/utils.hpp>
 
 namespace cxxmidi {
 namespace player {

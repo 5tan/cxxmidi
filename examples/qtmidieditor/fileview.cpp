@@ -20,9 +20,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***************************************************************************** */
 
-#include "fileview.h"
-
 #include <QMenu>
+
+#include "fileview.h"
 
 FileView::FileView(QWidget* parent) : QListView(parent) {
   this->setContextMenuPolicy(Qt::CustomContextMenu);
