@@ -20,8 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***************************************************************************** */
 
-#ifndef CXXMIDI_EVENT_HPP
-#define CXXMIDI_EVENT_HPP
+#ifndef CXXMIDI_EVENT_HPP_
+#define CXXMIDI_EVENT_HPP_
 
 #include <cstdint>
 
@@ -77,4 +77,4 @@ void Event::SetDt(uint32_t dt) { dt_ = dt; }
 
 }  // namespace cxxmidi
 
-#endif  // CXXMIDI_EVENT_HPP
+#endif  // CXXMIDI_EVENT_HPP_

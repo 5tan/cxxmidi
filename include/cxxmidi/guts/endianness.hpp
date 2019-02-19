@@ -20,8 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***************************************************************************** */
 
-#ifndef CXXMIDI_GUTS_ENDIANNESS_HPP
-#define CXXMIDI_GUTS_ENDIANNESS_HPP
+#ifndef INCLUDE_CXXMIDI_GUTS_ENDIANNESS_HPP_
+#define INCLUDE_CXXMIDI_GUTS_ENDIANNESS_HPP_
 
 #include <cstdint>
 #include <fstream>
@@ -86,4 +86,4 @@ size_t WriteBe(std::ofstream &file, T val) {
 }  // namespace guts
 }  // namespace cxxmidi
 
-#endif  // CXXMIDI_GUTS_ENDIANNESS_HPP
+#endif  // INCLUDE_CXXMIDI_GUTS_ENDIANNESS_HPP_

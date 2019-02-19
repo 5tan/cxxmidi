@@ -20,8 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***************************************************************************** */
 
-#ifndef CXXMIDI_NOTE_HPP
-#define CXXMIDI_NOTE_HPP
+#ifndef CXXMIDI_NOTE_HPP_
+#define CXXMIDI_NOTE_HPP_
 
 #include <string>
 
@@ -542,4 +542,4 @@ std::string Note::GetName(int note) {
 
 }  // namespace cxxmidi
 
-#endif  // CXXMIDI_NOTE_HPP
+#endif  // CXXMIDI_NOTE_HPP_

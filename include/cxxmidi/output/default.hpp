@@ -20,8 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***************************************************************************** */
 
-#ifndef CXXMIDI_OUTPUT_DEFAULT_HPP
-#define CXXMIDI_OUTPUT_DEFAULT_HPP
+#ifndef INCLUDE_CXXMIDI_OUTPUT_DEFAULT_HPP_
+#define INCLUDE_CXXMIDI_OUTPUT_DEFAULT_HPP_
 
 #ifdef _WIN32  // Windows 32-bit and 64-bit
 #include <cxxmidi/output/windows.hpp>
@@ -43,4 +43,4 @@ typedef output::linuxo::Alsa Default;
 #error "CxxMidi: couldn't determine the OS"
 #endif
 
-#endif  // CXXMIDI_OUTPUT_DEFAULT_HPP
+#endif  // INCLUDE_CXXMIDI_OUTPUT_DEFAULT_HPP_

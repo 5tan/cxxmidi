@@ -20,8 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***************************************************************************** */
 
-#ifndef CCXMIDI_SYSEX_HPP
-#define CCXMIDI_SYSEX_HPP
+#ifndef CCXMIDI_SYSEX_HPP_
+#define CCXMIDI_SYSEX_HPP_
 
 namespace cxxmidi {
 
@@ -375,4 +375,4 @@ class Sysex {
 
 }  // namespace cxxmidi
 
-#endif  // CXXMIDI_SYSEX_HPP
+#endif  // CXXMIDI_SYSEX_HPP_
