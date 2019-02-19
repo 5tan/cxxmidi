@@ -23,15 +23,22 @@ SOFTWARE.
 #ifndef INCLUDE_CXXMIDI_PLAYER_ABSTRACT_HPP_
 #define INCLUDE_CXXMIDI_PLAYER_ABSTRACT_HPP_
 
+#ifdef WIN32
+#include <Windows.h>
+#endif
+#include <assert.h>
+
 #include <chrono>
 #include <cstdint>
 #include <vector>
 #include <functional>
 #include <algorithm>
 
-#ifdef WIN32
-#include <Windows.h>
-#endif
+#include <cxxmidi/converters.hpp>
+#include <cxxmidi/event.hpp>
+#include <cxxmidi/file.hpp>
+#include <cxxmidi/guts/utils.hpp>
+#include <cxxmidi/output/abstract.hpp>
 
 namespace cxxmidi {
 namespace output {
@@ -104,14 +111,6 @@ class Abstract {
 
 }  // namespace player
 }  // namespace cxxmidi
-
-#include <assert.h>
-
-#include <cxxmidi/converters.hpp>
-#include <cxxmidi/event.hpp>
-#include <cxxmidi/file.hpp>
-#include <cxxmidi/guts/utils.hpp>
-#include <cxxmidi/output/abstract.hpp>
 
 namespace cxxmidi {
 namespace player {
