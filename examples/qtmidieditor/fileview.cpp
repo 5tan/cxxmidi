@@ -31,8 +31,6 @@ FileView::FileView(QWidget* parent) : QListView(parent) {
           &FileView::ShowContextMenu);
 }
 
-FileView::~FileView() {}
-
 void FileView::ShowContextMenu(const QPoint& pos) {
   QAction* action;
   int p = this->indexAt(pos).row();

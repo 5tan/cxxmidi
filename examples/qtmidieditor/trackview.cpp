@@ -31,8 +31,6 @@ TrackView::TrackView(QWidget* parent) : QTableView(parent) {
           &TrackView::ShowContextMenu);
 }
 
-TrackView::~TrackView() {}
-
 void TrackView::ShowContextMenu(const QPoint& pos) {
   QAction* action;
 

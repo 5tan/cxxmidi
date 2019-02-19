@@ -30,7 +30,7 @@ class TrackView : public QTableView {
   Q_OBJECT
  public:
   explicit TrackView(QWidget* parent = 0);
-  virtual ~TrackView();
+  virtual ~TrackView() = default;
 
  signals:
   void RequestAddEvent(int num);

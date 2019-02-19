@@ -66,10 +66,6 @@ class Alsa : public output::Abstract {
 
   Alsa(const Alsa &);             // non-copyable
   Alsa &operator=(const Alsa &);  // non-copyable (assignment)
-#if __cplusplus > 199711L
-  Alsa(Alsa &&) = default;
-  Alsa &operator=(Alsa &&) = default;
-#endif  // __cplusplus > 199711L
 
   inline virtual void OpenPort(unsigned int port_num = 0);
   inline virtual void ClosePort();
