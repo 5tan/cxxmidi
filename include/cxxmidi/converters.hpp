@@ -24,6 +24,7 @@ SOFTWARE.
 #define INCLUDE_CXXMIDI_CONVERTERS_HPP_
 
 #include <chrono>
+
 #include <cxxmidi/guts/utils.hpp>
 
 namespace cxxmidi {
