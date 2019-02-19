@@ -28,11 +28,11 @@ SOFTWARE.
 #endif
 #include <assert.h>
 
+#include <algorithm>
 #include <chrono>
 #include <cstdint>
-#include <vector>
 #include <functional>
-#include <algorithm>
+#include <vector>
 
 #include <cxxmidi/converters.hpp>
 #include <cxxmidi/event.hpp>

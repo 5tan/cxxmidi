@@ -25,6 +25,7 @@ SOFTWARE.
 
 #include <assert.h>
 #include <thread>
+
 #include <cxxmidi/converters.hpp>
 #include <cxxmidi/file.hpp>
 #include <cxxmidi/guts/utils.hpp>

@@ -26,10 +26,11 @@ SOFTWARE.
 #include <assert.h>
 #include <mutex>
 #include <thread>
-#include <cxxmidi/player/abstract.hpp>
+
 #include <cxxmidi/converters.hpp>
 #include <cxxmidi/file.hpp>
 #include <cxxmidi/guts/utils.hpp>
+#include <cxxmidi/player/abstract.hpp>
 
 namespace cxxmidi {
 class File;
