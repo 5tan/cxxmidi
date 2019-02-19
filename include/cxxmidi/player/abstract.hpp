@@ -25,7 +25,6 @@ SOFTWARE.
 
 #include <cstdint>
 #include <chrono>
-#include <cxxmidi/callback.hpp>
 
 #include <vector>
 
@@ -76,15 +75,8 @@ class Abstract {
   inline void SetSpeed(float speed) { speed_ = speed; }
   inline float Speed() const { return speed_; }
 
-  inline void SetCallbackHeartbeat(void (*callback)(void*), void* context);
-  inline void SetCallbackFinished(void (*callback)(void*), void* context);
-
-  inline void SetCallbackHeartbeat(Callback* callback);
-  inline void SetCallbackFinished(Callback* callback);
-#if __cplusplus > 199711L
   inline void SetCallbackHeartbeat(const std::function<void()>& callback);
   inline void SetCallbackFinished(const std::function<void()>& callback);
-#endif  // __cplusplus > 199711L
 
  protected:
   inline bool TrackFinished(size_t track_num) const;
@@ -113,21 +105,8 @@ class Abstract {
 
   int heartbeat_helper_;
 
-  // C style callbacks
-  void (*clbk_fun_ptr_heartbeat_)(void*);
-  void* clbk_fun_ctx_heartbeat_;
-  void (*_clbkFunPtrFinished)(void*);
-  void* clbk_fun_ctx_finished_;
-
-  // C++ style callbacs
-  Callback* clbk_obj_ptr_heartbeat_;
-  Callback* clbk_obj_ptr_finished_;
-
-#if __cplusplus > 199711L
-  // C++11 style callbacks
   std::function<void()> clbk_fun_heartbeat_;
   std::function<void()> clbk_fun_finished_;
-#endif  // __cplusplus > 199711L
 
  private:
   static inline void SetupWindowsTimers();
@@ -153,13 +132,7 @@ Abstract::Abstract()
       speed_(1),
       file_(0),
       output_(0),
-      heartbeat_helper_(0),
-      clbk_fun_ptr_heartbeat_(0),
-      clbk_fun_ctx_heartbeat_(0),
-      _clbkFunPtrFinished(0),
-      clbk_fun_ctx_finished_(0),
-      clbk_obj_ptr_heartbeat_(0),
-      clbk_obj_ptr_finished_(0) {
+      heartbeat_helper_(0) {
   Abstract::SetupWindowsTimers();
 }
 
@@ -169,13 +142,7 @@ Abstract::Abstract(output::Abstract* output)
       speed_(1),
       file_(0),
       output_(output),
-      heartbeat_helper_(0),
-      clbk_fun_ptr_heartbeat_(0),
-      clbk_fun_ctx_heartbeat_(0),
-      _clbkFunPtrFinished(0),
-      clbk_fun_ctx_finished_(0),
-      clbk_obj_ptr_heartbeat_(0),
-      clbk_obj_ptr_finished_(0) {
+      heartbeat_helper_(0) {
   Abstract::SetupWindowsTimers();
 }
 
@@ -251,24 +218,6 @@ bool Abstract::Finished() const {
     if (!this->TrackFinished(i)) return false;
 
   return true;
-}
-
-void Abstract::SetCallbackHeartbeat(void (*callback)(void*), void* context) {
-  clbk_fun_ptr_heartbeat_ = callback;
-  clbk_fun_ctx_heartbeat_ = context;
-}
-
-void Abstract::SetCallbackFinished(void (*callback)(void*), void* context) {
-  _clbkFunPtrFinished = callback;
-  clbk_fun_ctx_finished_ = context;
-}
-
-void Abstract::SetCallbackHeartbeat(Callback* callback) {
-  clbk_obj_ptr_heartbeat_ = callback;
-}
-
-void Abstract::SetCallbackFinished(Callback* callback) {
-  clbk_obj_ptr_finished_ = callback;
 }
 
 #if __cplusplus > 199711L

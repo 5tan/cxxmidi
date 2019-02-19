@@ -8,10 +8,6 @@
 #include <cxxmidi/output/default.hpp>
 #include <cxxmidi/player/asynchronous.hpp>
 
-
-#include "playerfinishedcallback.h"
-#include "playerheartbeatcallback.h"
-
 namespace Ui {
 class MainWindow;
 }
@@ -22,6 +18,10 @@ class MainWindow : public QMainWindow {
  public:
   explicit MainWindow(QWidget* parent = 0);
   ~MainWindow();
+
+signals:
+ void PlayerFinished();
+ void PlayerTimeChanged(std::chrono::microseconds time);
 
  private slots:
   void OnTimeSliderReleased();
@@ -34,7 +34,7 @@ class MainWindow : public QMainWindow {
   void OpenFile();
   void SetOutput(int num);
   void OnOutputSelected(QAction* action);
-  void PlayerFinished();
+  void OnPlayerFinished();
 
  private:
   void CreateMenuBar();
@@ -48,9 +48,6 @@ class MainWindow : public QMainWindow {
   cxxmidi::output::Default* midi_output_;
   cxxmidi::player::Asynchronous* midi_player_;
   cxxmidi::File* midi_file_;
-
-  PlayerHeartbeatCallback player_heartbeat_callback_;
-  PlayerFinishedCallback player_finished_callback_;
 
   bool slider_locked_;
 };

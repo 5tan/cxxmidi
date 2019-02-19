@@ -19,9 +19,7 @@ include_directories(
 
 set(QTMIDIPLAYER_SRCS
   main.cpp
-  mainwindow.cpp
-  playerfinishedcallback.cpp
-  playerheartbeatcallback.cpp)
+  mainwindow.cpp)
 
 add_executable(qtmidiplayer ${QTMIDIPLAYER_SRCS})
 target_link_libraries(qtmidiplayer
