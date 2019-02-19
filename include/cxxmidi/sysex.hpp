@@ -373,6 +373,6 @@ class Sysex {
   };
 };
 
-}  // namespace CxxMidi
+}  // namespace cxxmidi
 
 #endif  // CXXMIDI_SYSEX_HPP

@@ -42,8 +42,8 @@ class Simulator : public player::Abstract {
   inline virtual void Resume() {}
 };
 
-}  // namespace Guts
-}  // namespace CxxMidi
+}  // namespace guts
+}  // namespace cxxmidi
 
 #include <cxxmidi/converters.hpp>
 
@@ -70,7 +70,7 @@ std::chrono::microseconds Simulator::Duration(const File &file) {
   return r;
 }
 
-}  // namespace Guts
-}  // namespace CxxMidi
+}  // namespace guts
+}  // namespace cxxmidi
 
 #endif  // CXXMIDI_GUTS_SIMULATOR_HPP

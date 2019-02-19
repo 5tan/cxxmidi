@@ -49,8 +49,8 @@ class Synchronous : public player::Abstract {
   inline virtual void Pause() {}
 };
 
-}  // namespace Player
-}  // namespace CxxMidi
+}  // namespace player
+}  // namespace cxxmidi
 
 #include <assert.h>
 
@@ -114,7 +114,7 @@ void Synchronous::PlayerLoop() {
 #endif  // __cplusplus > 199711L
 }
 
-}  // namespace Player
-}  // namespace CxxMidi
+}  // namespace player
+}  // namespace cxxmidi
 
 #endif  // CXXMIDI_PLAYER_SYNCHRONOUS_HPP

@@ -250,7 +250,7 @@ class Note {
   int val_;  // 0 ... 127
 };
 
-}  // namespace CxxMidi
+}  // namespace cxxmidi
 
 namespace cxxmidi {
 
@@ -540,6 +540,6 @@ std::string Note::GetName(int note) {
   }
 }
 
-}  // namespace CxxMidi
+}  // namespace cxxmidi
 
 #endif  // CXXMIDI_NOTE_HPP

@@ -88,8 +88,8 @@ class Windows : public Output::Abstract {
   void *api_data_;
 };
 
-}  // namespace Output
-}  // namespace CxxMidi
+}  // namespace output
+}  // namespace cxxmidi
 
 namespace cxxmidi {
 namespace Output {
@@ -274,7 +274,7 @@ void Windows::SendMessage(const std::vector<uint8_t> *msg_) {
   }
 }
 
-}  // namespace Output
-}  // namespace CxxMidi
+}  // namespace output
+}  // namespace cxxmidi
 
 #endif  // CXXMIDI_OUTPUT_WINDOWS_HPP

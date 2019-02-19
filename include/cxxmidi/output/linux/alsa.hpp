@@ -87,8 +87,8 @@ class Alsa : public output::Abstract {
 };
 
 }  // namespace Linux
-}  // namespace Output
-}  // namespace CxxMidi
+}  // namespace output
+}  // namespace cxxmidi
 
 namespace cxxmidi {
 namespace output {
@@ -336,7 +336,7 @@ void Alsa::SendMessage(const std::vector<uint8_t> *msg) {
 }
 
 }  // namespace Linux
-}  // namespace Output
-}  // namespace CxxMidi
+}  // namespace output
+}  // namespace cxxmidi
 
 #endif  // CXXMIDI_OUTPUT_LINUX_ALSA_HPP
