@@ -55,13 +55,13 @@ class File : public std::vector<Track> {
   inline void ReadHeaderChunk(std::fstream &file);
   inline void ReadUnknownChunk(std::fstream &file);
   inline void ReadTrackChunk(std::fstream &file);
-  inline void ReadEvent(std::fstream &file, Event &event, bool &track_continue,
-                        uint8_t &running_status);
+  inline void ReadEvent(std::fstream &file, Event *event, bool *track_continue,
+                        uint8_t *running_status);
 
   inline void SaveHeaderChunk(std::ofstream &output_file) const;
   inline void SaveTrackChunk(std::ofstream &output_file, size_t num) const;
   inline size_t SaveEvent(std::ofstream &output_file, const Event &event,
-                          uint8_t &last_cmd) const;
+                          uint8_t *last_cmd) const;
 
   inline static void Putc(std::ofstream &file, uint8_t c);
 };
@@ -119,7 +119,7 @@ void File::SaveTrackChunk(std::ofstream &output_file, size_t num) const {
   for (size_t i = 0; i < track.size(); i++) {
     const Event &event = track.at(i);
     chunk_size +=
-        static_cast<uint32_t>(this->SaveEvent(output_file, event, last_cmd));
+        static_cast<uint32_t>(this->SaveEvent(output_file, event, &last_cmd));
   }
 
   // go back to chunk size
@@ -132,7 +132,7 @@ void File::SaveTrackChunk(std::ofstream &output_file, size_t num) const {
 }
 
 size_t File::SaveEvent(std::ofstream &output_file, const Event &event,
-                       uint8_t &last_cmd) const {
+                       uint8_t *last_cmd) const {
   size_t r = 0;
 
   if (event.IsSysex()) {
@@ -151,7 +151,7 @@ size_t File::SaveEvent(std::ofstream &output_file, const Event &event,
       r++;
     }
 
-    last_cmd = 0;
+    *last_cmd = 0;
 
     return r;
   }
@@ -173,7 +173,7 @@ size_t File::SaveEvent(std::ofstream &output_file, const Event &event,
       r++;
     }
 
-    last_cmd = 0;
+    *last_cmd = 0;
 
     return r;
   }
@@ -182,7 +182,7 @@ size_t File::SaveEvent(std::ofstream &output_file, const Event &event,
 
   r += utils::SaveVlq(output_file, event.Dt());
 
-  if (last_cmd != nowCmd) {
+  if (*last_cmd != nowCmd) {
     File::Putc(output_file, nowCmd);  // byte 0, event type
     r++;
   }
@@ -193,7 +193,7 @@ size_t File::SaveEvent(std::ofstream &output_file, const Event &event,
   }
 
   // save current command if we use running status
-  last_cmd = nowCmd;
+  *last_cmd = nowCmd;
 
   return r;
 }
@@ -257,9 +257,8 @@ void File::Load(const char *path) {
   unsigned int i = 0;
   unsigned int headers = 0;
 
-  // loop over chunks
-  while (file.good() && (fileLength - file.tellg()))  // data still in buffer
-  {
+  // loop over chunks while data still in buffer
+  while (file.good() && (fileLength - file.tellg())) {
     uint32_t chunk_id = guts::endianness::ReadBe<uint32_t>(file);
 
     switch (chunk_id) {
@@ -275,7 +274,7 @@ void File::Load(const char *path) {
       default:
 #ifndef CXXMIDI_QUIET
         std::cerr << "CxxMidi: ignoring unknown chunk: 0x" << std::hex
-                  << (int)chunk_id << std::endl;
+                  << static_cast<int>(chunk_id) << std::endl;
 #endif
         this->ReadUnknownChunk(file);
         break;
@@ -361,7 +360,7 @@ void File::ReadTrackChunk(std::fstream &file) {
     event.SetDt(dt);
 
     // read event data
-    this->ReadEvent(file, event, track_continue, running_status);
+    this->ReadEvent(file, &event, &track_continue, &running_status);
   }
 
 #ifndef CXXMIDI_QUIET
@@ -371,24 +370,24 @@ void File::ReadTrackChunk(std::fstream &file) {
 #endif
 }
 
-void File::ReadEvent(std::fstream &file, Event &event, bool &track_continue,
-                     uint8_t &running_status) {
+void File::ReadEvent(std::fstream &file, Event *event, bool *track_continue,
+                     uint8_t *running_status) {
   uint8_t cmd = guts::endianness::ReadBe<uint8_t>(file);
 
   // check running status
   bool incomplete = false;
   if (cmd < 0x80) {
     incomplete = true;  // this flag says: do not read to much later
-    event.push_back(running_status);  // command from previous complete event
-    event.push_back(cmd);
-    cmd = running_status;  // swap
+    event->push_back(*running_status);  // command from previous complete event
+    event->push_back(cmd);
+    cmd = *running_status;  // swap
   } else {
-    running_status = cmd;  // current command for this track
-    event.push_back(cmd);
+    *running_status = cmd;  // current command for this track
+    event->push_back(cmd);
   }
 
-  switch (cmd & 0xf0)  // control events
-  {
+  // control events
+  switch (cmd & 0xf0) {
     // two parameter events
     case Event::kNoteOn:
     case Event::kNoteOff:
@@ -396,16 +395,18 @@ void File::ReadEvent(std::fstream &file, Event &event, bool &track_continue,
     case Event::kControlChange:
     case Event::kPitchWheel: {
       // get parameter 1
-      event.push_back(guts::endianness::ReadBe<uint8_t>(file));
+      event->push_back(guts::endianness::ReadBe<uint8_t>(file));
 
       // get parameter 2
-      if (!incomplete) event.push_back(guts::endianness::ReadBe<uint8_t>(file));
+      if (!incomplete)
+        event->push_back(guts::endianness::ReadBe<uint8_t>(file));
     } break;
 
       // one parameter events
     case Event::kProgramChange:
     case Event::kChannelAftertouch: {
-      if (!incomplete) event.push_back(guts::endianness::ReadBe<uint8_t>(file));
+      if (!incomplete)
+        event->push_back(guts::endianness::ReadBe<uint8_t>(file));
     } break;
 
     case 0xf0:  // META events or SysEx events
@@ -414,7 +415,7 @@ void File::ReadEvent(std::fstream &file, Event &event, bool &track_continue,
         case 0xff:  // META events
         {
           uint8_t meta_event_type = guts::endianness::ReadBe<uint8_t>(file);
-          event.push_back(meta_event_type);
+          event->push_back(meta_event_type);
 
           switch (meta_event_type) {
             default: {
@@ -471,12 +472,12 @@ void File::ReadEvent(std::fstream &file, Event &event, bool &track_continue,
                   std::cerr << "CxxMidi: end of track event size is not 0 but "
                             << strLength << std::endl;
 #endif
-                track_continue = false;
+                *track_continue = false;
               }
 
               // read string
               for (int i = 0; i < strLength; i++)
-                event.push_back(guts::endianness::ReadBe<uint8_t>(file));
+                event->push_back(guts::endianness::ReadBe<uint8_t>(file));
             } break;
           }
           break;
@@ -487,14 +488,15 @@ void File::ReadEvent(std::fstream &file, Event &event, bool &track_continue,
           // uint32_t size = Guts::Endianness::readBE<uint8_t>(file);
 
           for (unsigned int i = 0; i < size; i++)
-            event.push_back(guts::endianness::ReadBe<uint8_t>(file));
+            event->push_back(guts::endianness::ReadBe<uint8_t>(file));
         } break;
       }  // switch cmd
     }    // case 0xf0
     break;
     default:
 #ifndef CXXMIDI_QUIET
-      std::cerr << "warning: unknown event " << (int)cmd << std::endl;
+      std::cerr << "warning: unknown event " << static_cast<int>(cmd)
+                << std::endl;
 #endif
       break;
   }
