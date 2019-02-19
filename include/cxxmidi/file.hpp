@@ -71,7 +71,7 @@ class File : public std::vector<Track> {
 #include <cxxmidi/guts/endianness.hpp>
 #include <cxxmidi/guts/simulator.hpp>
 
-#include <cxxmidi/utils.hpp>
+#include <cxxmidi/guts/utils.hpp>
 
 namespace cxxmidi {
 
