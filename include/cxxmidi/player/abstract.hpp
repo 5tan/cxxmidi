@@ -142,7 +142,7 @@ class Abstract {
 #include <cxxmidi/event.hpp>
 #include <cxxmidi/file.hpp>
 #include <cxxmidi/output/abstract.hpp>
-#include <cxxmidi/utils.hpp>
+#include <cxxmidi/guts/utils.hpp>
 
 namespace cxxmidi {
 namespace player {
