@@ -34,8 +34,6 @@ const char* TrackModel::columnNames[] = {"Dt [ticks]", "Data", "Type",
 TrackModel::TrackModel(QObject* parent)
     : QAbstractTableModel(parent), track_(0) {}
 
-TrackModel::~TrackModel() {}
-
 Qt::ItemFlags TrackModel::flags(const QModelIndex& index) const {
   if ((index.column() == COLUMN_DT) || (index.column() == COLUMN_DATA))
     return Qt::ItemIsSelectable | Qt::ItemIsEditable | Qt::ItemIsEnabled;
