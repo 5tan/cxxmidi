@@ -27,9 +27,6 @@ SOFTWARE.
 #include <mutex>
 #include <thread>
 
-#include <cxxmidi/converters.hpp>
-#include <cxxmidi/file.hpp>
-#include <cxxmidi/guts/utils.hpp>
 #include <cxxmidi/player/abstract.hpp>
 
 namespace cxxmidi {
@@ -76,6 +73,10 @@ class Asynchronous : public player::Abstract {
 
 }  // namespace player
 }  // namespace cxxmidi
+
+#include <cxxmidi/converters.hpp>
+#include <cxxmidi/file.hpp>
+#include <cxxmidi/guts/utils.hpp>
 
 namespace cxxmidi {
 namespace player {
