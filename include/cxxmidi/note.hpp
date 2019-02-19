@@ -237,7 +237,7 @@ class Note {
   };
 
   inline Note();
-  inline Note(int val);
+  inline explicit Note(int val);
 
   inline static Note MiddleC();
   inline static Note A440Hz();

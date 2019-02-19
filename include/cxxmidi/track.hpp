@@ -39,8 +39,6 @@ class Track : public std::vector<Event> {
 
 }  // namespace cxxmidi
 
-#include <cxxmidi/event.hpp>
-
 namespace cxxmidi {
 
 Event& Track::AddEvent() {
@@ -53,11 +51,12 @@ std::string Track::GetName() const {
 
   for (size_t i = 0; i < this->size(); i++) {
     const Event* event = &this->at(i);
-    if (event->IsMeta())
+    if (event->IsMeta()) {
       if (event->at(1) == Event::TrackName) {
         if (!r.empty()) r += ", ";
         r += event->GetText();
       }
+    }
   }
 
   return r;

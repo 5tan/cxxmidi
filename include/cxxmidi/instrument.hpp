@@ -246,7 +246,7 @@ Instrument::operator int() const { return val_; }
 
 std::string Instrument::GetName(int instrument, int channel) {
   if (channel == 10) {
-      switch (instrument) {
+    switch (instrument) {
       case kAcousticBassDrum:
         return "Acoustic Bass Drum";
       case kBassDrum1:

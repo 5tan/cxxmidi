@@ -65,8 +65,6 @@ class Abstract {
 }  // namespace output
 }  // namespace cxxmidi
 
-#include <cstdint>
-
 namespace cxxmidi {
 namespace output {
 

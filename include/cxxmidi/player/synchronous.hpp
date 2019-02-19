@@ -23,8 +23,12 @@ SOFTWARE.
 #ifndef INCLUDE_CXXMIDI_PLAYER_SYNCHRONOUS_HPP_
 #define INCLUDE_CXXMIDI_PLAYER_SYNCHRONOUS_HPP_
 
-#include <cxxmidi/player/abstract.hpp>
+#include <assert.h>
 #include <thread>
+#include <cxxmidi/converters.hpp>
+#include <cxxmidi/file.hpp>
+#include <cxxmidi/guts/utils.hpp>
+#include <cxxmidi/player/abstract.hpp>
 
 namespace cxxmidi {
 class File;
@@ -32,15 +36,8 @@ namespace player {
 
 class Synchronous : public player::Abstract {
  public:
-  inline Synchronous(output::Abstract* output);
-  inline virtual ~Synchronous();
-
-  // Synchronous(const Synchronous&); // default is ok
-  // Synchronous &operator=(const Synchronous &); // default is ok
-#if __cplusplus > 199711L
-  Synchronous(Synchronous&&) = default;
-  Synchronous& operator=(Synchronous&&) = default;
-#endif  // __cplusplus > 199711L
+  inline explicit Synchronous(output::Abstract* output);
+  inline virtual ~Synchronous() = default;
 
   inline virtual void Play();
 
@@ -52,19 +49,10 @@ class Synchronous : public player::Abstract {
 }  // namespace player
 }  // namespace cxxmidi
 
-#include <assert.h>
-
-#include <cxxmidi/converters.hpp>
-#include <cxxmidi/file.hpp>
-
-#include <cxxmidi/guts/utils.hpp>
-
 namespace cxxmidi {
 namespace player {
 
 Synchronous::Synchronous(output::Abstract* output) : Abstract(output) {}
-
-Synchronous::~Synchronous() {}
 
 void Synchronous::Play() {
   if (!output_ || !file_) return;
