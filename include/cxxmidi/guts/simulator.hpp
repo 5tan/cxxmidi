@@ -47,7 +47,6 @@ class Simulator : public player::Abstract {
 
 #include <cxxmidi/converters.hpp>
 
-
 namespace cxxmidi {
 namespace guts {
 

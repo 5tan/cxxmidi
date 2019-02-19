@@ -11,8 +11,7 @@ int main(int, char**) {
 
   player.SetCallbackHeartbeat([]() { std::cout << "beep!" << std::endl; });
 
-  player.SetCallbackFinished(
-      []() { std::cout << "finished!" << std::endl; });
+  player.SetCallbackFinished([]() { std::cout << "finished!" << std::endl; });
 
   player.Play();
 }

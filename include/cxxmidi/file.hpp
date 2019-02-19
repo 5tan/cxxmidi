@@ -23,11 +23,11 @@ SOFTWARE.
 #ifndef CXXMIDI_FILE_HPP_
 #define CXXMIDI_FILE_HPP_
 
+#include <chrono>
 #include <cstdint>
 #include <fstream>
 #include <iostream>
 #include <vector>
-#include <chrono>
 
 #include <cxxmidi/track.hpp>
 
@@ -55,8 +55,8 @@ class File : public std::vector<Track> {
   inline void ReadHeaderChunk(std::fstream &file);
   inline void ReadUnknownChunk(std::fstream &file);
   inline void ReadTrackChunk(std::fstream &file);
-  inline void ReadEvent(std::fstream &file, Event &event,
-                        bool &track_continue, uint8_t &running_status);
+  inline void ReadEvent(std::fstream &file, Event &event, bool &track_continue,
+                        uint8_t &running_status);
 
   inline void SaveHeaderChunk(std::ofstream &output_file) const;
   inline void SaveTrackChunk(std::ofstream &output_file, size_t num) const;
@@ -160,7 +160,7 @@ size_t File::SaveEvent(std::ofstream &output_file, const Event &event,
     // save delta time variable-length quantity
     r += utils::SaveVlq(output_file, event.Dt());
 
-    File::Putc(output_file, 0xff);          // byte 0 (event_.at(0))
+    File::Putc(output_file, 0xff);         // byte 0 (event_.at(0))
     File::Putc(output_file, event.at(1));  // byte 1, meta event type
     r += 2;
 
@@ -399,15 +399,13 @@ void File::ReadEvent(std::fstream &file, Event &event, bool &track_continue,
       event.push_back(guts::endianness::ReadBe<uint8_t>(file));
 
       // get parameter 2
-      if (!incomplete)
-        event.push_back(guts::endianness::ReadBe<uint8_t>(file));
+      if (!incomplete) event.push_back(guts::endianness::ReadBe<uint8_t>(file));
     } break;
 
       // one parameter events
     case Event::kProgramChange:
     case Event::kChannelAftertouch: {
-      if (!incomplete)
-        event.push_back(guts::endianness::ReadBe<uint8_t>(file));
+      if (!incomplete) event.push_back(guts::endianness::ReadBe<uint8_t>(file));
     } break;
 
     case 0xf0:  // META events or SysEx events
@@ -445,7 +443,8 @@ void File::ReadEvent(std::fstream &file, Event &event, bool &track_continue,
               // event_.push_back(strLength);
 
 #ifndef CXXMIDI_QUIET
-              if ((meta_event_type == Event::SequenceNumber) && (strLength != 2))
+              if ((meta_event_type == Event::SequenceNumber) &&
+                  (strLength != 2))
                 std::cerr << "CxxMidi: sequence number event size is not 2 but "
                           << strLength << std::endl;
 

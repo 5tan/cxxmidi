@@ -10,6 +10,7 @@ TEST(Instrument, GetSomeIds) {
   EXPECT_EQ(static_cast<int>(
                 cxxmidi::Instrument(cxxmidi::Instrument::kAcousticGrandPiano)),
             0);
-  EXPECT_EQ(static_cast<int>(cxxmidi::Instrument(cxxmidi::Instrument::kGunshot)),
-            127);
+  EXPECT_EQ(
+      static_cast<int>(cxxmidi::Instrument(cxxmidi::Instrument::kGunshot)),
+      127);
 }
