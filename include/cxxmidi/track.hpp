@@ -37,7 +37,7 @@ class Track : public std::vector<Event> {
   inline std::string GetName() const;
 };
 
-}  // namespace CxxMidi
+}  // namespace cxxmidi
 
 #include <cxxmidi/event.hpp>
 
@@ -63,6 +63,6 @@ std::string Track::GetName() const {
   return r;
 }
 
-}  // namespace CxxMidi
+}  // namespace cxxmidi
 
 #endif  // CXXMIDI_TRACK_HPP

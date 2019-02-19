@@ -62,8 +62,8 @@ class Abstract {
   bool connected_;
 };
 
-}  // namespace Output
-}  // namespace CxxMidi
+}  // namespace output
+}  // namespace cxxmidi
 
 #include <cstdint>
 
@@ -94,7 +94,7 @@ void Abstract::Reset() {
   }
 }
 
-}  // namespace Output
-}  // namespace CxxMidi
+}  // namespace output
+}  // namespace cxxmidi
 
 #endif  // CXXMIDI_OUTPUT_ABSTRACT_HPP

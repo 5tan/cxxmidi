@@ -81,8 +81,8 @@ class Asynchronous : public player::Abstract {
   std::thread* thread_;
 };
 
-}  // namespace Player
-}  // namespace CxxMidi
+}  // namespace player
+}  // namespace cxxmidi
 
 #include <assert.h>
 
@@ -398,7 +398,7 @@ void Asynchronous::SetCallbackFinished(const std::function<void()>& callback) {
 }
 #endif  // __cplusplus > 199711L
 
-}  // namespace Player
-}  // namespace CxxMidi
+}  // namespace player
+}  // namespace cxxmidi
 
 #endif  // CXXMIDI_PLAYER_ASYNCHRONOUS_HPP

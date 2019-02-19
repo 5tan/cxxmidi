@@ -28,8 +28,8 @@ SOFTWARE.
 namespace CxxMidi {
 namespace Output {
 typedef Output::Windows Default;
-}  // namespace Output
-}  // namespace CxxMidi
+}  // namespace output
+}  // namespace cxxmidi
 #elif __APPLE__  // Mac OS X
 #error "CxxMidi: OSX Midi output not yet implemented"
 #elif __unix  // Linux, *BSD, Mac OS X
@@ -37,8 +37,8 @@ typedef Output::Windows Default;
 namespace cxxmidi {
 namespace output {
 typedef output::linuxo::Alsa Default;
-}  // namespace Output
-}  // namespace CxxMidi
+}  // namespace output
+}  // namespace cxxmidi
 #else
 #error "CxxMidi: couldn't determine the OS"
 #endif

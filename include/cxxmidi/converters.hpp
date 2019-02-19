@@ -39,7 +39,7 @@ inline constexpr uint32_t Us2dt(unsigned int us, unsigned int tempo_uspq,
   return us / utils::UsPerTick(tempo_uspq, time_div);
 }
 
-}  // namespace Converters
-}  // namespace CxxMidi
+}  // namespace converters
+}  // namespace cxxmidi
 
 #endif  // CXXMIDI_CONVERTERS_HPP

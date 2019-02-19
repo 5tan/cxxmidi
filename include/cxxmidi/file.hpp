@@ -66,7 +66,7 @@ class File : public std::vector<Track> {
   inline static void Putc(std::ofstream &file, uint8_t c);
 };
 
-}  // namespace CxxMidi
+}  // namespace cxxmidi
 
 #include <cxxmidi/guts/endianness.hpp>
 #include <cxxmidi/guts/simulator.hpp>
@@ -501,6 +501,6 @@ void File::ReadEvent(std::fstream &file, Event &event, bool &track_continue,
   }
 }
 
-}  // namespace CxxMidi
+}  // namespace cxxmidi
 
 #endif  // CXXMIDI_FILE_HPP
