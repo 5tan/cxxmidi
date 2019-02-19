@@ -224,7 +224,7 @@ class Instrument {
   };
 
   inline Instrument();
-  inline Instrument(int val);
+  inline explicit Instrument(int val);
 
   inline operator int() const;
 
@@ -245,7 +245,8 @@ Instrument::Instrument(int val) : val_(val) {}
 Instrument::operator int() const { return val_; }
 
 std::string Instrument::GetName(int instrument, int channel) {
-  if (channel == 10) switch (instrument) {
+  if (channel == 10) {
+      switch (instrument) {
       case kAcousticBassDrum:
         return "Acoustic Bass Drum";
       case kBassDrum1:
@@ -343,8 +344,10 @@ std::string Instrument::GetName(int instrument, int channel) {
       default:
         break;
     }
+  }
 
-  if (channel == -1)  // undefined channel
+  // undefined channel
+  if (channel == -1) {
     switch (instrument) {
       case kFretlessBass:
         return "Fretless Bass / Acoustic Bass Drum";
@@ -443,6 +446,7 @@ std::string Instrument::GetName(int instrument, int channel) {
       default:
         break;
     }
+  }
 
   switch (instrument) {
     case kAcousticGrandPiano:
