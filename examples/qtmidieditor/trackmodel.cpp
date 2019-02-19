@@ -245,7 +245,7 @@ QVariant TrackModel::headerData(int section, Qt::Orientation orientation,
 
   // => orientation_ == Qt::Horizontal
   if (role == Qt::DisplayRole) {
-      switch (section) {
+    switch (section) {
       case COLUMN_DATA:
       case COLUMN_DT:
       case COLUMN_DESCR:

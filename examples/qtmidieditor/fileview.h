@@ -38,7 +38,6 @@ class FileView : public QListView {
   void RequestAddTrack(int num);
 
  public slots:
-  TrackModel::~TrackModel() {}
   void ShowContextMenu(const QPoint& pos);
 };
 
