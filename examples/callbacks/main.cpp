@@ -32,7 +32,6 @@ int main(int, char**) {
   player.SetFile(&file);
 
   player.SetCallbackHeartbeat([]() { std::cout << "beep!" << std::endl; });
-
   player.SetCallbackFinished([]() { std::cout << "finished!" << std::endl; });
 
   player.Play();

@@ -39,14 +39,10 @@ namespace output {
 class Abstract {
  public:
   inline Abstract();
-  inline ~Abstract();
+  virtual ~Abstract() = default;
 
   Abstract(const Abstract &);             // non-copyable
   Abstract &operator=(const Abstract &);  // non-copyable (assignment)
-#if __cplusplus > 199711L
-  Abstract(Abstract &&) = default;
-  Abstract &operator=(Abstract &&) = default;
-#endif  // __cplusplus > 199711L
 
   virtual void OpenPort(unsigned int port_num = 0) = 0;
   virtual void ClosePort() = 0;
@@ -69,8 +65,6 @@ namespace cxxmidi {
 namespace output {
 
 Abstract::Abstract() : connected_(false) {}
-
-Abstract::~Abstract() {}
 
 void Abstract::Reset() {
   std::vector<uint8_t> message(3);

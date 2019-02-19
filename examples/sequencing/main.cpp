@@ -26,7 +26,7 @@ SOFTWARE.
 #include <cxxmidi/output/default.hpp>
 #include <cxxmidi/player/synchronous.hpp>
 
-int main(int /*argc*/, char ** /*argv*/) {
+int main(int, char **) {
   uint32_t dt;  // quartenote deltatime [ticks]
   // What value should dt be, if we want quarter notes to last 0.5s?
 

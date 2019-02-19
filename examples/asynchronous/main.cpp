@@ -24,7 +24,7 @@ SOFTWARE.
 #include <cxxmidi/output/default.hpp>
 #include <cxxmidi/player/asynchronous.hpp>
 
-int main(int /*argc*/, char** /*argv*/) {
+int main(int, char**) {
   cxxmidi::output::Default output(1);
   cxxmidi::player::Asynchronous player(&output);
 
