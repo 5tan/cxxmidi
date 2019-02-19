@@ -32,6 +32,6 @@ class Callback {
   virtual void operator()() = 0;
 };
 
-}  // namespace CxxMidi
+}  // namespace cxxmidi
 
 #endif  // CXXMIDI_CALLBACK_HPP

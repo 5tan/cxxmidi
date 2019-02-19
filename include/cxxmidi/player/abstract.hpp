@@ -40,7 +40,7 @@ SOFTWARE.
 namespace cxxmidi {
 namespace output {
 class Abstract;
-}  // namespace Output
+}  // namespace output
 class File;
 class Event;
 namespace player {
@@ -133,8 +133,8 @@ class Abstract {
   static inline void SetupWindowsTimers();
 };
 
-}  // namespace Player
-}  // namespace CxxMidi
+}  // namespace player
+}  // namespace cxxmidi
 
 #include <assert.h>
 
@@ -322,7 +322,7 @@ void Abstract::ExecEvent(const Event& event) {
   if (output_) output_->SendMessage(&event);
 }
 
-}  // namespace Player
-}  // namespace CxxMidi
+}  // namespace player
+}  // namespace cxxmidi
 
 #endif  // CXXMIDI_PLAYER_ABSTRACT_HPP

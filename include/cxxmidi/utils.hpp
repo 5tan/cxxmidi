@@ -90,7 +90,7 @@ inline size_t SaveVlq(std::ofstream &output_file, unsigned int val) {
   return r;  // return size of vlq
 }
 
-}  // namespace Utils
-}  // namespace CxxMidi
+}  // namespace utils
+}  // namespace cxxmidi
 
 #endif  // CXXMIDI_GUTS_HPP

@@ -82,8 +82,8 @@ size_t WriteBe(std::ofstream &file, T val) {
   return size;
 }
 
-}  // namespace Endianness
-}  // namespace Guts
-}  // namespace CxxMidi
+}  // namespace endianness
+}  // namespace guts
+}  // namespace cxxmidi
 
 #endif  // CXXMIDI_GUTS_ENDIANNESS_HPP

@@ -45,7 +45,7 @@ class Event : public Message {
   uint32_t dt_;  // delta time [ticks]
 };
 
-}  // namespace CxxMidi
+}  // namespace cxxmidi
 
 namespace cxxmidi {
 
@@ -75,6 +75,6 @@ uint32_t Event::Dt() const { return dt_; }
 
 void Event::SetDt(uint32_t dt) { dt_ = dt; }
 
-}  // namespace CxxMidi
+}  // namespace cxxmidi
 
 #endif  // CXXMIDI_EVENT_HPP

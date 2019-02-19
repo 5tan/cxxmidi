@@ -234,7 +234,7 @@ class Instrument {
   int val_;  // 0 ... 128
 };
 
-}  // namespace CxxMidi
+}  // namespace cxxmidi
 
 namespace cxxmidi {
 
@@ -708,6 +708,6 @@ std::string Instrument::GetName(int instrument, int channel) {
   }
 }
 
-}  // namespace CxxMidi
+}  // namespace cxxmidi
 
 #endif  // CXXMIDI_INSTRUMENT_HPP

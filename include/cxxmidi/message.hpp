@@ -101,7 +101,7 @@ class Message : public std::vector<uint8_t> {
   inline std::string GetName() const;
 };
 
-}  // namespace CxxMidi
+}  // namespace cxxmidi
 
 namespace cxxmidi {
 
@@ -260,6 +260,6 @@ std::string Message::GetName() const {
   return "";
 }
 
-}  // namespace CxxMidi
+}  // namespace cxxmidi
 
 #endif  // CXXMIDI_MESSAGE_HPP
