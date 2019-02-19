@@ -32,8 +32,8 @@ namespace guts {
 namespace endianness {
 
 inline bool MachineIsLittleEndian() {
-  static const uint32_t num = 1;
-  static const bool r = *(uint8_t *)&num == 1;
+  uint32_t num = 1;
+  static const bool r = *reinterpret_cast<uint8_t *>(&num) == 1;
   return r;
   // note: we don't want constexpr here. Library should detect endianness
   // in runtime so cross compilation is possible.
