@@ -20,8 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***************************************************************************** */
 
-#ifndef FILEMODEL_H
-#define FILEMODEL_H
+#ifndef EXAMPLES_QTMIDIEDITOR_FILEMODEL_H_
+#define EXAMPLES_QTMIDIEDITOR_FILEMODEL_H_
 
 #include <QAbstractListModel>
 #include <QObject>
@@ -32,8 +32,8 @@ class FileModel : public QAbstractListModel {
   Q_OBJECT
 
  public:
-  FileModel(QObject *parent = 0);
-  virtual ~FileModel();
+  explicit FileModel(QObject *parent = 0);
+  virtual ~FileModel() = default;
 
   virtual int rowCount(const QModelIndex &index) const;
   virtual QVariant data(const QModelIndex &index,
@@ -48,4 +48,4 @@ class FileModel : public QAbstractListModel {
   cxxmidi::File *file_;
 };
 
-#endif /* FILEMODEL_H */
+#endif  // EXAMPLES_QTMIDIEDITOR_FILEMODEL_H_
