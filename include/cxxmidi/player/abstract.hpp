@@ -25,16 +25,13 @@ SOFTWARE.
 
 #include <chrono>
 #include <cstdint>
-
 #include <vector>
+#include <functional>
+#include <algorithm>
 
 #ifdef WIN32
 #include <Windows.h>
 #endif
-
-#if __cplusplus > 199711L
-#include <functional>
-#endif  // __cplusplus > 199711L
 
 namespace cxxmidi {
 namespace output {
@@ -46,16 +43,9 @@ namespace player {
 
 class Abstract {
  public:
-  // Abstract(const Abstract&); // default is ok
-  // Abstract &operator=(const Abstract &); // default is ok
-#if __cplusplus > 199711L
-  Abstract(Abstract&&) = default;
-  Abstract& operator=(Abstract&&) = default;
-#endif  // __cplusplus > 199711L
-
   inline Abstract();
-  inline Abstract(output::Abstract* output);
-  inline virtual ~Abstract();
+  inline explicit Abstract(output::Abstract* output);
+  inline virtual ~Abstract() = default;
 
   virtual void Play() = 0;
   virtual void Pause() = 0;
@@ -163,8 +153,6 @@ void Abstract::SetupWindowsTimers() {
 #endif
 }
 
-Abstract::~Abstract() {}
-
 void Abstract::SetFile(const File* file) {
   file_ = file;
   player_state_.clear();
@@ -239,12 +227,14 @@ unsigned int Abstract::TrackPending() const {
   uint32_t dt = -1;
   size_t r = 0;
 
-  for (size_t i = 0; i < player_state_.size(); i++)
-    if (!this->TrackFinished(i))
+  for (size_t i = 0; i < player_state_.size(); i++) {
+    if (!this->TrackFinished(i)) {
       if (player_state_[i].track_dt_ < dt) {
         dt = player_state_[i].track_dt_;
         r = i;
       }
+    }
+  }
 
   return static_cast<unsigned int>(r);
 }
@@ -254,10 +244,12 @@ void Abstract::UpdatePlayerState(unsigned int track_num, unsigned int dt) {
     if (!this->TrackFinished(i)) {
       if (i == track_num) {
         unsigned int num = ++player_state_[i].track_pointer_;
-        if (!this->TrackFinished(i))
+        if (!this->TrackFinished(i)) {
           player_state_[i].track_dt_ = (*file_)[i][num].Dt();
-      } else
+        }
+      } else {
         player_state_[i].track_dt_ -= dt;
+      }
     }
 }
 

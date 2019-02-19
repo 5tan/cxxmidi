@@ -26,21 +26,16 @@ CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ***************************************************************************** */
 
-#ifndef CXXMIDI_OUTPUT_WINDOWS_HPP
-#define CXXMIDI_OUTPUT_WINDOWS_HPP
+#ifndef INCLUDE_CXXMIDI_OUTPUT_WINDOWS_HPP_
+#define INCLUDE_CXXMIDI_OUTPUT_WINDOWS_HPP_
 
 #include <mmsystem.h>
 #include <windows.h>
 
-/*
-#ifdef _MSC_VER
-#pragma comment(lib, "winmm.lib")
-#endif
-*/
-
 #include <cstdint>
 #include <iostream>
 #include <sstream>
+#include <string>
 #include <vector>
 
 #include <cxxmidi/output/abstract.hpp>
@@ -63,7 +58,7 @@ class Windows : public Output::Abstract {
 
  public:
   inline Windows();
-  inline Windows(unsigned int initialPort_);
+  inline explicit Windows(unsigned int initialPort_);
   inline virtual ~Windows();
 
   Windows(const Windows &);             // non-copyable
@@ -130,7 +125,7 @@ std::string Windows::GetPortName(unsigned int portNumber_) {
   // std::string stringName = std::string( deviceCaps.szPname );
   char nameString[MAXPNAMELEN];
   for (int i = 0; i < MAXPNAMELEN; ++i)
-    nameString[i] = (char)(deviceCaps.szPname[i]);
+    nameString[i] = static_cast<char>(deviceCaps.szPname[i]);
 
   stringName = nameString;
   return stringName;
@@ -145,8 +140,8 @@ void Windows::Initialize() {
 #endif
 
   // Save our api-specific connection information.
-  WinMidiData *data = (WinMidiData *)new WinMidiData;
-  api_data_ = (void *)data;
+  WinMidiData *data = new WinMidiData;
+  api_data_ = reinterpret_cast<void *>(data);
 }
 
 void Windows::OpenPort(unsigned int portNumber_) {
@@ -206,9 +201,8 @@ void Windows::SendMessage(const std::vector<uint8_t> *msg_) {
   MMRESULT result;
   WinMidiData *data = static_cast<WinMidiData *>(api_data_);
   if (msg_->at(0) == 0xF0) {  // Sysex message
-
     // Allocate buffer for sysex data.
-    char *buffer = (char *)malloc(nBytes);
+    char *buffer = reinterpret_cast<char *>(malloc(nBytes));
 #ifndef CXXMIDI_QUIET
     if (buffer == NULL)
       std::cerr << "CxxMidi: message malloc error " << std::endl;
@@ -244,9 +238,7 @@ void Windows::SendMessage(const std::vector<uint8_t> *msg_) {
            midiOutUnprepareHeader(data->outHandle, &sysex, sizeof(MIDIHDR)))
       Sleep(1);
     free(buffer);
-
   } else {  // Channel or system message
-
     // Make sure the message size isn't too big
     if (nBytes > 3) {
 #ifndef CXXMIDI_QUIET
@@ -277,4 +269,4 @@ void Windows::SendMessage(const std::vector<uint8_t> *msg_) {
 }  // namespace Output
 }  // namespace cxxmidi
 
-#endif  // CXXMIDI_OUTPUT_WINDOWS_HPP
+#endif  // INCLUDE_CXXMIDI_OUTPUT_WINDOWS_HPP_

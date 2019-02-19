@@ -20,8 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***************************************************************************** */
 
-#ifndef INCLUDE_CCXMIDI_SYSEX_HPP_
-#define INCLUDE_CCXMIDI_SYSEX_HPP_
+#ifndef INCLUDE_CXXMIDI_SYSEX_HPP_
+#define INCLUDE_CXXMIDI_SYSEX_HPP_
 
 namespace cxxmidi {
 
