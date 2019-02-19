@@ -20,8 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***************************************************************************** */
 
-#ifndef CXXMIDI_GUTS_HPP
-#define CXXMIDI_GUTS_HPP
+#ifndef INCLUDE_CXXMIDI_GUTS_UTILS_HPP_
+#define INCLUDE_CXXMIDI_GUTS_UTILS_HPP_
 
 #include <cstdint>
 #include <cxxmidi/guts/endianness.hpp>
@@ -93,4 +93,4 @@ inline size_t SaveVlq(std::ofstream &output_file, unsigned int val) {
 }  // namespace utils
 }  // namespace cxxmidi
 
-#endif  // CXXMIDI_GUTS_HPP
+#endif  // INCLUDE_CXXMIDI_GUTS_UTILS_HPP_

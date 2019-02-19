@@ -26,8 +26,8 @@ CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ***************************************************************************** */
 
-#ifndef CXXMIDI_OUTPUT_LINUX_ALSA_HPP
-#define CXXMIDI_OUTPUT_LINUX_ALSA_HPP
+#ifndef INCLUDE_CXXMIDI_OUTPUT_LINUX_ALSA_HPP_
+#define INCLUDE_CXXMIDI_OUTPUT_LINUX_ALSA_HPP_
 
 #include <alsa/asoundlib.h>
 #include <pthread.h>
@@ -339,4 +339,4 @@ void Alsa::SendMessage(const std::vector<uint8_t> *msg) {
 }  // namespace output
 }  // namespace cxxmidi
 
-#endif  // CXXMIDI_OUTPUT_LINUX_ALSA_HPP
+#endif  // INCLUDE_CXXMIDI_OUTPUT_LINUX_ALSA_HPP_

@@ -20,8 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***************************************************************************** */
 
-#ifndef CXXMIDI_GUTS_SIMULATOR_HPP
-#define CXXMIDI_GUTS_SIMULATOR_HPP
+#ifndef INCLUDE_CXXMIDI_GUTS_SIMULATOR_HPP_
+#define INCLUDE_CXXMIDI_GUTS_SIMULATOR_HPP_
 
 #include <cxxmidi/player/abstract.hpp>
 
@@ -73,4 +73,4 @@ std::chrono::microseconds Simulator::Duration(const File &file) {
 }  // namespace guts
 }  // namespace cxxmidi
 
-#endif  // CXXMIDI_GUTS_SIMULATOR_HPP
+#endif  // INCLUDE_CXXMIDI_GUTS_SIMULATOR_HPP_

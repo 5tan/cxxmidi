@@ -20,8 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***************************************************************************** */
 
-#ifndef CXXMIDI_PLAYER_SYNCHRONOUS_HPP
-#define CXXMIDI_PLAYER_SYNCHRONOUS_HPP
+#ifndef INCLUDE_CXXMIDI_PLAYER_SYNCHRONOUS_HPP_
+#define INCLUDE_CXXMIDI_PLAYER_SYNCHRONOUS_HPP_
 
 #include <cxxmidi/player/abstract.hpp>
 #include <thread>
@@ -105,4 +105,4 @@ void Synchronous::PlayerLoop() {
 }  // namespace player
 }  // namespace cxxmidi
 
-#endif  // CXXMIDI_PLAYER_SYNCHRONOUS_HPP
+#endif  // INCLUDE_CXXMIDI_PLAYER_SYNCHRONOUS_HPP_

@@ -20,8 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***************************************************************************** */
 
-#ifndef CXXMIDI_FILE_HPP
-#define CXXMIDI_FILE_HPP
+#ifndef CXXMIDI_FILE_HPP_
+#define CXXMIDI_FILE_HPP_
 
 #include <cstdint>
 #include <fstream>
@@ -503,4 +503,4 @@ void File::ReadEvent(std::fstream &file, Event &event, bool &track_continue,
 
 }  // namespace cxxmidi
 
-#endif  // CXXMIDI_FILE_HPP
+#endif  // CXXMIDI_FILE_HPP_

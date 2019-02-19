@@ -20,8 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***************************************************************************** */
 
-#ifndef CXXMIDI_TRACK_HPP
-#define CXXMIDI_TRACK_HPP
+#ifndef CXXMIDI_TRACK_HPP_
+#define CXXMIDI_TRACK_HPP_
 
 #include <string>
 #include <vector>
@@ -65,4 +65,4 @@ std::string Track::GetName() const {
 
 }  // namespace cxxmidi
 
-#endif  // CXXMIDI_TRACK_HPP
+#endif  // CXXMIDI_TRACK_HPP_

@@ -20,8 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***************************************************************************** */
 
-#ifndef CXXMIDI_INSTRUMENT_HPP
-#define CXXMIDI_INSTRUMENT_HPP
+#ifndef CXXMIDI_INSTRUMENT_HPP_
+#define CXXMIDI_INSTRUMENT_HPP_
 
 #include <string>
 
@@ -710,4 +710,4 @@ std::string Instrument::GetName(int instrument, int channel) {
 
 }  // namespace cxxmidi
 
-#endif  // CXXMIDI_INSTRUMENT_HPP
+#endif  // CXXMIDI_INSTRUMENT_HPP_
