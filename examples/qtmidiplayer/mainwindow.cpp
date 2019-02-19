@@ -21,8 +21,8 @@ MainWindow::MainWindow(QWidget* parent)
 
   midi_player_->SetCallbackHeartbeat(&player_heartbeat_callback_);
   connect(&player_heartbeat_callback_,
-          &PlayerHeartbeatCallback::PlayerTimeChanged2,
-          this, &MainWindow::UpdateTimeCode2, Qt::QueuedConnection);
+          &PlayerHeartbeatCallback::PlayerTimeChanged,
+          this, &MainWindow::UpdateTimeCode, Qt::QueuedConnection);
 
   midi_player_->SetCallbackFinished(&player_finished_callback_);
   connect(&player_finished_callback_, &PlayerFinishedCallback::PlayerFinished,
