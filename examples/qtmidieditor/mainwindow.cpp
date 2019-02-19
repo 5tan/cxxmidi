@@ -18,18 +18,17 @@ MainWindow::MainWindow(QWidget *parent_)
   file_model_.SetFile(&_file);
   file_view_.setModel(&file_model_);
 
-  connect(&file_view_, &FileView::activated,
-          this, &MainWindow::OnTrackSelected);
-  connect(&file_view_, &FileView::clicked,
-          this, &MainWindow::OnTrackSelected);
-  connect(&file_view_, &FileView::RequestAddTrack,
-          this, &MainWindow::OnRequestAddTrack);
-  connect(&file_view_, &FileView::RequestDeleteTrack,
-          this, &MainWindow::OnRequestDeleteTrack);
-  connect(&track_view_, &TrackView::RequestAddEvent,
-          this, &MainWindow::OnRequestAddEvent);
-  connect(&track_view_, &TrackView::RequestDeleteEvent,
-          this, &MainWindow::OnRequestDeleteEvent);
+  connect(&file_view_, &FileView::activated, this,
+          &MainWindow::OnTrackSelected);
+  connect(&file_view_, &FileView::clicked, this, &MainWindow::OnTrackSelected);
+  connect(&file_view_, &FileView::RequestAddTrack, this,
+          &MainWindow::OnRequestAddTrack);
+  connect(&file_view_, &FileView::RequestDeleteTrack, this,
+          &MainWindow::OnRequestDeleteTrack);
+  connect(&track_view_, &TrackView::RequestAddEvent, this,
+          &MainWindow::OnRequestAddEvent);
+  connect(&track_view_, &TrackView::RequestDeleteEvent, this,
+          &MainWindow::OnRequestDeleteEvent);
 
   track_model_.SetTrack(0);
   track_view_.setModel(&track_model_);
@@ -56,8 +55,8 @@ void MainWindow::CreateMenu() {
   file_menu->addSeparator();
 
   action = file_menu->addAction(tr("&Exit"));
-  QObject::connect(action, &QAction::triggered,
-                   QApplication::instance(), &QApplication::quit);
+  QObject::connect(action, &QAction::triggered, QApplication::instance(),
+                   &QApplication::quit);
   //! @TODO ask if save changes
 }
 

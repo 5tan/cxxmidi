@@ -23,8 +23,8 @@ SOFTWARE.
 #ifndef INCLUDE_CXXMIDI_PLAYER_ABSTRACT_HPP_
 #define INCLUDE_CXXMIDI_PLAYER_ABSTRACT_HPP_
 
-#include <cstdint>
 #include <chrono>
+#include <cstdint>
 
 #include <vector>
 
@@ -120,8 +120,8 @@ class Abstract {
 #include <cxxmidi/converters.hpp>
 #include <cxxmidi/event.hpp>
 #include <cxxmidi/file.hpp>
-#include <cxxmidi/output/abstract.hpp>
 #include <cxxmidi/guts/utils.hpp>
+#include <cxxmidi/output/abstract.hpp>
 
 namespace cxxmidi {
 namespace player {
@@ -175,7 +175,7 @@ void Abstract::SetFile(const File* file) {
   this->InitPlayerState();
 }
 
-void Abstract::GoTo(const std::chrono::microseconds &pos) {
+void Abstract::GoTo(const std::chrono::microseconds& pos) {
   if (!file_ || !output_) return;
 
   tempo_ = 500000;
@@ -231,7 +231,8 @@ void Abstract::SetCallbackFinished(const std::function<void()>& callback) {
 #endif  // __cplusplus > 199711L
 
 bool Abstract::TrackFinished(size_t track_num) const {
-  return (player_state_[track_num].track_pointer_ >= (*file_)[track_num].size());
+  return (player_state_[track_num].track_pointer_ >=
+          (*file_)[track_num].size());
 }
 
 unsigned int Abstract::TrackPending() const {

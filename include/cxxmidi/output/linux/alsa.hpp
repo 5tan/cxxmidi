@@ -86,7 +86,7 @@ class Alsa : public output::Abstract {
   AlsaMidiData *_apiData;
 };
 
-}  // namespace Linux
+}  // namespace linuxo
 }  // namespace output
 }  // namespace cxxmidi
 
@@ -335,7 +335,7 @@ void Alsa::SendMessage(const std::vector<uint8_t> *msg) {
   snd_seq_drain_output(_apiData->seq);
 }
 
-}  // namespace Linux
+}  // namespace linuxo
 }  // namespace output
 }  // namespace cxxmidi
 

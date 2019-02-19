@@ -19,9 +19,9 @@ class MainWindow : public QMainWindow {
   explicit MainWindow(QWidget* parent = 0);
   ~MainWindow();
 
-signals:
- void PlayerFinished();
- void PlayerTimeChanged(std::chrono::microseconds time);
+ signals:
+  void PlayerFinished();
+  void PlayerTimeChanged(std::chrono::microseconds time);
 
  private slots:
   void OnTimeSliderReleased();

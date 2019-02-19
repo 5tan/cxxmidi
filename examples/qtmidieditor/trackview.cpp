@@ -5,8 +5,8 @@
 TrackView::TrackView(QWidget* parent) : QTableView(parent) {
   this->setContextMenuPolicy(Qt::CustomContextMenu);
 
-  connect(this, &TrackView::customContextMenuRequested,
-          this, &TrackView::ShowContextMenu);
+  connect(this, &TrackView::customContextMenuRequested, this,
+          &TrackView::ShowContextMenu);
 }
 
 TrackView::~TrackView() {}

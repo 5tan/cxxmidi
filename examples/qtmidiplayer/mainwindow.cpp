@@ -18,20 +18,20 @@ MainWindow::MainWindow(QWidget* parent)
   this->centralWidget()->setDisabled(true);
   this->resize(this->minimumSizeHint());
 
-  midi_player_->SetCallbackHeartbeat([this](){ this->PlayerTimeChanged(midi_player_->CurrentTimePos());});
-  midi_player_->SetCallbackFinished([this](){ this->PlayerFinished(); });
-  connect(this,
-          &MainWindow::PlayerTimeChanged,
-          this, &MainWindow::UpdateTimeCode, Qt::QueuedConnection);
-  connect(this, &MainWindow::PlayerFinished,
-          this,
+  midi_player_->SetCallbackHeartbeat(
+      [this]() { this->PlayerTimeChanged(midi_player_->CurrentTimePos()); });
+  midi_player_->SetCallbackFinished([this]() { this->PlayerFinished(); });
+  connect(this, &MainWindow::PlayerTimeChanged, this,
+          &MainWindow::UpdateTimeCode, Qt::QueuedConnection);
+  connect(this, &MainWindow::PlayerFinished, this,
           &MainWindow::OnPlayerFinished, Qt::QueuedConnection);
 
-  connect(ui_->doubleSpinBoxSpeed, qOverload<double>(&QDoubleSpinBox::valueChanged),
-          this, &MainWindow::OnSpeedChange);
+  connect(ui_->doubleSpinBoxSpeed,
+          qOverload<double>(&QDoubleSpinBox::valueChanged), this,
+          &MainWindow::OnSpeedChange);
 
-  connect(ui_->pushButtonPlay, &QPushButton::clicked,
-          this, &MainWindow::OnPlayClicked);
+  connect(ui_->pushButtonPlay, &QPushButton::clicked, this,
+          &MainWindow::OnPlayClicked);
 
   connect(ui_->pushButtonPause, &QPushButton::clicked, this,
           &MainWindow::OnPauseClicked);
@@ -66,12 +66,13 @@ void MainWindow::CreateMenuBar() {
   QMenu* file_menu = this->menuBar()->addMenu(tr("&File"));
   QAction* action = file_menu->addAction("&Open");
 
-  connect(action, &QAction::triggered, this, [this](bool){ OpenFile(); });
+  connect(action, &QAction::triggered, this, [this](bool) { OpenFile(); });
 
   file_menu->addSeparator();
 
   action = file_menu->addAction("&Exit");
-  connect(action, &QAction::triggered, QApplication::instance(), &QApplication::quit);
+  connect(action, &QAction::triggered, QApplication::instance(),
+          &QApplication::quit);
 
   // output menu
   QMenu* output_menu = this->menuBar()->addMenu(tr("&Output"));
