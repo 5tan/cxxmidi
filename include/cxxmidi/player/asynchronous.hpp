@@ -25,8 +25,8 @@ SOFTWARE.
 
 #include <cxxmidi/player/abstract.hpp>
 
-#include <thread>
 #include <mutex>
+#include <thread>
 
 namespace cxxmidi {
 class File;
@@ -92,9 +92,9 @@ Asynchronous::Asynchronous(output::Abstract* output)
 
 Asynchronous::~Asynchronous() {
   if (thread_) {
-      if(thread_->joinable()) thread_->join();
-      delete thread_;
-  } //! @FIXME
+    if (thread_->joinable()) thread_->join();
+    delete thread_;
+  }  //! @FIXME
 }
 
 void Asynchronous::Play() {
@@ -111,9 +111,9 @@ void Asynchronous::Play() {
   if (reject) return;
 
   if (thread_) {
-      if(thread_->joinable()) thread_->join();
-      delete thread_;
-  } //! @FIXME
+    if (thread_->joinable()) thread_->join();
+    delete thread_;
+  }  //! @FIXME
   thread_ = new std::thread(Asynchronous::PlayerLoop, this);
 }
 
@@ -122,10 +122,9 @@ void Asynchronous::Pause() {
   pause_request_ = true;
   mutex_.unlock();
 
-  if(thread_) {
-  if(thread_->joinable())
-      thread_->join(); //! @FIXME
-  delete thread_;
+  if (thread_) {
+    if (thread_->joinable()) thread_->join();  //! @FIXME
+    delete thread_;
   }
   thread_ = 0;
 }
@@ -305,8 +304,7 @@ float Asynchronous::Speed() {
   return r;
 }
 
-void Asynchronous::SetCallbackHeartbeat(
-    const std::function<void()>& callback) {
+void Asynchronous::SetCallbackHeartbeat(const std::function<void()>& callback) {
   mutex_.lock();
   clbk_fun_heartbeat_ = callback;
   mutex_.unlock();

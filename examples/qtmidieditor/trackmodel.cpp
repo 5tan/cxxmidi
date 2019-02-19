@@ -2,9 +2,9 @@
 
 #include <QStringList>
 
+#include <cxxmidi/guts/utils.hpp>
 #include <cxxmidi/instrument.hpp>
 #include <cxxmidi/note.hpp>
-#include <cxxmidi/guts/utils.hpp>
 
 const char* TrackModel::columnNames[] = {"Dt [ticks]", "Data", "Type",
                                          "Description"};

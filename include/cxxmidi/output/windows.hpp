@@ -274,7 +274,7 @@ void Windows::SendMessage(const std::vector<uint8_t> *msg_) {
   }
 }
 
-}  // namespace output
+}  // namespace Output
 }  // namespace cxxmidi
 
 #endif  // CXXMIDI_OUTPUT_WINDOWS_HPP
