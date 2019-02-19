@@ -82,7 +82,7 @@ class Message : public std::vector<uint8_t> {
     KeySignature = 0x59
   };
 
-  inline Message();
+  Message() = default;
   inline explicit Message(uint8_t b1);
   inline Message(uint8_t b1, uint8_t b2);
   inline Message(uint8_t b1, uint8_t b2, uint8_t b3);
@@ -103,8 +103,6 @@ class Message : public std::vector<uint8_t> {
 }  // namespace cxxmidi
 
 namespace cxxmidi {
-
-Message::Message() {}
 
 Message::Message(uint8_t b1) { this->push_back(b1); }
 

@@ -63,10 +63,6 @@ class Windows : public Output::Abstract {
 
   Windows(const Windows &);             // non-copyable
   Windows &operator=(const Windows &);  // non-copyable (assignment)
-#if __cplusplus > 199711L
-  Windows(Windows &&) = default;
-  Windows &operator=(Windows &&) = default;
-#endif  // __cplusplus > 199711L
 
   inline virtual void OpenPort(unsigned int portNumber_ = 0);
   inline virtual void ClosePort();

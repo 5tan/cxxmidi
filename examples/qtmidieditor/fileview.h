@@ -31,7 +31,7 @@ class FileView : public QListView {
 
  public:
   explicit FileView(QWidget* parent = 0);
-  virtual ~FileView();
+  virtual ~FileView() = default;
 
  signals:
   void RequestDeleteTrack(int num);
