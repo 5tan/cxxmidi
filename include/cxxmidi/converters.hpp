@@ -20,8 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***************************************************************************** */
 
-#ifndef CXXMIDI_CONVERTERS_HPP
-#define CXXMIDI_CONVERTERS_HPP
+#ifndef INCLUDE_CXXMIDI_CONVERTERS_HPP_
+#define INCLUDE_CXXMIDI_CONVERTERS_HPP_
 
 #include <chrono>
 #include <cxxmidi/guts/utils.hpp>
@@ -42,4 +42,4 @@ inline constexpr uint32_t Us2dt(unsigned int us, unsigned int tempo_uspq,
 }  // namespace converters
 }  // namespace cxxmidi
 
-#endif  // CXXMIDI_CONVERTERS_HPP
+#endif  // INCLUDE_CXXMIDI_CONVERTERS_HPP_

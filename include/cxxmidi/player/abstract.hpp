@@ -20,8 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***************************************************************************** */
 
-#ifndef CXXMIDI_PLAYER_ABSTRACT_HPP
-#define CXXMIDI_PLAYER_ABSTRACT_HPP
+#ifndef INCLUDE_CXXMIDI_PLAYER_ABSTRACT_HPP_
+#define INCLUDE_CXXMIDI_PLAYER_ABSTRACT_HPP_
 
 #include <cstdint>
 #include <chrono>
@@ -274,4 +274,4 @@ void Abstract::ExecEvent(const Event& event) {
 }  // namespace player
 }  // namespace cxxmidi
 
-#endif  // CXXMIDI_PLAYER_ABSTRACT_HPP
+#endif  // INCLUDE_CXXMIDI_PLAYER_ABSTRACT_HPP_

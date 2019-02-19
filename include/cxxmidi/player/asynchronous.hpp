@@ -20,8 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***************************************************************************** */
 
-#ifndef CXXMIDI_PLAYER_ASYNCHRONOUS_HPP
-#define CXXMIDI_PLAYER_ASYNCHRONOUS_HPP
+#ifndef INCLUDE_CXXMIDI_PLAYER_ASYNCHRONOUS_HPP_
+#define INCLUDE_CXXMIDI_PLAYER_ASYNCHRONOUS_HPP_
 
 #include <cxxmidi/player/abstract.hpp>
 
@@ -321,4 +321,4 @@ void Asynchronous::SetCallbackFinished(const std::function<void()>& callback) {
 }  // namespace player
 }  // namespace cxxmidi
 
-#endif  // CXXMIDI_PLAYER_ASYNCHRONOUS_HPP
+#endif  // INCLUDE_CXXMIDI_PLAYER_ASYNCHRONOUS_HPP_
