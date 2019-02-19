@@ -62,15 +62,8 @@ class Asynchronous : public player::Abstract {
   inline void SetSpeed(float speed);
   inline float Speed();
 
-  inline void SetCallbackHeartbeat(void (*callback_)(void*), void* context);
-  inline void SetCallbackFinished(void (*callback)(void*), void* context);
-
-  inline void SetCallbackHeartbeat(Callback* callback);
-  inline void SetCallbackFinished(Callback* callback);
-#if __cplusplus > 199711L
   inline void SetCallbackHeartbeat(const std::function<void()>& callback);
   inline void SetCallbackFinished(const std::function<void()>& callback);
-#endif  // __cplusplus > 199711L
 
  private:
   bool pause_request_;
@@ -147,21 +140,9 @@ void* Asynchronous::PlayerLoop(void* caller) {
   uint32_t dt = 0;
   auto us = std::chrono::microseconds::zero();
   float speed = 0;
-  // C style callbacks
-  void (*clbk_fun_ptr_heartbeat)(void*) = 0;
-  void* clbk_fun_ctx_heartbeat;
-  void (*clbk_fun_ptr_finished)(void*) = 0;
-  void* clbk_fun_ctx_finished = 0;
 
-  // C++ style callbacs
-  Callback* clbk_obj_ptr_heartbeat = 0;
-  Callback* clbk_obj_ptr_finished = 0;
-
-#if __cplusplus > 199711L
-  // C++11 style callbacks
   std::function<void()> clbk_fun_heartbeat;
   std::function<void()> clbk_fun_finished;
-#endif  // __cplusplus > 199711L
 
   while (true) {
     // copy player data
@@ -174,18 +155,8 @@ void* Asynchronous::PlayerLoop(void* caller) {
         us = converters::Dt2us(dt, that->tempo_, that->file_->TimeDivision());
         speed = that->speed_;
 
-        clbk_fun_ptr_heartbeat = that->clbk_fun_ptr_heartbeat_;
-        clbk_fun_ctx_heartbeat = that->clbk_fun_ctx_heartbeat_;
-        clbk_fun_ptr_finished = that->_clbkFunPtrFinished;
-        clbk_fun_ctx_finished = that->clbk_fun_ctx_finished_;
-
-        clbk_obj_ptr_heartbeat = that->clbk_obj_ptr_heartbeat_;
-        clbk_obj_ptr_finished = that->clbk_obj_ptr_finished_;
-
-#if __cplusplus > 199711L
         clbk_fun_heartbeat = that->clbk_fun_heartbeat_;
         clbk_fun_finished = that->clbk_fun_finished_;
-#endif  // __cplusplus > 199711L
       }
     }
     that->mutex_.unlock();
@@ -197,13 +168,7 @@ void* Asynchronous::PlayerLoop(void* caller) {
       that->mutex_.unlock();
 
       if (finished) {
-        if (clbk_fun_ptr_finished) (*clbk_fun_ptr_finished)(clbk_fun_ctx_finished);
-
-        if (clbk_obj_ptr_finished) (*clbk_obj_ptr_finished)();
-
-#if __cplusplus > 199711L
         if (clbk_fun_finished) clbk_fun_finished();
-#endif  // __cplusplus > 199711L
       }
 
       return 0;
@@ -222,17 +187,8 @@ void* Asynchronous::PlayerLoop(void* caller) {
       pause_request = that->pause_request_;
       speed = that->speed_;
 
-      clbk_fun_ptr_heartbeat = that->clbk_fun_ptr_heartbeat_;
-      clbk_fun_ctx_heartbeat = that->clbk_fun_ctx_heartbeat_;
-      clbk_fun_ptr_finished = that->_clbkFunPtrFinished;
-      clbk_fun_ctx_finished = that->clbk_fun_ctx_finished_;
-
-      clbk_obj_ptr_heartbeat = that->clbk_obj_ptr_heartbeat_;
-      clbk_obj_ptr_finished = that->clbk_obj_ptr_finished_;
-#if __cplusplus > 199711L
       clbk_fun_heartbeat = that->clbk_fun_heartbeat_;
       clbk_fun_finished = that->clbk_fun_finished_;
-#endif  // __cplusplus > 199711L
       that->mutex_.unlock();
 
       if (pause_request) {
@@ -249,13 +205,7 @@ void* Asynchronous::PlayerLoop(void* caller) {
       that->played_us_ += std::chrono::microseconds(partial);
       that->mutex_.unlock();
 
-      if (clbk_fun_ptr_heartbeat) (*clbk_fun_ptr_heartbeat)(clbk_fun_ctx_heartbeat);
-
-      if (clbk_obj_ptr_heartbeat) (*clbk_obj_ptr_heartbeat)();
-
-#if __cplusplus > 199711L
       if (clbk_fun_heartbeat) clbk_fun_heartbeat();
-#endif  // __cplusplus > 199711L
     }
 
     unsigned int wait = us.count() / speed;
@@ -355,35 +305,6 @@ float Asynchronous::Speed() {
   return r;
 }
 
-void Asynchronous::SetCallbackHeartbeat(void (*callback_)(void*),
-                                        void* context) {
-  mutex_.lock();
-  clbk_fun_ptr_heartbeat_ = callback_;
-  clbk_fun_ctx_heartbeat_ = context;
-  mutex_.unlock();
-}
-
-void Asynchronous::SetCallbackFinished(void (*callback)(void*),
-                                       void* context) {
-  mutex_.lock();
-  _clbkFunPtrFinished = callback;
-  clbk_fun_ctx_finished_ = context;
-  mutex_.unlock();
-}
-
-void Asynchronous::SetCallbackHeartbeat(Callback* callback) {
-  mutex_.lock();
-  clbk_obj_ptr_heartbeat_ = callback;
-  mutex_.unlock();
-}
-
-void Asynchronous::SetCallbackFinished(Callback* callback) {
-  mutex_.lock();
-  clbk_obj_ptr_finished_ = callback;
-  mutex_.unlock();
-}
-
-#if __cplusplus > 199711L
 void Asynchronous::SetCallbackHeartbeat(
     const std::function<void()>& callback) {
   mutex_.lock();
@@ -396,7 +317,6 @@ void Asynchronous::SetCallbackFinished(const std::function<void()>& callback) {
   clbk_fun_finished_ = callback;
   mutex_.unlock();
 }
-#endif  // __cplusplus > 199711L
 
 }  // namespace player
 }  // namespace cxxmidi

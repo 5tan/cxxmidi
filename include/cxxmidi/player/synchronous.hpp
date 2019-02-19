@@ -88,13 +88,7 @@ void Synchronous::PlayerLoop() {
       std::this_thread::sleep_for(std::chrono::microseconds(wait));
       played_us_ += std::chrono::microseconds(partial);
 
-      if (clbk_fun_ptr_heartbeat_) (*clbk_fun_ptr_heartbeat_)(clbk_fun_ctx_heartbeat_);
-
-      if (clbk_obj_ptr_heartbeat_) (*clbk_obj_ptr_heartbeat_)();
-
-#if __cplusplus > 199711L
       if (clbk_fun_heartbeat_) clbk_fun_heartbeat_();
-#endif  // __cplusplus > 199711L
     }
 
     unsigned int wait = us.count() / speed_;
@@ -105,13 +99,7 @@ void Synchronous::PlayerLoop() {
     this->UpdatePlayerState(track_num, dt);
   }
 
-  if (_clbkFunPtrFinished) (*_clbkFunPtrFinished)(clbk_fun_ctx_finished_);
-
-  if (clbk_obj_ptr_finished_) (*clbk_obj_ptr_finished_)();
-
-#if __cplusplus > 199711L
   if (clbk_fun_finished_) clbk_fun_finished_();
-#endif  // __cplusplus > 199711L
 }
 
 }  // namespace player

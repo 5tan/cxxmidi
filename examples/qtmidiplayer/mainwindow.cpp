@@ -11,7 +11,6 @@ MainWindow::MainWindow(QWidget* parent)
       midi_output_(new cxxmidi::output::Default(0)),
       midi_player_(new cxxmidi::player::Asynchronous(midi_output_)),
       midi_file_(0),
-      player_heartbeat_callback_(midi_player_),
       slider_locked_(false) {
   ui_->setupUi(this);
 
@@ -19,15 +18,14 @@ MainWindow::MainWindow(QWidget* parent)
   this->centralWidget()->setDisabled(true);
   this->resize(this->minimumSizeHint());
 
-  midi_player_->SetCallbackHeartbeat(&player_heartbeat_callback_);
-  connect(&player_heartbeat_callback_,
-          &PlayerHeartbeatCallback::PlayerTimeChanged,
+  midi_player_->SetCallbackHeartbeat([this](){ this->PlayerTimeChanged(midi_player_->CurrentTimePos());});
+  midi_player_->SetCallbackFinished([this](){ this->PlayerFinished(); });
+  connect(this,
+          &MainWindow::PlayerTimeChanged,
           this, &MainWindow::UpdateTimeCode, Qt::QueuedConnection);
-
-  midi_player_->SetCallbackFinished(&player_finished_callback_);
-  connect(&player_finished_callback_, &PlayerFinishedCallback::PlayerFinished,
+  connect(this, &MainWindow::PlayerFinished,
           this,
-          &MainWindow::PlayerFinished, Qt::QueuedConnection);
+          &MainWindow::OnPlayerFinished, Qt::QueuedConnection);
 
   connect(ui_->doubleSpinBoxSpeed, qOverload<double>(&QDoubleSpinBox::valueChanged),
           this, &MainWindow::OnSpeedChange);
@@ -138,7 +136,7 @@ void MainWindow::OnPlayClicked() { midi_player_->Play(); }
 
 void MainWindow::OnPauseClicked() { midi_player_->Pause(); }
 
-void MainWindow::PlayerFinished() {
+void MainWindow::OnPlayerFinished() {
   midi_player_->GoTo(std::chrono::microseconds::zero());
   midi_player_->Play();
 }
