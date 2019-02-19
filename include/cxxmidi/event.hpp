@@ -31,12 +31,12 @@ namespace cxxmidi {
 
 class Event : public Message {
  public:
-  inline Event();
-  inline Event(uint32_t dt);
-  inline Event(uint32_t dt, const Message &message);
-  inline Event(uint32_t dt, uint8_t b1);
-  inline Event(uint32_t dt, uint8_t b1, uint8_t b2);
-  inline Event(uint32_t dt, uint8_t b1, uint8_t b2, uint8_t b3);
+  inline Event() = default;
+  inline explicit Event(uint32_t dt);
+  inline explicit Event(uint32_t dt, const Message &message);
+  inline explicit Event(uint32_t dt, uint8_t b1);
+  inline explicit Event(uint32_t dt, uint8_t b1, uint8_t b2);
+  inline explicit Event(uint32_t dt, uint8_t b1, uint8_t b2, uint8_t b3);
 
   inline uint32_t Dt() const;
   inline void SetDt(uint32_t dt);
@@ -48,8 +48,6 @@ class Event : public Message {
 }  // namespace cxxmidi
 
 namespace cxxmidi {
-
-Event::Event() {}
 
 Event::Event(uint32_t dt) : dt_(dt) {}
 
