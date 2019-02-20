@@ -64,7 +64,8 @@ class File : public std::vector<Track> {
   inline uint32_t SaveEvent(std::ofstream &output_file, const Event &event,
                             uint8_t *last_cmd) const;
 
-  inline static void Putc(std::ofstream &file, uint8_t c);
+  inline static void Putc(std::ofstream &file, const uint8_t *c,
+                          std::streamsize size=1);
 };
 
 }  // namespace cxxmidi
@@ -75,8 +76,8 @@ class File : public std::vector<Track> {
 
 namespace cxxmidi {
 
-void File::Putc(std::ofstream &file, uint8_t c) {
-  file.write(reinterpret_cast<char *>(&c), 1);
+void File::Putc(std::ofstream &file, const uint8_t *c, std::streamsize size) {
+  file.write(reinterpret_cast<const char *>(c), size);
 }
 
 File::File() : time_division_(500) {}
@@ -135,7 +136,7 @@ uint32_t File::SaveEvent(std::ofstream &output_file, const Event &event,
   r += utils::SaveVlq(output_file, event.Dt());
 
   if (event.IsSysex()) {
-    File::Putc(output_file, event.at(0));  // SysEx type
+    File::Putc(output_file, &event.at(0));  // SysEx type
     r++;
 
     uint8_t data_size = static_cast<uint8_t>(event.size()) - 1;
@@ -143,7 +144,7 @@ uint32_t File::SaveEvent(std::ofstream &output_file, const Event &event,
 
     //! @TODO check it
     for (size_t i = 1; i < event.size(); i++) {
-      File::Putc(output_file, event.at(i));  // save data bytes
+      File::Putc(output_file, &event.at(i));  // save data bytes
       r++;
     }
 
@@ -153,16 +154,16 @@ uint32_t File::SaveEvent(std::ofstream &output_file, const Event &event,
   }
 
   if (event.IsMeta()) {
-    File::Putc(output_file, 0xff);         // byte 0 (event_.at(0))
-    File::Putc(output_file, event.at(1));  // byte 1, meta event type
+    File::Putc(output_file, &event.at(0));  // byte 0
+    File::Putc(output_file, &event.at(1));  // byte 1, meta event type
     r += 2;
 
     uint8_t dataSize = static_cast<uint8_t>(event.size()) - 2;
-    File::Putc(output_file, dataSize);  // save length
+    File::Putc(output_file, &dataSize);  // save length
     r++;
 
     for (size_t i = 2; i < event.size(); i++) {
-      File::Putc(output_file, event.at(i));  // save data bytes
+      File::Putc(output_file, &event.at(i));  // save data bytes
       r++;
     }
 
@@ -173,12 +174,12 @@ uint32_t File::SaveEvent(std::ofstream &output_file, const Event &event,
 
   uint8_t nowCmd = event.at(0);
   if (*last_cmd != nowCmd) {
-    File::Putc(output_file, nowCmd);  // byte 0, event type
+    File::Putc(output_file, &nowCmd);  // byte 0, event type
     r++;
   }
 
   for (size_t i = 1; i < event.size(); i++) {
-    File::Putc(output_file, event.at(i));  // data bytes
+    File::Putc(output_file, &event.at(i));  // data bytes
     r++;
   }
 
