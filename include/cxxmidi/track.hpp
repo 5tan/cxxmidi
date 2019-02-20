@@ -48,7 +48,7 @@ Event& Track::AddEvent() {
 
 std::string Track::GetName() const {
   std::string r;
-  for (const auto &event : *this) {
+  for (const auto& event : *this) {
     if (event.IsMeta()) {
       if (event.at(1) == Event::kTrackName) {
         if (!r.empty()) r += ", ";
