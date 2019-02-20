@@ -60,12 +60,12 @@ class File : public std::vector<Track> {
 
   inline void SaveHeaderChunk(std::ofstream &output_file) const;
   inline void SaveTrackChunk(std::ofstream &output_file,
-                             const Track& track) const;
+                             const Track &track) const;
   inline uint32_t SaveEvent(std::ofstream &output_file, const Event &event,
                             uint8_t *last_cmd) const;
 
-  inline static void Putc(std::ofstream &file, const uint8_t *c,
-                          std::streamsize size=1);
+  inline static uint32_t Write(std::ofstream &file, const uint8_t *c,
+                               std::streamsize size = 1);
 };
 
 }  // namespace cxxmidi
@@ -76,8 +76,10 @@ class File : public std::vector<Track> {
 
 namespace cxxmidi {
 
-void File::Putc(std::ofstream &file, const uint8_t *c, std::streamsize size) {
+uint32_t File::Write(std::ofstream &file, const uint8_t *c,
+                     std::streamsize size) {
   file.write(reinterpret_cast<const char *>(c), size);
+  return size;
 }
 
 File::File() : time_division_(500) {}
@@ -98,8 +100,7 @@ void File::SaveAs(const char *path) const {
   this->SaveHeaderChunk(out_file);
 
   // loop over tracks
-  for (const auto &track : *this)
-    this->SaveTrackChunk(out_file, track);
+  for (const auto &track : *this) this->SaveTrackChunk(out_file, track);
 
   out_file.close();
 }
@@ -116,7 +117,7 @@ void File::SaveTrackChunk(std::ofstream &output_file,
   uint32_t chunk_size = 0;  // chunk size
   uint8_t last_cmd = 0;
 
-  for (const auto& event : track)
+  for (const auto &event : track)
     chunk_size += this->SaveEvent(output_file, event, &last_cmd);
 
   // go back to chunk size
@@ -129,62 +130,34 @@ void File::SaveTrackChunk(std::ofstream &output_file,
 }
 
 uint32_t File::SaveEvent(std::ofstream &output_file, const Event &event,
-                       uint8_t *last_cmd) const {
-  uint32_t r = 0;
+                         uint8_t *last_cmd) const {
+  uint32_t r = utils::SaveVlq(output_file, event.Dt());
 
-  // save delta time variable-length quantity
-  r += utils::SaveVlq(output_file, event.Dt());
-
+  int skip_data_bytes;
   if (event.IsSysex()) {
-    File::Putc(output_file, &event.at(0));  // SysEx type
-    r++;
+    r += Write(output_file, &event.at(0));  // SysEx type
 
     uint8_t data_size = static_cast<uint8_t>(event.size()) - 1;
     r += utils::SaveVlq(output_file, data_size);
 
-    //! @TODO check it
-    for (size_t i = 1; i < event.size(); i++) {
-      File::Putc(output_file, &event.at(i));  // save data bytes
-      r++;
-    }
-
+    skip_data_bytes = 1;
     *last_cmd = 0;
-
-    return r;
-  }
-
-  if (event.IsMeta()) {
-    File::Putc(output_file, &event.at(0));  // byte 0
-    File::Putc(output_file, &event.at(1));  // byte 1, meta event type
-    r += 2;
+  } else if (event.IsMeta()) {
+    r += Write(output_file, event.data(), 2);  // byte 0 and 1
 
     uint8_t dataSize = static_cast<uint8_t>(event.size()) - 2;
-    File::Putc(output_file, &dataSize);  // save length
-    r++;
+    r += Write(output_file, &dataSize);  // save length
 
-    for (size_t i = 2; i < event.size(); i++) {
-      File::Putc(output_file, &event.at(i));  // save data bytes
-      r++;
-    }
-
+    skip_data_bytes = 2;
     *last_cmd = 0;
-
-    return r;
+  } else {
+    const uint8_t nowCmd = event.at(0);
+    skip_data_bytes = (*last_cmd == nowCmd);
+    *last_cmd = nowCmd;  // save current command if we use running status
   }
 
-  uint8_t nowCmd = event.at(0);
-  if (*last_cmd != nowCmd) {
-    File::Putc(output_file, &nowCmd);  // byte 0, event type
-    r++;
-  }
-
-  for (size_t i = 1; i < event.size(); i++) {
-    File::Putc(output_file, &event.at(i));  // data bytes
-    r++;
-  }
-
-  // save current command if we use running status
-  *last_cmd = nowCmd;
+  r += Write(output_file, event.data() + skip_data_bytes,
+             event.size() - skip_data_bytes);
   return r;
 }
 
@@ -439,7 +412,8 @@ void File::ReadEvent(std::fstream &file, Event *event, bool *track_continue,
                 std::cerr << "CxxMidi: sequence number event size is not 2 but "
                           << strLength << std::endl;
 
-              if ((meta_event_type == Event::kChannelPrefix) && (strLength != 1))
+              if ((meta_event_type == Event::kChannelPrefix) &&
+                  (strLength != 1))
                 std::cerr << "CxxMidi: channel prefix event size is not 1 but"
                           << strLength << std::endl;
 
