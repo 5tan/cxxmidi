@@ -213,7 +213,7 @@ void File::Load(const char *path) {
 
   // calculate file length
   file.seekg(0, std::fstream::end);
-  std::fstream::streampos fileLength = file.tellg();
+  auto fileLength = file.tellg();
   file.seekg(0, std::fstream::beg);
 
   // control counters
@@ -308,19 +308,15 @@ void File::ReadTrackChunk(std::fstream &file) {
   // we will not use this size to read data (we wait for end event)
 
   uint8_t running_status = 0;  // start with no running status
-  std::fstream::streampos begin = file.tellg();
+  auto begin = file.tellg();
   bool track_continue = true;
 
   // read track data
   while (track_continue) {
-    // create new event
     Event &event = track.AddEvent();
 
-    // get delta time
-    uint32_t dt = utils::GetVlq(file);
-
-    // save event delta time
-    event.SetDt(dt);
+    uint32_t dt = utils::GetVlq(file);  // get delta time
+    event.SetDt(dt);                    // save event delta time
 
     // read event data
     this->ReadEvent(file, &event, &track_continue, &running_status);
@@ -357,15 +353,12 @@ void File::ReadEvent(std::fstream &file, Event *event, bool *track_continue,
     case Event::kNoteAftertouch:
     case Event::kControlChange:
     case Event::kPitchWheel: {
-      // get parameter 1
       event->push_back(guts::endianness::ReadBe<uint8_t>(file));
-
-      // get parameter 2
       if (!incomplete)
         event->push_back(guts::endianness::ReadBe<uint8_t>(file));
     } break;
 
-      // one parameter events
+    // one parameter events
     case Event::kProgramChange:
     case Event::kChannelAftertouch: {
       if (!incomplete)
@@ -375,18 +368,12 @@ void File::ReadEvent(std::fstream &file, Event *event, bool *track_continue,
     case 0xf0:  // META events or SysEx events
     {
       switch (cmd) {
-        case 0xff:  // META events
+        case Event::kMeta:  // META events
         {
           uint8_t meta_event_type = guts::endianness::ReadBe<uint8_t>(file);
           event->push_back(meta_event_type);
 
           switch (meta_event_type) {
-            default: {
-#ifndef CXXMIDI_QUIET
-              std::cerr << "CxxMidi: unknown meta event 0x" << std::hex
-                        << meta_event_type << std::endl;
-#endif
-            } break;
             case Event::kSequenceNumber:  // size always 2
             case Event::kText:
             case Event::kCopyright:
@@ -443,14 +430,18 @@ void File::ReadEvent(std::fstream &file, Event *event, bool *track_continue,
               for (int i = 0; i < strLength; i++)
                 event->push_back(guts::endianness::ReadBe<uint8_t>(file));
             } break;
-          }
+            default: {
+#ifndef CXXMIDI_QUIET
+              std::cerr << "CxxMidi: unknown meta event 0x" << std::hex
+                        << meta_event_type << std::endl;
+#endif
+            } break;
+          }  // switch meta_event_type
           break;
         }  // case 0xff, META events
         case Event::kSysExBegin:
         case Event::kSysExEnd: {
           uint32_t size = utils::GetVlq(file);
-          // uint32_t size = Guts::Endianness::readBE<uint8_t>(file);
-
           for (unsigned int i = 0; i < size; i++)
             event->push_back(guts::endianness::ReadBe<uint8_t>(file));
         } break;
