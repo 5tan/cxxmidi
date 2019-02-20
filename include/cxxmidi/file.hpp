@@ -42,7 +42,7 @@ class File : public std::vector<Track> {
   inline void SaveAs(const char *path) const;
 
   inline Track &AddTrack();
-  inline size_t Tracks() const;
+  inline File::size_type Tracks() const;
 
   inline uint16_t TimeDivision() const;
   inline void SetTimeDivision(uint16_t time_division);
@@ -59,9 +59,10 @@ class File : public std::vector<Track> {
                         uint8_t *running_status);
 
   inline void SaveHeaderChunk(std::ofstream &output_file) const;
-  inline void SaveTrackChunk(std::ofstream &output_file, size_t num) const;
-  inline size_t SaveEvent(std::ofstream &output_file, const Event &event,
-                          uint8_t *last_cmd) const;
+  inline void SaveTrackChunk(std::ofstream &output_file,
+                             const Track& track) const;
+  inline uint32_t SaveEvent(std::ofstream &output_file, const Event &event,
+                            uint8_t *last_cmd) const;
 
   inline static void Putc(std::ofstream &file, uint8_t c);
 };
@@ -96,30 +97,26 @@ void File::SaveAs(const char *path) const {
   this->SaveHeaderChunk(out_file);
 
   // loop over tracks
-  for (unsigned int i = 0; i < this->Tracks(); i++)
-    this->SaveTrackChunk(out_file, i);
+  for (const auto &track : *this)
+    this->SaveTrackChunk(out_file, track);
 
   out_file.close();
 }
 
-void File::SaveTrackChunk(std::ofstream &output_file, size_t num) const {
-  const Track &track = this->at(num);
-
+void File::SaveTrackChunk(std::ofstream &output_file,
+                          const Track &track) const {
   // save chunk id
   guts::endianness::WriteBe<uint32_t>(output_file, 0x4D54726B);  // "MTrk"
 
   // write dummy chunk size (we will get back here)
-  std::streampos size_pos = output_file.tellp();
+  auto size_pos = output_file.tellp();
   guts::endianness::WriteBe<uint32_t>(output_file, 0);
 
   uint32_t chunk_size = 0;  // chunk size
   uint8_t last_cmd = 0;
 
-  for (size_t i = 0; i < track.size(); i++) {
-    const Event &event = track.at(i);
-    chunk_size +=
-        static_cast<uint32_t>(this->SaveEvent(output_file, event, &last_cmd));
-  }
+  for (const auto& event : track)
+    chunk_size += this->SaveEvent(output_file, event, &last_cmd);
 
   // go back to chunk size
   output_file.seekp(size_pos);
@@ -130,14 +127,14 @@ void File::SaveTrackChunk(std::ofstream &output_file, size_t num) const {
   output_file.seekp(0, std::ios_base::end);
 }
 
-size_t File::SaveEvent(std::ofstream &output_file, const Event &event,
+uint32_t File::SaveEvent(std::ofstream &output_file, const Event &event,
                        uint8_t *last_cmd) const {
-  size_t r = 0;
+  uint32_t r = 0;
+
+  // save delta time variable-length quantity
+  r += utils::SaveVlq(output_file, event.Dt());
 
   if (event.IsSysex()) {
-    // save delta time variable-length quantity
-    r += utils::SaveVlq(output_file, event.Dt());
-
     File::Putc(output_file, event.at(0));  // SysEx type
     r++;
 
@@ -156,9 +153,6 @@ size_t File::SaveEvent(std::ofstream &output_file, const Event &event,
   }
 
   if (event.IsMeta()) {
-    // save delta time variable-length quantity
-    r += utils::SaveVlq(output_file, event.Dt());
-
     File::Putc(output_file, 0xff);         // byte 0 (event_.at(0))
     File::Putc(output_file, event.at(1));  // byte 1, meta event type
     r += 2;
@@ -178,9 +172,6 @@ size_t File::SaveEvent(std::ofstream &output_file, const Event &event,
   }
 
   uint8_t nowCmd = event.at(0);
-
-  r += utils::SaveVlq(output_file, event.Dt());
-
   if (*last_cmd != nowCmd) {
     File::Putc(output_file, nowCmd);  // byte 0, event type
     r++;
@@ -193,7 +184,6 @@ size_t File::SaveEvent(std::ofstream &output_file, const Event &event,
 
   // save current command if we use running status
   *last_cmd = nowCmd;
-
   return r;
 }
 
@@ -204,11 +194,11 @@ void File::SaveHeaderChunk(std::ofstream &output_file) const {
   // save header size
   guts::endianness::WriteBe<uint32_t>(output_file, 6);
 
-  // save file type (dummy, real value saved later)
+  // save file type
   uint16_t fileType = (this->Tracks() > 1) ? 1 : 0;
   guts::endianness::WriteBe<uint16_t>(output_file, fileType);
 
-  // save tracks numer (dummy, real value saved later)
+  // save tracks numer
   guts::endianness::WriteBe<uint16_t>(output_file,
                                       static_cast<uint16_t>(this->Tracks()));
 
@@ -226,7 +216,7 @@ Track &File::AddTrack() {
   return this->back();
 }
 
-size_t File::Tracks() const { return this->size(); }
+File::size_type File::Tracks() const { return this->size(); }
 
 uint16_t File::TimeDivision() const { return time_division_; }
 
