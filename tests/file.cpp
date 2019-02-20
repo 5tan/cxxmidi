@@ -53,7 +53,7 @@ class FileTestFixture : public ::testing::Test {
       }
       track.push_back(cxxmidi::Event(0,  // deltatime
                                      cxxmidi::Message::kMeta,
-                                     cxxmidi::Message::EndOfTrack));
+                                     cxxmidi::Message::kEndOfTrack));
     }
 
     return file;

@@ -124,7 +124,7 @@ QVariant TrackModel::data(const QModelIndex& index, int role) const {
           break;
         }
 
-        if (event->IsMeta(cxxmidi::Event::Tempo)) {
+        if (event->IsMeta(cxxmidi::Event::kTempo)) {
           int tempo = 0;
 
           if (event->size() >= 5)
