@@ -31,54 +31,62 @@ namespace cxxmidi {
 namespace guts {
 namespace endianness {
 
+#ifdef CXXMIDI_LIL_ENDIAN
+inline constexpr bool MachineIsLittleEndian() { return true; }
+#elif CXXMIDI_BIG_ENDIAN
+inline constexpr bool MachineIsLittleEndian() { return false; }
+#else
 inline bool MachineIsLittleEndian() {
   uint32_t num = 1;
   static const bool r = *reinterpret_cast<uint8_t *>(&num) == 1;
   return r;
-  // note: we don't want constexpr here. Library should detect endianness
-  // in runtime so cross compilation is possible.
 }
+#endif
 
 template <typename T>
-T Fix(const T &v) {
-  T r = 0;
+T Swap(const T &u) {
+  union {
+    T u;
+    unsigned char u8[sizeof(T)];
+  } source, dest;
+  source.u = u;
 
-  for (size_t i = 0; i < sizeof(v); i++) {
-    const T size = static_cast<T>(sizeof(v));
-    const T it = static_cast<T>(i);
+  for (size_t k = 0; k < sizeof(T); k++)
+    dest.u8[k] = source.u8[sizeof(T) - k - 1];
 
-    T mask1 = 0xff << 8 * i;
-    T byte = (v & mask1) >> 8 * i;
-    T offset = (size - it - 1) * 8;
-    T mask2 = 0xff << offset;
-    r |= (((byte) << offset) & mask2);
-  }
-
-  return r;
+  return dest.u;
 }
+
+template <>
+inline uint16_t Swap(const uint16_t &u) {
+  return (u << 8 | u >> 8);
+}
+
+#ifdef __GNUC__
+template <>
+inline uint32_t Swap(const uint32_t &u) {
+  return __builtin_bswap32(u);
+}
+
+template <>
+inline uint64_t Swap(const uint64_t &u) {
+  return __builtin_bswap64(u);
+}
+#endif  // __GNUC__
 
 template <typename T>
 T ReadBe(std::fstream &file) {
   T r;
   file.read(reinterpret_cast<char *>(&r), sizeof(T));
-
-  if (MachineIsLittleEndian()) r = Fix<T>(r);
-
+  if ((sizeof(T) > 1) && MachineIsLittleEndian()) r = Swap<T>(r);
   return r;
 }
 
 template <typename T>
 size_t WriteBe(std::ofstream &file, T val) {
   size_t size = sizeof(val);
-
-  if (MachineIsLittleEndian()) val = Fix<T>(val);
-
+  if ((sizeof(T) > 1) && MachineIsLittleEndian()) val = Swap<T>(val);
   file.write(reinterpret_cast<char *>(&val), size);
-
-#ifndef CXXMIDI_QUIET
-  if (file.bad()) std::cerr << "CxxMidi: file write error" << std::endl;
-#endif
-
   return size;
 }
 
