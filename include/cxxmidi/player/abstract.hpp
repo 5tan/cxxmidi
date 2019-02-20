@@ -254,7 +254,7 @@ void Abstract::UpdatePlayerState(unsigned int track_num, unsigned int dt) {
 
 void Abstract::ExecEvent(const Event& event) {
   if (event.IsMeta()) {
-    if (event.IsMeta(Event::Tempo))
+    if (event.IsMeta(Event::kTempo))
       tempo_ = cxxmidi::utils::ExtractTempo(event[2], event[3], event[4]);
 
     return;  // ignore other META events (?)

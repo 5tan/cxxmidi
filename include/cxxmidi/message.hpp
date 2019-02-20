@@ -65,21 +65,21 @@ class Message : public std::vector<uint8_t> {
   };
 
   enum MetaType {
-    SequenceNumber = 0x00,  // size 2
-    Text = 0x01,
-    Copyright = 0x02,
-    TrackName = 0x03,
-    InstrumentName = 0x04,
-    Lyrics = 0x05,
-    Marker = 0x06,
-    CuePoint = 0x07,
-    ChannelPrefix = 0x20,  // size 1
-    OutputCable = 0x21,    // size 1
-    EndOfTrack = 0x2f,     // size 0
-    Tempo = 0x51,          // size 3
-    SmpteOffset = 0x54,    // size 5
-    TimeSignature = 0x58,
-    KeySignature = 0x59
+    kSequenceNumber = 0x00,  // size 2
+    kText = 0x01,
+    kCopyright = 0x02,
+    kTrackName = 0x03,
+    kInstrumentName = 0x04,
+    kLyrics = 0x05,
+    kMarker = 0x06,
+    kCuePoint = 0x07,
+    kChannelPrefix = 0x20,  // size 1
+    kOutputCable = 0x21,    // size 1
+    kEndOfTrack = 0x2f,     // size 0
+    kTempo = 0x51,          // size 3
+    kSmpteOffset = 0x54,    // size 5
+    kTimeSignature = 0x58,
+    kKeySignature = 0x59
   };
 
   Message() = default;
@@ -157,9 +157,9 @@ bool Message::IsSystemCommon() const {
 bool Message::ContainsText() const {
   if (this->size() > 1)
     return ((*this)[0] == 0xff) &&
-           (((*this)[1] == Text) || ((*this)[1] == Lyrics) ||
-            ((*this)[1] == InstrumentName) || ((*this)[1] == TrackName) ||
-            ((*this)[1] == Copyright));
+           (((*this)[1] == kText) || ((*this)[1] == kLyrics) ||
+            ((*this)[1] == kInstrumentName) || ((*this)[1] == kTrackName) ||
+            ((*this)[1] == kCopyright));
   return false;
 }
 
@@ -175,35 +175,35 @@ std::string Message::GetText() const {
 std::string Message::GetName() const {
   if (this->IsMeta()) {
     switch ((*this)[1]) {
-      case SequenceNumber:
+      case kSequenceNumber:
         return "SequenceNumber";
-      case Text:
+      case kText:
         return "Text";
-      case Copyright:
+      case kCopyright:
         return "Copyright";
-      case TrackName:
+      case kTrackName:
         return "TrackName";
-      case InstrumentName:
+      case kInstrumentName:
         return "InstrumentName";
-      case Lyrics:
+      case kLyrics:
         return "Lyrics";
-      case Marker:
+      case kMarker:
         return "Marker";
-      case CuePoint:
+      case kCuePoint:
         return "CuePoint";
-      case ChannelPrefix:
+      case kChannelPrefix:
         return "ChannelPrefix";
-      case OutputCable:
+      case kOutputCable:
         return "OutputCable";
-      case EndOfTrack:
+      case kEndOfTrack:
         return "EndOfTrack";
-      case Tempo:
+      case kTempo:
         return "Tempo";
-      case SmpteOffset:
+      case kSmpteOffset:
         return "SmpteOffset";
-      case TimeSignature:
+      case kTimeSignature:
         return "TimeSignature";
-      case KeySignature:
+      case kKeySignature:
         return "KeySignature";
       default:
         break;

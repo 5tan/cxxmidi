@@ -52,7 +52,7 @@ int main(int, char **) {
   }
   track.push_back(cxxmidi::Event(0,  // deltatime
                                  cxxmidi::Message::kMeta,
-                                 cxxmidi::Message::EndOfTrack));
+                                 cxxmidi::Message::kEndOfTrack));
 
   // play the file
   cxxmidi::output::Default output(0);

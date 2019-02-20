@@ -423,44 +423,44 @@ void File::ReadEvent(std::fstream &file, Event *event, bool *track_continue,
                         << meta_event_type << std::endl;
 #endif
             } break;
-            case Event::SequenceNumber:  // size always 2
-            case Event::Text:
-            case Event::Copyright:
-            case Event::TrackName:
-            case Event::InstrumentName:
-            case Event::Lyrics:
-            case Event::Marker:
-            case Event::CuePoint:
-            case Event::ChannelPrefix:  // size always 1
-            case Event::OutputCable:    // size always 1
-            case Event::EndOfTrack:     // size always 0
-            case Event::Tempo:          // size always 3
-            case Event::SmpteOffset:    // size always 5
-            case Event::TimeSignature:
-            case Event::KeySignature: {
+            case Event::kSequenceNumber:  // size always 2
+            case Event::kText:
+            case Event::kCopyright:
+            case Event::kTrackName:
+            case Event::kInstrumentName:
+            case Event::kLyrics:
+            case Event::kMarker:
+            case Event::kCuePoint:
+            case Event::kChannelPrefix:  // size always 1
+            case Event::kOutputCable:    // size always 1
+            case Event::kEndOfTrack:     // size always 0
+            case Event::kTempo:          // size always 3
+            case Event::kSmpteOffset:    // size always 5
+            case Event::kTimeSignature:
+            case Event::kKeySignature: {
               // read string length
               uint8_t strLength = guts::endianness::ReadBe<uint8_t>(file);
               // event_.push_back(strLength);
 
 #ifndef CXXMIDI_QUIET
-              if ((meta_event_type == Event::SequenceNumber) &&
+              if ((meta_event_type == Event::kSequenceNumber) &&
                   (strLength != 2))
                 std::cerr << "CxxMidi: sequence number event size is not 2 but "
                           << strLength << std::endl;
 
-              if ((meta_event_type == Event::ChannelPrefix) && (strLength != 1))
+              if ((meta_event_type == Event::kChannelPrefix) && (strLength != 1))
                 std::cerr << "CxxMidi: channel prefix event size is not 1 but"
                           << strLength << std::endl;
 
-              if ((meta_event_type == Event::OutputCable) && (strLength != 1))
+              if ((meta_event_type == Event::kOutputCable) && (strLength != 1))
                 std::cerr << "CxxMidi: output cable event size is not 1 but"
                           << strLength << std::endl;
 
-              if ((meta_event_type == Event::Tempo) && (strLength != 3))
+              if ((meta_event_type == Event::kTempo) && (strLength != 3))
                 std::cerr << "CxxMidi: tempo event size is not 3 but"
                           << strLength << std::endl;
 
-              if ((meta_event_type == Event::SmpteOffset) && (strLength != 5))
+              if ((meta_event_type == Event::kSmpteOffset) && (strLength != 5))
                 std::cerr << "CxxMidi: SMPTE offset event size is not 5 but "
                           << strLength << std::endl;
 #endif
