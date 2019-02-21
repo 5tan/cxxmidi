@@ -52,10 +52,10 @@ class File : public std::vector<Track> {
  private:
   uint16_t time_division_;  // [ticks per quarternote]
 
-  inline void ReadHeaderChunk(std::fstream &file);
-  inline void ReadUnknownChunk(std::fstream &file);
-  inline void ReadTrackChunk(std::fstream &file);
-  inline void ReadEvent(std::fstream &file, Event *event, bool *track_continue,
+  inline void ReadHeaderChunk(std::ifstream &file);
+  inline void ReadUnknownChunk(std::ifstream &file);
+  inline void ReadTrackChunk(std::ifstream &file);
+  inline void ReadEvent(std::ifstream &file, Event *event, bool *track_continue,
                         uint8_t *running_status);
 
   inline void SaveHeaderChunk(std::ofstream &output_file) const;
@@ -202,7 +202,7 @@ void File::Load(const char *path) {
   this->clear();
 
   // open file
-  std::fstream file(path, std::fstream::in | std::fstream::binary);
+  std::ifstream file(path, std::ifstream::in | std::ifstream::binary);
 
   if (!file.is_open()) {
 #ifndef CXXMIDI_QUIET
@@ -212,9 +212,9 @@ void File::Load(const char *path) {
   }
 
   // calculate file length
-  file.seekg(0, std::fstream::end);
+  file.seekg(0, std::ifstream::end);
   auto fileLength = file.tellg();
-  file.seekg(0, std::fstream::beg);
+  file.seekg(0, std::ifstream::beg);
 
   // control counters
   unsigned int i = 0;
@@ -254,7 +254,7 @@ void File::Load(const char *path) {
   }
 }
 
-void File::ReadHeaderChunk(std::fstream &file) {
+void File::ReadHeaderChunk(std::ifstream &file) {
   // read and check header size
   if (guts::endianness::ReadBe<uint32_t>(file) != 6) {
 #ifndef CXXMIDI_QUIET
@@ -291,15 +291,15 @@ void File::ReadHeaderChunk(std::fstream &file) {
 #endif
 }
 
-void File::ReadUnknownChunk(std::fstream &file) {
+void File::ReadUnknownChunk(std::ifstream &file) {
   // get chunk size
   uint32_t chunk_size = guts::endianness::ReadBe<uint32_t>(file);
 
   // skip chunk data
-  file.seekg(chunk_size, std::fstream::cur);
+  file.seekg(chunk_size, std::ifstream::cur);
 }
 
-void File::ReadTrackChunk(std::fstream &file) {
+void File::ReadTrackChunk(std::ifstream &file) {
   // push back new track
   Track &track = this->AddTrack();
 
@@ -329,7 +329,7 @@ void File::ReadTrackChunk(std::fstream &file) {
 #endif
 }
 
-void File::ReadEvent(std::fstream &file, Event *event, bool *track_continue,
+void File::ReadEvent(std::ifstream &file, Event *event, bool *track_continue,
                      uint8_t *running_status) {
   uint8_t cmd = guts::endianness::ReadBe<uint8_t>(file);
 
@@ -348,19 +348,19 @@ void File::ReadEvent(std::fstream &file, Event *event, bool *track_continue,
   // control events
   switch (cmd & 0xf0) {
     // two parameter events
-    case Event::kNoteOn:
-    case Event::kNoteOff:
-    case Event::kNoteAftertouch:
-    case Event::kControlChange:
-    case Event::kPitchWheel: {
+    case Message::kNoteOn:
+    case Message::kNoteOff:
+    case Message::kNoteAftertouch:
+    case Message::kControlChange:
+    case Message::kPitchWheel: {
       event->push_back(guts::endianness::ReadBe<uint8_t>(file));
       if (!incomplete)
         event->push_back(guts::endianness::ReadBe<uint8_t>(file));
     } break;
 
     // one parameter events
-    case Event::kProgramChange:
-    case Event::kChannelAftertouch: {
+    case Message::kProgramChange:
+    case Message::kChannelAftertouch: {
       if (!incomplete)
         event->push_back(guts::endianness::ReadBe<uint8_t>(file));
     } break;
@@ -368,56 +368,56 @@ void File::ReadEvent(std::fstream &file, Event *event, bool *track_continue,
     case 0xf0:  // META events or SysEx events
     {
       switch (cmd) {
-        case Event::kMeta:  // META events
+        case Message::kMeta:  // META events
         {
           uint8_t meta_event_type = guts::endianness::ReadBe<uint8_t>(file);
           event->push_back(meta_event_type);
 
           switch (meta_event_type) {
-            case Event::kSequenceNumber:  // size always 2
-            case Event::kText:
-            case Event::kCopyright:
-            case Event::kTrackName:
-            case Event::kInstrumentName:
-            case Event::kLyrics:
-            case Event::kMarker:
-            case Event::kCuePoint:
-            case Event::kChannelPrefix:  // size always 1
-            case Event::kOutputCable:    // size always 1
-            case Event::kEndOfTrack:     // size always 0
-            case Event::kTempo:          // size always 3
-            case Event::kSmpteOffset:    // size always 5
-            case Event::kTimeSignature:
-            case Event::kKeySignature: {
+            case Message::kSequenceNumber:  // size always 2
+            case Message::kText:
+            case Message::kCopyright:
+            case Message::kTrackName:
+            case Message::kInstrumentName:
+            case Message::kLyrics:
+            case Message::kMarker:
+            case Message::kCuePoint:
+            case Message::kChannelPrefix:  // size always 1
+            case Message::kOutputCable:    // size always 1
+            case Message::kEndOfTrack:     // size always 0
+            case Message::kTempo:          // size always 3
+            case Message::kSmpteOffset:    // size always 5
+            case Message::kTimeSignature:
+            case Message::kKeySignature: {
               // read string length
               uint8_t strLength = guts::endianness::ReadBe<uint8_t>(file);
               // event_.push_back(strLength);
 
 #ifndef CXXMIDI_QUIET
-              if ((meta_event_type == Event::kSequenceNumber) &&
+              if ((meta_event_type == Message::kSequenceNumber) &&
                   (strLength != 2))
                 std::cerr << "CxxMidi: sequence number event size is not 2 but "
                           << strLength << std::endl;
 
-              if ((meta_event_type == Event::kChannelPrefix) &&
+              if ((meta_event_type == Message::kChannelPrefix) &&
                   (strLength != 1))
                 std::cerr << "CxxMidi: channel prefix event size is not 1 but"
                           << strLength << std::endl;
 
-              if ((meta_event_type == Event::kOutputCable) && (strLength != 1))
+              if ((meta_event_type == Message::kOutputCable) && (strLength != 1))
                 std::cerr << "CxxMidi: output cable event size is not 1 but"
                           << strLength << std::endl;
 
-              if ((meta_event_type == Event::kTempo) && (strLength != 3))
+              if ((meta_event_type == Message::kTempo) && (strLength != 3))
                 std::cerr << "CxxMidi: tempo event size is not 3 but"
                           << strLength << std::endl;
 
-              if ((meta_event_type == Event::kSmpteOffset) && (strLength != 5))
+              if ((meta_event_type == Message::kSmpteOffset) && (strLength != 5))
                 std::cerr << "CxxMidi: SMPTE offset event size is not 5 but "
                           << strLength << std::endl;
 #endif
 
-              if (meta_event_type == 0x2f) {
+              if (meta_event_type == Message::kEndOfTrack) {
 #ifndef CXXMIDI_QUIET
                 if (strLength != 0)
                   std::cerr << "CxxMidi: end of track event size is not 0 but "
@@ -439,8 +439,8 @@ void File::ReadEvent(std::fstream &file, Event *event, bool *track_continue,
           }  // switch meta_event_type
           break;
         }  // case 0xff, META events
-        case Event::kSysExBegin:
-        case Event::kSysExEnd: {
+        case Message::kSysExBegin:
+        case Message::kSysExEnd: {
           uint32_t size = utils::GetVlq(file);
           for (unsigned int i = 0; i < size; i++)
             event->push_back(guts::endianness::ReadBe<uint8_t>(file));

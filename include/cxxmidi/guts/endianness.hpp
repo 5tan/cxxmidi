@@ -75,7 +75,7 @@ inline uint64_t Swap(const uint64_t &u) {
 #endif  // __GNUC__
 
 template <typename T>
-T ReadBe(std::fstream &file) {
+T ReadBe(std::ifstream &file) {
   T r;
   file.read(reinterpret_cast<char *>(&r), sizeof(T));
   if ((sizeof(T) > 1) && MachineIsLittleEndian()) r = Swap<T>(r);
