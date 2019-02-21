@@ -49,12 +49,7 @@ inline uint32_t ExtractTempo(uint8_t v0, uint8_t v1, uint8_t v2) {
   return one_tempo;
 }
 
-inline constexpr unsigned int UsPerTick(unsigned int tempo_uspq,
-                                        uint16_t time_div) {
-  return tempo_uspq / time_div;
-}
-
-inline uint32_t GetVlq(std::fstream &file) {
+inline uint32_t GetVlq(std::ifstream &file) {
   uint32_t r = 0;
   uint8_t c;
 

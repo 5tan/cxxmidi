@@ -25,11 +25,11 @@ SOFTWARE.
 
 #ifdef _WIN32  // Windows 32-bit and 64-bit
 #include <cxxmidi/output/windows.hpp>
-namespace CxxMidi {
-namespace Output {
-typedef Output::Windows Default;
-}  // namespace Output
-}  // namespace CxxMidi
+namespace cxxmidi {
+namespace output {
+typedef output::windows Default;
+}  // namespace output
+}  // namespace cxxmidi
 #elif __APPLE__  // Mac OS X
 #error "CxxMidi: OSX Midi output not yet implemented"
 #elif __unix  // Linux, *BSD, Mac OS X
