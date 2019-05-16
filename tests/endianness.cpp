@@ -25,7 +25,7 @@ SOFTWARE.
 #include <cxxmidi/guts/endianness.hpp>
 
 TEST(Endianness, Swap) {
-  std::ifstream ifs("../../cxxmidi/music/chopin.mid");
+  std::ifstream ifs("music/chopin.mid");
   uint32_t data;
   ifs.read(reinterpret_cast<char *>(&data), 4);
 
