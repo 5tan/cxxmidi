@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1.0)
+cmake_minimum_required(VERSION 3.10.2)
 
 project(tests)
 
@@ -25,4 +25,4 @@ target_link_libraries(tests
   ${GTEST_BOTH_LIBRARIES}
   ${CMAKE_THREAD_LIBS_INIT})
 
-add_test(tests tests)
+gtest_discover_tests(tests WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}) 

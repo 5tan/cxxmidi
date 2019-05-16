@@ -37,7 +37,7 @@ class FileTestFixture : public ::testing::Test {
 
     // create 3 tracks
     for (int t = 0; t < 3; t++) {
-      cxxmidi::Track& track = file.AddTrack();
+      cxxmidi::Track &track = file.AddTrack();
 
       for (int i = 0; i < 10; i++) {
         track.push_back(
@@ -59,7 +59,7 @@ class FileTestFixture : public ::testing::Test {
     return file;
   }
 
-  bool CompareFiles(const std::string& p1, const std::string& p2) {
+  bool CompareFiles(const std::string &p1, const std::string &p2) {
     std::ifstream f1(p1, std::ifstream::binary | std::ifstream::ate);
     std::ifstream f2(p2, std::ifstream::binary | std::ifstream::ate);
 
@@ -84,26 +84,23 @@ TEST_F(FileTestFixture, Creation) {
 
 TEST_F(FileTestFixture, ReadWrite) {
   std::array<std::string, 6> test_files = {
-      "../../cxxmidi/music/Abracadabra.mid",
-      "../../cxxmidi/music/chopin.mid",
-      "../../cxxmidi/music/c_major_scale.mid",
-      "../../cxxmidi/music/fantaisie.mid",
-      "../../cxxmidi/music/mahavishnu.mid",
-      "../../cxxmidi/music/MIDI_sample.mid"};
+      "music/Abracadabra.mid",   "music/chopin.mid",
+      "music/c_major_scale.mid", "music/fantaisie.mid",
+      "music/mahavishnu.mid",    "music/MIDI_sample.mid"};
   cxxmidi::File file;
-  for (auto const& f : test_files) {
+  for (auto const &f : test_files) {
     file.Load(f.c_str());
-    file.SaveAs("test.mid");
+    file.SaveAs("/tmp/test.mid");
 
     // copmpare original and saved file
-    EXPECT_TRUE(CompareFiles(f, "test.mid")) << f;
+    EXPECT_TRUE(CompareFiles(f, "/tmp/test.mid")) << f;
   }
   // Note: This test will work only for files that were generatated optimally.
 }
 
-TEST(FILE, ReadSomeTestFiles) {
+TEST(File, ReadSomeTestFiles) {
   cxxmidi::File file;
-  file.Load("../../cxxmidi/music/chopin.mid");
+  file.Load("music/chopin.mid");
   EXPECT_EQ(file.Tracks(), 8);
   EXPECT_EQ(file[0].size(), 1433);
   EXPECT_EQ(file[1].size(), 1877);
@@ -114,7 +111,7 @@ TEST(FILE, ReadSomeTestFiles) {
   EXPECT_EQ(file[6].size(), 2);
   EXPECT_EQ(file[7].size(), 2);
 
-  file.Load("../../cxxmidi/music/MIDI_sample.mid");
+  file.Load("music/MIDI_sample.mid");
   EXPECT_EQ(file.Tracks(), 6);
   EXPECT_EQ(file[0].size(), 4);
   EXPECT_EQ(file[1].size(), 303);
