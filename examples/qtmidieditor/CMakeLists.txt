@@ -1,23 +1,10 @@
-cmake_minimum_required(VERSION 3.10.2)
-
-project(qtmidieditor)
-
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -Wextra")
-
 find_package(ALSA REQUIRED)
 find_package(Threads REQUIRED)
-
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 find_package(Qt5 COMPONENTS Gui Widgets REQUIRED)
 
-include_directories(
-  ${ALSA_INCLUDE_DIRS}
-  ../../include)
-
-set(QTMIDIEDITOR_SRCS
+add_executable(qtmidieditor 
   filemodel.cpp
   fileview.cpp
   main.cpp
@@ -26,8 +13,15 @@ set(QTMIDIEDITOR_SRCS
   trackmodel.cpp
   trackview.cpp)
 
-add_executable(qtmidieditor ${QTMIDIEDITOR_SRCS})
+target_compile_options(qtmidieditor PRIVATE -Wall -pedantic -Wextra)
+target_compile_features(qtmidieditor PRIVATE cxx_std_17)
+
+target_include_directories(qtmidieditor 
+  PRIVATE
+    ${ALSA_INCLUDE_DIRS})
+
 target_link_libraries(qtmidieditor
+  CxxMidi::CxxMidi
+  Threads::Threads
   ${ALSA_LIBRARIES}
-  ${CMAKE_THREAD_LIBS_INIT}
   Qt5::Widgets)
