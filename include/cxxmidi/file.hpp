@@ -404,7 +404,8 @@ void File::ReadEvent(std::ifstream &file, Event *event, bool *track_continue,
                 std::cerr << "CxxMidi: channel prefix event size is not 1 but"
                           << strLength << std::endl;
 
-              if ((meta_event_type == Message::kOutputCable) && (strLength != 1))
+              if ((meta_event_type == Message::kOutputCable) &&
+                  (strLength != 1))
                 std::cerr << "CxxMidi: output cable event size is not 1 but"
                           << strLength << std::endl;
 
@@ -412,7 +413,8 @@ void File::ReadEvent(std::ifstream &file, Event *event, bool *track_continue,
                 std::cerr << "CxxMidi: tempo event size is not 3 but"
                           << strLength << std::endl;
 
-              if ((meta_event_type == Message::kSmpteOffset) && (strLength != 5))
+              if ((meta_event_type == Message::kSmpteOffset) &&
+                  (strLength != 5))
                 std::cerr << "CxxMidi: SMPTE offset event size is not 5 but "
                           << strLength << std::endl;
 #endif
