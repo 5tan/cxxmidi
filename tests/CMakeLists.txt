@@ -1,18 +1,5 @@
-cmake_minimum_required(VERSION 3.10.2)
-
-project(tests)
-
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -Wextra")
-
-enable_testing()
-
 find_package(Threads REQUIRED)
 find_package(GTest REQUIRED)
-
-include_directories(
-  ${GTEST_INCLUDE_DIRS}
-  ../include)
 
 add_executable(tests
   endianness.cpp
@@ -21,8 +8,12 @@ add_executable(tests
   main.cpp
   other.cpp)
 
+target_compile_options(tests PRIVATE -Wall -pedantic -Wextra)
+target_compile_features(tests PRIVATE cxx_std_17)
+
 target_link_libraries(tests
-  ${GTEST_BOTH_LIBRARIES}
-  ${CMAKE_THREAD_LIBS_INIT})
+  CxxMidi::CxxMidi
+  GTest::GTest
+  Threads::Threads)
 
 gtest_discover_tests(tests WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}) 
