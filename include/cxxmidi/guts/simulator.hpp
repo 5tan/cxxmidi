@@ -26,9 +26,6 @@ SOFTWARE.
 #include <cxxmidi/player/abstract.hpp>
 
 namespace cxxmidi {
-namespace time {
-class Duration;
-}
 namespace guts {
 
 class Simulator : public player::Abstract {
