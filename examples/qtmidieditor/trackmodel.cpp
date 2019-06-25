@@ -26,7 +26,7 @@ SOFTWARE.
 #include <cxxmidi/instrument.hpp>
 #include <cxxmidi/note.hpp>
 
-#include "trackmodel.h"
+#include "trackmodel.h"  // NOLINT(build/include_subdir) INCLUDE_NO_DIR
 
 const char* TrackModel::columnNames[] = {"Dt [ticks]", "Data", "Type",
                                          "Description"};

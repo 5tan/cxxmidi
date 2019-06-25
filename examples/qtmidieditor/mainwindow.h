@@ -25,10 +25,10 @@ SOFTWARE.
 
 #include <QMainWindow>
 
-#include "filemodel.h"
-#include "fileview.h"
-#include "trackmodel.h"
-#include "trackview.h"
+#include "filemodel.h"   // NOLINT(build/include_subdir) INCLUDE_NO_DIR
+#include "fileview.h"    // NOLINT(build/include_subdir) INCLUDE_NO_DIR
+#include "trackmodel.h"  // NOLINT(build/include_subdir) INCLUDE_NO_DIR
+#include "trackview.h"   // NOLINT(build/include_subdir) INCLUDE_NO_DIR
 
 #include <cxxmidi/file.hpp>
 

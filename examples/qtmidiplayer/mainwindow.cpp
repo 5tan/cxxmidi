@@ -22,8 +22,8 @@ SOFTWARE.
 
 #include <QFileDialog>
 
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include "mainwindow.h"     // NOLINT(build/include_subdir) INCLUDE_NO_DIR
+#include "ui_mainwindow.h"  // NOLINT(build/include_subdir) INCLUDE_NO_DIR
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent),

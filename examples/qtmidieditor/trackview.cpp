@@ -22,7 +22,7 @@ SOFTWARE.
 
 #include <QMenu>
 
-#include "trackview.h"
+#include "trackview.h"  // NOLINT(build/include_subdir) INCLUDE_NO_DIR
 
 TrackView::TrackView(QWidget* parent) : QTableView(parent) {
   this->setContextMenuPolicy(Qt::CustomContextMenu);

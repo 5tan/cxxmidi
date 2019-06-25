@@ -25,8 +25,8 @@ SOFTWARE.
 #include <QHBoxLayout>
 #include <QSplitter>
 
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include "mainwindow.h"     // NOLINT(build/include_subdir) INCLUDE_NO_DIR
+#include "ui_mainwindow.h"  // NOLINT(build/include_subdir) INCLUDE_NO_DIR
 
 MainWindow::MainWindow(QWidget *parent_)
     : QMainWindow(parent_), ui_(new Ui::MainWindow) {
