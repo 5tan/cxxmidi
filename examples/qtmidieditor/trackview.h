@@ -32,11 +32,11 @@ class TrackView : public QTableView {
   explicit TrackView(QWidget* parent = 0);
   virtual ~TrackView() = default;
 
- signals:
+ signals:  // NOLINT(whitespace/indent) SIGNAL_SLOT_SPECIFIER
   void RequestAddEvent(int num);
   void RequestDeleteEvent(int num);
 
- public slots:
+ public slots:  // NOLINT(whitespace/indent) SIGNAL_SLOT_SPECIFIER
   void ShowContextMenu(const QPoint& pos);
 };
 

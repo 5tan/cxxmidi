@@ -43,7 +43,7 @@ class MainWindow : public QMainWindow {
   explicit MainWindow(QWidget *parent = 0);
   ~MainWindow();
 
- private slots:
+ private slots:  // NOLINT(whitespace/indent) SIGNAL_SLOT_SPECIFIER
   void OnTrackSelected(QModelIndex index);
   void OnOpenFile();
   void OnSaveAs();
@@ -52,7 +52,7 @@ class MainWindow : public QMainWindow {
   void OnRequestAddEvent(int num);
   void OnRequestDeleteEvent(int num);
 
- private:
+ private: 
   void CreateMenu();
 
   Ui::MainWindow *ui_;
