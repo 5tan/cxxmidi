@@ -20,7 +20,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***************************************************************************** */
 
-#include "filemodel.h"
+#include "filemodel.h"  // NOLINT(build/include_subdir) INCLUDE_NO_DIR
 
 FileModel::FileModel(QObject *parent) : QAbstractListModel(parent) {}
 

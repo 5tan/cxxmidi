@@ -22,7 +22,7 @@ SOFTWARE.
 
 #include <QMenu>
 
-#include "fileview.h"
+#include "fileview.h"  // NOLINT(build/include_subdir) INCLUDE_NO_DIR
 
 FileView::FileView(QWidget* parent) : QListView(parent) {
   this->setContextMenuPolicy(Qt::CustomContextMenu);

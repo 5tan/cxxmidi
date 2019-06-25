@@ -22,7 +22,7 @@ SOFTWARE.
 
 #include <QApplication>
 
-#include "mainwindow.h"
+#include "mainwindow.h"  // NOLINT(build/include_subdir) INCLUDE_NO_DIR
 
 int main(int argc, char** argv) {
   qRegisterMetaType<std::chrono::microseconds>("std::chrono::microseconds");
