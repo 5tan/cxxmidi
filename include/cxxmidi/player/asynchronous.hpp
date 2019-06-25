@@ -24,7 +24,7 @@ SOFTWARE.
 #define INCLUDE_CXXMIDI_PLAYER_ASYNCHRONOUS_HPP_
 
 #include <assert.h>
-#include <mutex>  // NOLINT() CPP11_INCLUDES
+#include <mutex>   // NOLINT() CPP11_INCLUDES
 #include <thread>  // NOLINT() CPP11_INCLUDES
 
 #include <cxxmidi/player/abstract.hpp>
