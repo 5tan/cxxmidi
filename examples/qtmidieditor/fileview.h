@@ -33,11 +33,11 @@ class FileView : public QListView {
   explicit FileView(QWidget* parent = 0);
   virtual ~FileView() = default;
 
- signals:
+ signals:  // NOLINT(whitespace/indent) SIGNAL_SLOT_SPECIFIER
   void RequestDeleteTrack(int num);
   void RequestAddTrack(int num);
 
- public slots:
+ public slots:  // NOLINT(whitespace/indent) SIGNAL_SLOT_SPECIFIER
   void ShowContextMenu(const QPoint& pos);
 };
 

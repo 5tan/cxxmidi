@@ -41,11 +41,11 @@ class MainWindow : public QMainWindow {
   explicit MainWindow(QWidget* parent = 0);
   ~MainWindow();
 
- signals:
+ signals:  // NOLINT(whitespace/indent) SIGNAL_SLOT_SPECIFIER
   void PlayerFinished();
   void PlayerTimeChanged(std::chrono::microseconds time);
 
- private slots:
+ private slots:  // NOLINT(whitespace/indent) SIGNAL_SLOT_SPECIFIER
   void OnTimeSliderReleased();
   void OnTimeSliderPressed();
   void OnSpeedChange(double speed);

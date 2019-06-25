@@ -88,6 +88,16 @@ CxxMidi class | Required external library
 `CxxMidi::Output::Windows` or `CxxMidi::Output::Default` on Windows | winmm.lib
 `CxxMidi::Player::Asynchronous` and if pre C++11 compiler on Unix | lpthread
 
+## cpplint exceptions
+
+`cpplint` exceptions in the code are marked:
+```
+// NOLINT(...) CXXMIDI_NOLINT_${MARK}
+```
+
+Mark | Reason for exception
+--- | ---
+`SIGNAL_SLOT_SPECIFIER` | `cpplint` reports `[whitespace/indent] [3]` when parsing Qt `signal`/`slot` specifiers. 
 
 ## License
 
