@@ -92,12 +92,14 @@ CxxMidi class | Required external library
 
 `cpplint` exceptions in the code are marked:
 ```
-// NOLINT(...) CXXMIDI_NOLINT_${MARK}
+// NOLINT(...) ${Mark}
 ```
 
 Mark | Reason for exception
 --- | ---
-`SIGNAL_SLOT_SPECIFIER` | `cpplint` reports `[whitespace/indent] [3]` when parsing Qt `signal`/`slot` specifiers. 
+`SIGNAL_SLOT_SPECIFIER` | `[whitespace/indent] [3]` is reported when parsing Qt `signal`/`slot` specifiers. 
+`CPP11_INCLUDES` | `[build/c++11] [5]` is reported when parsing include directive of header files unapproved C++11 header files(like `chrono`, `thread` or `mutex`). These files have custom implementations in Chrome project, but not in `cxxmidi`.
+
 
 ## License
 
