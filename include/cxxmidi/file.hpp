@@ -23,7 +23,7 @@ SOFTWARE.
 #ifndef INCLUDE_CXXMIDI_FILE_HPP_
 #define INCLUDE_CXXMIDI_FILE_HPP_
 
-#include <chrono>
+#include <chrono>  // NOLINT() CPP11_INCLUDES
 #include <cstdint>
 #include <fstream>
 #include <iostream>

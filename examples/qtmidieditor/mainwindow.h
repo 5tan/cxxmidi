@@ -52,7 +52,7 @@ class MainWindow : public QMainWindow {
   void OnRequestAddEvent(int num);
   void OnRequestDeleteEvent(int num);
 
- private: 
+ private:
   void CreateMenu();
 
   Ui::MainWindow *ui_;

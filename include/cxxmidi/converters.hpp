@@ -23,7 +23,7 @@ SOFTWARE.
 #ifndef INCLUDE_CXXMIDI_CONVERTERS_HPP_
 #define INCLUDE_CXXMIDI_CONVERTERS_HPP_
 
-#include <chrono>
+#include <chrono>  // NOLINT() CPP11_INCLUDES
 
 namespace cxxmidi {
 namespace converters {

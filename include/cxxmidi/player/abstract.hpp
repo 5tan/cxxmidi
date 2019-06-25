@@ -29,7 +29,7 @@ SOFTWARE.
 #include <assert.h>
 
 #include <algorithm>
-#include <chrono>
+#include <chrono>  // NOLINT() CPP11_INCLUDES
 #include <cstdint>
 #include <functional>
 #include <vector>
