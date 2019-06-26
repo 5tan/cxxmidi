@@ -1,58 +1,63 @@
 dist: xenial
 language: cpp
-os:
-  - linux
-  # - windows
-  # - osx
-compiler: 
-  - gcc
-  - clang
-env: 
-  - JOB_DEF='-DCMAKE_CXX_FLAGS="-fsanitize=thread -g -O1"'
-  - JOB_DEF='-DCMAKE_CXX_FLAGS="-fsanitize=address -fno-optimize-sibling-calls -fsanitize-address-use-after-scope -fno-omit-frame-pointer -g -O1"'
-  - JOB_DEF='-DCMAKE_CXX_FLAGS="-fsanitize=memory -fno-optimize-sibling-calls -fsanitize-memory-track-origins=2 -fno-omit-frame-pointer -g -O2"'
-  - JOB_DEF='-DCMAKE_CXX_FLAGS="-fsanitize=leak -fno-omit-frame-pointer -g -O1"'
-  - JOB_DEF='-DCMAKE_CXX_FLAGS="-fsanitize=undefined"'
+os: linux
+# compiler: 
+#   - gcc
+#   - clang
+# env: 
+#   - JOB_CXX_FLAGS='-fsanitize=thread -g -O1'
+#   - JOB_CXX_FLAGS='-fsanitize=address -fno-optimize-sibling-calls -fsanitize-address-use-after-scope -fno-omit-frame-pointer -g -O1'
+#   - JOB_CXX_FLAGS='-fsanitize=leak -fno-omit-frame-pointer -g -O1'
+#   - JOB_CXX_FLAGS='-fsanitize=undefined' JOB_EXE_LINKER_FLAGS='-fuse-ld=gold' # https://stackoverflow.com/questions/50024731/ld-unrecognized-option-push-state-no-as-needed
 before_install: 
   -
-   if [ "$TRAVIS_OS_NAME" = "linux" ] ; then 
-     if [ "$TRAVIS_COMPILER" = "gcc" ] ; then
-       sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y `# for g++-8` ;
-     fi &&
-     sudo add-apt-repository ppa:beineri/opt-qt-5.11.1-xenial -y `# for Qt 5.11` &&
-     sudo apt-get update ;
-   fi
-
+   if [ "$TRAVIS_COMPILER" = "gcc" ] ; then
+     sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y `# for g++-7` ;
+   fi &&
+   sudo add-apt-repository ppa:beineri/opt-qt-5.11.1-xenial -y `# for Qt 5.11` &&
+   sudo apt-get update ;
+   
 install:
-  -
-   if [ "$TRAVIS_OS_NAME" = "linux" ] ; then 
-     if [ "$TRAVIS_COMPILER" = "gcc" ] ; then
-       sudo apt-get install -y g++-8 &&
-       sudo ln -s /usr/bin/g++-8 /usr/local/bin/g++ ;
-     fi &&
-     sudo apt-get install -y 
-       libasound2-dev 
-       qt511-meta-minimal 
-       libgl1-mesa-dev 
-       libglu1-mesa-dev &&
-     (cd /tmp && 
-       wget https://github.com/google/googletest/archive/release-1.8.1.tar.gz ; 
-       tar xf release-1.8.1.tar.gz && 
-       mkdir googletest-release-1.8.1/build && 
-       cd googletest-release-1.8.1/build && 
-       cmake -DBUILD_SHARED_LIBS=ON .. && 
-       sudo make install) ;
-     fi 
+  - &install_build_deps
+   if [ "$TRAVIS_COMPILER" = "gcc" ] ; then
+     sudo apt-get install -y g++-7 &&
+     sudo ln -s /usr/bin/g++-7 /usr/local/bin/g++ ;
+   fi &&
+    sudo apt-get install -y 
+      libasound2-dev 
+      qt511-meta-minimal 
+      libgl1-mesa-dev 
+      libglu1-mesa-dev &&
+    (cd /tmp && 
+      wget https://github.com/google/googletest/archive/release-1.8.1.tar.gz ; 
+      mkdir googletest &&
+      tar xf release-1.8.1.tar.gz -C googletest --strip-components=1 && 
+      mkdir googletest/build && 
+      cd googletest/build && 
+      cmake -DBUILD_SHARED_LIBS=ON .. && 
+      sudo make install -j$(nproc)) ;
 
 before_script: mkdir build
 script: 
-  - (cd build && cmake '$JOB_DEF' .. && make)
-  - (cd build && ctest)
+  - &cmd_build (cd build && cmake -DCMAKE_CXX_FLAGS="$JOB_CXX_FLAGS" -DCMAKE_EXE_LINKER_FLAGS="$JOB_EXE_LINKER_FLAGS" .. && make VERBOSE=1 -j$(nproc))
+  - &cmd_test (cd build && ctest)
 jobs:
   include:
-    - stage: checks
+    - stage: test
       name: cpplint
+      before_install: 
       install: sudo pip install cpplint
       env: 
       compiler: 
       script: cpplint --recursive .
+    - stage: coverage
+      compiler: gcc
+      install:
+        - *install_build_deps
+        - sudo apt-get install -y lcov
+      env: JOB_CXX_FLAGS='--coverage -g -O0'  
+      after_success: 
+        - lcov --directory . --capture --output-file coverage.info
+        - lcov --remove coverage.info '/usr/*' "${HOME}"'/.cache/*' --output-file coverage.info
+        - lcov --list coverage.info
+        - bash <(curl -s https://codecov.io/bash) -f coverage.info 
