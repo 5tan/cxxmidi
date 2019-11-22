@@ -1,18 +1,18 @@
 dist: xenial
 language: cpp
 os: linux
-# compiler: 
-#   - gcc
-#   - clang
-# env: 
-#   - JOB_CXX_FLAGS='-fsanitize=thread -g -O1'
-#   - JOB_CXX_FLAGS='-fsanitize=address -fno-optimize-sibling-calls -fsanitize-address-use-after-scope -fno-omit-frame-pointer -g -O1'
-#   - JOB_CXX_FLAGS='-fsanitize=leak -fno-omit-frame-pointer -g -O1'
-#   - JOB_CXX_FLAGS='-fsanitize=undefined' JOB_EXE_LINKER_FLAGS='-fuse-ld=gold' # https://stackoverflow.com/questions/50024731/ld-unrecognized-option-push-state-no-as-needed
+compiler: 
+  - gcc
+  - clang
+env: 
+  - JOB_CXX_FLAGS='-fsanitize=thread -g -O1'
+  - JOB_CXX_FLAGS='-fsanitize=address -fno-optimize-sibling-calls -fsanitize-address-use-after-scope -fno-omit-frame-pointer -g -O1'
+  - JOB_CXX_FLAGS='-fsanitize=leak -fno-omit-frame-pointer -g -O1'
+  - JOB_CXX_FLAGS='-fsanitize=undefined' JOB_EXE_LINKER_FLAGS='-fuse-ld=gold' # https://stackoverflow.com/questions/50024731/ld-unrecognized-option-push-state-no-as-needed
 before_install: 
   -
    if [ "$TRAVIS_COMPILER" = "gcc" ] ; then
-     sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y `# for g++-7` ;
+     sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y `# for g++-8` ;
    fi &&
    sudo add-apt-repository ppa:beineri/opt-qt-5.11.1-xenial -y `# for Qt 5.11` &&
    sudo apt-get update ;
@@ -20,8 +20,8 @@ before_install:
 install:
   - &install_build_deps
    if [ "$TRAVIS_COMPILER" = "gcc" ] ; then
-     sudo apt-get install -y g++-7 &&
-     sudo ln -s /usr/bin/g++-7 /usr/local/bin/g++ ;
+     sudo apt-get install -y g++-8 &&
+     sudo ln -s /usr/bin/g++-8 /usr/local/bin/g++ ;
    fi &&
     sudo apt-get install -y 
       libasound2-dev 
@@ -29,9 +29,9 @@ install:
       libgl1-mesa-dev 
       libglu1-mesa-dev &&
     (cd /tmp && 
-      wget https://github.com/google/googletest/archive/release-1.8.1.tar.gz ; 
+      wget https://github.com/google/googletest/archive/release-1.10.0.tar.gz ; 
       mkdir googletest &&
-      tar xf release-1.8.1.tar.gz -C googletest --strip-components=1 && 
+      tar xf release-1.10.0.tar.gz -C googletest --strip-components=1 && 
       mkdir googletest/build && 
       cd googletest/build && 
       cmake -DBUILD_SHARED_LIBS=ON .. && 
