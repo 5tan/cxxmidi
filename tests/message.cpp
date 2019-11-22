@@ -78,7 +78,7 @@ TEST(Message, GetName) {
   EXPECT_EQ(Msg(Msg::kMeta, Msg::kSequenceNumber).GetName(), "SequenceNumber");
   EXPECT_EQ(Msg(Msg::kMeta, Msg::kText).GetName(), "Text");
   EXPECT_EQ(Msg(Msg::kMeta, Msg::kCopyright).GetName(), "Copyright");
-  EXPECT_EQ(Msg(Msg::kMeta, Msg::kTrackName).GetName() ,"TrackName");
+  EXPECT_EQ(Msg(Msg::kMeta, Msg::kTrackName).GetName(), "TrackName");
   EXPECT_EQ(Msg(Msg::kMeta, Msg::kInstrumentName).GetName(), "InstrumentName");
   EXPECT_EQ(Msg(Msg::kMeta, Msg::kLyrics).GetName(), "Lyrics");
   EXPECT_EQ(Msg(Msg::kMeta, Msg::kMarker).GetName(), "Marker");
