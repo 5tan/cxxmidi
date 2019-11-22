@@ -1,26 +1,8 @@
-```
-       @ @@@                                       @@@@@   @@    @@                @@
-     @  @@@@  @                                 @@@@@@  @@@@@ @@@@@     @           @@     @
-    @  @  @@@@                                 @@   @  @  @@@@@ @@@@@  @@@          @@    @@@
-   @  @@   @@                                 @    @  @   @ @@  @ @@    @           @@     @
-  @  @@@         @@@    @@@     @@@    @@@        @  @    @     @                   @@
- @@   @@        @ @@@  @@@@ @  @ @@@  @@@@ @     @@ @@    @     @     @@@       @@@ @@   @@@
- @@   @@           @@@ @@@@@      @@@ @@@@@      @@ @@    @     @      @@@     @@@@@@@@@  @@@
- @@   @@            @@@  @@        @@@  @@       @@ @@    @     @       @@    @@   @@@@    @@
- @@   @@             @@@            @@@          @@ @@    @     @       @@    @@    @@     @@
- @@   @@            @ @@@          @ @@@         @@ @@    @     @@      @@    @@    @@     @@
-  @@  @@           @   @@@        @   @@@        @  @@    @     @@      @@    @@    @@     @@
-   @@ @      @    @     @@@      @     @@@          @     @      @@     @@    @@    @@     @@
-    @@@     @    @       @@@ @  @       @@@ @   @@@@      @      @@     @@    @@    @@     @@
-     @@@@@@@    @         @@@  @         @@@   @  @@@@@           @@    @@@ @  @@@@@       @@@ @
-       @@@                                    @     @@                   @@@    @@@         @@@
-                                              @
-                                               @@
-```
-
-# CxxMidi v0.2 [![Build Status](https://travis-ci.org/5tan/cxxmidi.svg?branch=master)](https://travis-ci.org/5tan/cxxmidi)
+# cxxmidi 
 
 C++ MIDI library.
+
+[![Build Status](https://travis-ci.org/5tan/cxxmidi.svg?branch=master)](https://travis-ci.org/5tan/cxxmidi) [![codecov](https://codecov.io/gh/5tan/cxxmidi/branch/master/graph/badge.svg)](https://codecov.io/gh/5tan/cxxmidi)
 
 ## Key features
 * MIDI files read/write
@@ -36,66 +18,68 @@ C++ MIDI library.
 * Multiplatform (Linux, Windows)
 * Endian safe
 * Boost-like HPP header files only library
-* C++11 avail
-* C++98 compatible
 
-## Hello World example
+## Simple example
 
 ``` cpp
 #include <cxxmidi/file.hpp>
 #include <cxxmidi/output/default.hpp>
 #include <cxxmidi/player/synchronous.hpp>
 
-int main(int /*argc*/, char ** /*argv*/)
-{
-    CxxMidi::Output::Default output;
-    for(int i=0; i<output.getPortCount(); i++)
-        std::cout << i << ": " << output.getPortName(i) << std::endl;
-    output.openPort(0);
+int main(int /*argc*/, char** /*argv*/) {
+  cxxmidi::output::Default output;
+  for (size_t i = 0; i < output.GetPortCount(); i++)
+    std::cout << i << ": " << output.GetPortName(i) << std::endl;
+  output.OpenPort(1);
 
-    CxxMidi::File file("some_file.mid");
+  cxxmidi::File file("music/chopin.mid");
 
-    CxxMidi::Player::Synchronous player(&output);
-    player.setFile(&file);
+  cxxmidi::player::Synchronous player(&output);
+  player.SetFile(&file);
 
-    player.setCallbackHeartbeat([&]()
-    {
-        std::cout << player.currentTimePos() << std::endl;
-    });
+  player.SetCallbackHeartbeat(
+      [&]() { std::cout << player.CurrentTimePos().count() << std::endl; });
 
-    player.play();
+  player.Play();
 }
 ```
 
 ## More examples
 
-* `examples/asynchronous` Demonstrates asynchronous MIDI player.
-* `examples/callbacks` Demonstrates use of CxxMidi callbacks.
+* `examples/asynchronous` Asynchronous MIDI player.
+* `examples/callbacks` Use of CxxMidi callbacks.
 * `examples/qtmidieditor` Simple Qt GUI MIDI editor.
 * `examples/qtmidiplayer` Simple Qt GUI MIDI player.
-* `examples/sequencing` Demonstrates how to algorithmically create MIDI files.
-* `examples/synchronous` Demonstrates synchronous MIDI player.
+* `examples/sequencing` How to algorithmically create MIDI files.
+* `examples/synchronous` Synchronous MIDI player.
 
-## How to build
+## How to use
 
-You don't have to build a library in order to use it. Simply clone the repo and copy `include` directory into your project.
+To use library clone the repo and copy `include` directory into your project.
+Use of some cxxmidi classes requires external libraries linkage.
 
-Use of some CxxMidi classes requires linking external libraries.
+Class | Required external library
+--- | ---
+`cxxmidi::output::Alsa` | `libasound`
+`cxxmidi::output::Windows` | `winmm.lib`
 
-CxxMidi class | Required external library
-------------- | -------------------------
-`CxxMidi::Output::Alsa` or `CxxMidi::Output::Default` on Unix | libasound
-`CxxMidi::Output::Windows` or `CxxMidi::Output::Default` on Windows | winmm.lib
-`CxxMidi::Player::Asynchronous` and if pre C++11 compiler on Unix | lpthread
+## How to build tests and examples
 
-## cpplint exceptions
+```
+mkdir build
+cd build
+cmake ..
+make
+```
 
-`cpplint` exceptions in the code are marked:
+## cpplint suppressions
+
+`cpplint` suppressions in the code are marked:
 ```
 // NOLINT(...) ${Mark}
 ```
 
-Mark | Reason for exception
+Mark | Reason for suppression
 --- | ---
 `SIGNAL_SLOT_SPECIFIER` | `[whitespace/indent] [3]` is reported when parsing Qt `signal`/`slot` specifiers. 
 `CPP11_INCLUDES` | `[build/c++11] [5]` is reported when parsing include directive of unapproved C++11 header file (like `chrono`, `thread` or `mutex`). These files have custom implementations in Chrome, but not in this project.
@@ -104,5 +88,5 @@ Mark | Reason for exception
 
 ## License
 
-* CxxMidi: MIT
+* cxxmidi: MIT
 * RtMidi: https://www.music.mcgill.ca/~gary/rtmidi/index.html#license 
