@@ -89,6 +89,7 @@ class Message : public std::vector<uint8_t> {
 
   inline Message::Type GetType() const;
   inline bool IsVoiceCategory() const;
+  inline bool IsVoiceCategory(Type type) const;
   inline bool IsSystemCommon() const;
   inline bool IsSysex() const;
   inline bool IsRealtime() const;
@@ -146,6 +147,11 @@ bool Message::IsRealtime() const {
 
 bool Message::IsVoiceCategory() const {
   if (!this->empty()) return ((*this)[0] >= 0x80) && ((*this)[0] <= 0xef);
+  return false;
+}
+
+bool Message::IsVoiceCategory(Type type) const {
+  if (!this->empty()) return ((*this)[0] & 0xf0) == type;
   return false;
 }
 

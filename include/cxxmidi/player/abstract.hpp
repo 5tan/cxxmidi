@@ -178,7 +178,9 @@ void Abstract::GoTo(const std::chrono::microseconds& pos) {
     played_us_ += converters::Dt2us(dt, tempo_, file_->TimeDivision());
 
     Event event = (*file_)[track_mum][event_num];
-    if (event[0] != Message::kNoteOn) this->ExecEvent(event);
+    if (!event.IsVoiceCategory(Message::kNoteOn) &&
+        !event.IsVoiceCategory(Message::kNoteOff))
+      this->ExecEvent(event);
 
     this->UpdatePlayerState(track_mum, dt);
 
