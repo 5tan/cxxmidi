@@ -71,3 +71,48 @@ TEST(Message, IsVoiceCategory) {
     // clang-format on
   }
 }
+
+TEST(Message, GetName) {
+  using Msg = cxxmidi::Message;
+
+  EXPECT_EQ(Msg(Msg::kMeta, Msg::kSequenceNumber).GetName(), "SequenceNumber");
+  EXPECT_EQ(Msg(Msg::kMeta, Msg::kText).GetName(), "Text");
+  EXPECT_EQ(Msg(Msg::kMeta, Msg::kCopyright).GetName(), "Copyright");
+  EXPECT_EQ(Msg(Msg::kMeta, Msg::kTrackName).GetName() ,"TrackName");
+  EXPECT_EQ(Msg(Msg::kMeta, Msg::kInstrumentName).GetName(), "InstrumentName");
+  EXPECT_EQ(Msg(Msg::kMeta, Msg::kLyrics).GetName(), "Lyrics");
+  EXPECT_EQ(Msg(Msg::kMeta, Msg::kMarker).GetName(), "Marker");
+  EXPECT_EQ(Msg(Msg::kMeta, Msg::kCuePoint).GetName(), "CuePoint");
+  EXPECT_EQ(Msg(Msg::kMeta, Msg::kChannelPrefix).GetName(), "ChannelPrefix");
+  EXPECT_EQ(Msg(Msg::kMeta, Msg::kOutputCable).GetName(), "OutputCable");
+  EXPECT_EQ(Msg(Msg::kMeta, Msg::kEndOfTrack).GetName(), "EndOfTrack");
+  EXPECT_EQ(Msg(Msg::kMeta, Msg::kTempo).GetName(), "Tempo");
+  EXPECT_EQ(Msg(Msg::kMeta, Msg::kSmpteOffset).GetName(), "SmpteOffset");
+  EXPECT_EQ(Msg(Msg::kMeta, Msg::kTimeSignature).GetName(), "TimeSignature");
+  EXPECT_EQ(Msg(Msg::kMeta, Msg::kKeySignature).GetName(), "KeySignature");
+
+  EXPECT_EQ(Msg(Msg::kSysExBegin).GetName(), "SysExBegin");
+  EXPECT_EQ(Msg(Msg::kMtcQuarterFrame).GetName(), "MtcQuarterFrame");
+  EXPECT_EQ(Msg(Msg::kSongPositionPointer).GetName(), "SongPositionPointer");
+  EXPECT_EQ(Msg(Msg::kSongSelect).GetName(), "SongSelect");
+  EXPECT_EQ(Msg(Msg::kTuneRequest).GetName(), "TuneRequest");
+  EXPECT_EQ(Msg(Msg::kSysExEnd).GetName(), "SysExEnd");
+
+  EXPECT_EQ(Msg(Msg::kClock).GetName(), "Clock");
+  EXPECT_EQ(Msg(Msg::kTick).GetName(), "Tick");
+  EXPECT_EQ(Msg(Msg::kStart).GetName(), "Start");
+  EXPECT_EQ(Msg(Msg::kContinue).GetName(), "Continue");
+  EXPECT_EQ(Msg(Msg::kStop).GetName(), "Stop");
+  EXPECT_EQ(Msg(Msg::kActiveSense).GetName(), "ActiveSense");
+  EXPECT_EQ(Msg(Msg::kReset).GetName(), "Reset");
+
+  for (uint8_t ch = 0; ch < 16; ch++) {
+    EXPECT_EQ(Msg(ch | Msg::kNoteOff).GetName(), "NoteOff");
+    EXPECT_EQ(Msg(ch | Msg::kNoteOn).GetName(), "NoteOn");
+    EXPECT_EQ(Msg(ch | Msg::kNoteAftertouch).GetName(), "NoteAftertouch");
+    EXPECT_EQ(Msg(ch | Msg::kControlChange).GetName(), "ControlChange");
+    EXPECT_EQ(Msg(ch | Msg::kProgramChange).GetName(), "ProgramChange");
+    EXPECT_EQ(Msg(ch | Msg::kChannelAftertouch).GetName(), "ChannelAftertouch");
+    EXPECT_EQ(Msg(ch | Msg::kPitchWheel).GetName(), "PitchWheel");
+  }
+}

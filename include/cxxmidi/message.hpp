@@ -217,6 +217,41 @@ std::string Message::GetName() const {
   }
 
   if (this->size()) {
+    switch ((*this)[0]) {
+      // System common:
+      case kSysExBegin:
+        return "SysExBegin";
+      case kMtcQuarterFrame:
+        return "MtcQuarterFrame";
+      case kSongPositionPointer:
+        return "SongPositionPointer";
+      case kSongSelect:
+        return "SongSelect";
+      case kTuneRequest:
+        return "TuneRequest";
+      case kSysExEnd:
+        return "SysExEnd";
+
+      // Realtime:
+      case kClock:
+        return "Clock";
+      case kTick:
+        return "Tick";
+      case kStart:
+        return "Start";
+      case kContinue:
+        return "Continue";
+      case kStop:
+        return "Stop";
+      case kActiveSense:
+        return "ActiveSense";
+      case kReset:
+        return "Reset";
+      default:
+        break;
+    }
+
+    // Voice:
     switch ((*this)[0] & 0xf0) {
       case kNoteOff:
         return "NoteOff";
@@ -232,32 +267,6 @@ std::string Message::GetName() const {
         return "ChannelAftertouch";
       case kPitchWheel:
         return "PitchWheel";
-      case kSysExBegin:
-        return "SysExBegin";
-      case kMtcQuarterFrame:
-        return "MtcQuarterFrame";
-      case kSongPositionPointer:
-        return "SongPositionPointer";
-      case kSongSelect:
-        return "SongSelect";
-      case kTuneRequest:
-        return "TuneRequest";
-      case kSysExEnd:
-        return "SysExEnd";
-      case kClock:
-        return "Clock";
-      case kTick:
-        return "Tick";
-      case kStart:
-        return "Start";
-      case kContinue:
-        return "Continue";
-      case kStop:
-        return "Stop";
-      case kActiveSense:
-        return "ActiveSense";
-      case kReset:
-        return "Reset";
       default:
         break;
     }
