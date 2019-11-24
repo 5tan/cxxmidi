@@ -22,11 +22,11 @@ SOFTWARE.
 
 #include <cxxmidi/file.hpp>
 #include <cxxmidi/output/default.hpp>
-#include <cxxmidi/player/synchronous.hpp>
+#include <cxxmidi/player/player_sync.hpp>
 
 int main(int, char**) {
   cxxmidi::output::Default output(0);
-  cxxmidi::player::Synchronous player(&output);
+  cxxmidi::player::PlayerSync player(&output);
 
   cxxmidi::File file("music/c_major_scale.mid");
   player.SetFile(&file);

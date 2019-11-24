@@ -22,11 +22,11 @@ SOFTWARE.
 
 #include <cxxmidi/file.hpp>
 #include <cxxmidi/output/default.hpp>
-#include <cxxmidi/player/synchronous.hpp>
+#include <cxxmidi/player/player_sync.hpp>
 
 int main(int, char**) {
   cxxmidi::output::Default output(1);
-  cxxmidi::player::Synchronous player(&output);
+  cxxmidi::player::PlayerSync player(&output);
 
   cxxmidi::File file("music/chopin.mid");
   player.SetFile(&file);
