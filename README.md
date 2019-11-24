@@ -46,12 +46,12 @@ int main(int /*argc*/, char** /*argv*/) {
 
 ## More examples
 
-* `examples/asynchronous` Asynchronous MIDI player.
 * `examples/callbacks` Use of CxxMidi callbacks.
 * `examples/qtmidieditor` Simple Qt GUI MIDI editor.
 * `examples/qtmidiplayer` Simple Qt GUI MIDI player.
+* `examples/player_async` Asynchronous MIDI player.
+* `examples/player_sync` Synchronous MIDI player.
 * `examples/sequencing` How to algorithmically create MIDI files.
-* `examples/synchronous` Synchronous MIDI player.
 
 ## How to use
 
