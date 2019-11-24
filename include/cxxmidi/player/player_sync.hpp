@@ -1,3 +1,4 @@
+
 /* *****************************************************************************
 Copyright (c) 2018 Stan Chlebicki
 
@@ -20,28 +21,26 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***************************************************************************** */
 
-#ifndef INCLUDE_CXXMIDI_PLAYER_SYNCHRONOUS_HPP_
-#define INCLUDE_CXXMIDI_PLAYER_SYNCHRONOUS_HPP_
+#ifndef INCLUDE_CXXMIDI_PLAYER_PLAYER_SYNC_HPP_
+#define INCLUDE_CXXMIDI_PLAYER_PLAYER_SYNC_HPP_
 
 #include <assert.h>
 #include <thread>  // NOLINT() CPP11_INCLUDES
 
-#include <cxxmidi/player/abstract.hpp>
+#include <cxxmidi/guts/player_impl.hpp>
 
 namespace cxxmidi {
 class File;
 namespace player {
 
-class Synchronous : public player::Abstract {
+class PlayerSync : public guts::PlayerImpl {
  public:
-  inline explicit Synchronous(output::Abstract* output);
-  inline virtual ~Synchronous() = default;
+  inline explicit PlayerSync(output::Abstract* output);
 
-  inline virtual void Play();
+  inline void Play();
 
  private:
   inline void PlayerLoop();
-  inline virtual void Pause() {}
 };
 
 }  // namespace player
@@ -54,15 +53,15 @@ class Synchronous : public player::Abstract {
 namespace cxxmidi {
 namespace player {
 
-Synchronous::Synchronous(output::Abstract* output) : Abstract(output) {}
+PlayerSync::PlayerSync(output::Abstract* output) : guts::PlayerImpl(output) {}
 
-void Synchronous::Play() {
+void PlayerSync::Play() {
   if (!output_ || !file_) return;
 
   this->PlayerLoop();
 }
 
-void Synchronous::PlayerLoop() {
+void PlayerSync::PlayerLoop() {
   while (!this->Finished()) {
     unsigned int track_num = this->TrackPending();
     unsigned int event_num = player_state_[track_num].track_pointer_;
@@ -95,4 +94,4 @@ void Synchronous::PlayerLoop() {
 }  // namespace player
 }  // namespace cxxmidi
 
-#endif  // INCLUDE_CXXMIDI_PLAYER_SYNCHRONOUS_HPP_
+#endif  // INCLUDE_CXXMIDI_PLAYER_PLAYER_SYNC_HPP_
