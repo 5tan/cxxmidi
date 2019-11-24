@@ -24,7 +24,7 @@ SOFTWARE.
 #include <cxxmidi/file.hpp>
 #include <cxxmidi/note.hpp>
 #include <cxxmidi/output/default.hpp>
-#include <cxxmidi/player/synchronous.hpp>
+#include <cxxmidi/player/player_sync.hpp>
 
 int main(int, char **) {
   uint32_t dt;  // quartenote deltatime [ticks]
@@ -56,7 +56,7 @@ int main(int, char **) {
 
   // play the file
   cxxmidi::output::Default output(0);
-  cxxmidi::player::Synchronous player(&output);
+  cxxmidi::player::PlayerSync player(&output);
   player.SetFile(&my_file);
   player.Play();
 
