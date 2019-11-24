@@ -31,7 +31,7 @@ MainWindow::MainWindow(QWidget* parent)
       played_us_(std::chrono::microseconds::zero()),
       total_us_(std::chrono::microseconds::zero()),
       midi_output_(new cxxmidi::output::Default(0)),
-      midi_player_(new cxxmidi::player::Asynchronous(midi_output_)),
+      midi_player_(new cxxmidi::player::PlayerAsync(midi_output_)),
       midi_file_(0),
       slider_locked_(false) {
   ui_->setupUi(this);
