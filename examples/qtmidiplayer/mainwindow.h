@@ -28,7 +28,7 @@ SOFTWARE.
 
 #include <cxxmidi/file.hpp>
 #include <cxxmidi/output/default.hpp>
-#include <cxxmidi/player/asynchronous.hpp>
+#include <cxxmidi/player/player_async.hpp>
 
 namespace Ui {
 class MainWindow;
@@ -68,7 +68,7 @@ class MainWindow : public QMainWindow {
   std::chrono::microseconds total_us_;
 
   cxxmidi::output::Default* midi_output_;
-  cxxmidi::player::Asynchronous* midi_player_;
+  cxxmidi::player::PlayerAsync* midi_player_;
   cxxmidi::File* midi_file_;
 
   bool slider_locked_;

@@ -20,29 +20,29 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***************************************************************************** */
 
-#ifndef INCLUDE_CXXMIDI_PLAYER_ASYNCHRONOUS_HPP_
-#define INCLUDE_CXXMIDI_PLAYER_ASYNCHRONOUS_HPP_
+#ifndef INCLUDE_CXXMIDI_PLAYER_PLAYER_ASYNC_HPP_
+#define INCLUDE_CXXMIDI_PLAYER_PLAYER_ASYNC_HPP_
 
 #include <assert.h>
 #include <mutex>   // NOLINT() CPP11_INCLUDES
 #include <thread>  // NOLINT() CPP11_INCLUDES
 
-#include <cxxmidi/player/abstract.hpp>
+#include <cxxmidi/guts/player_impl.hpp>
 
 namespace cxxmidi {
 class File;
 namespace player {
 
-class Asynchronous : public player::Abstract {
+class PlayerAsync : public guts::PlayerImpl {
  public:
-  inline explicit Asynchronous(output::Abstract* output);
-  inline virtual ~Asynchronous();
+  inline explicit PlayerAsync(output::Abstract* output);
+  inline ~PlayerAsync();
 
-  Asynchronous(const Asynchronous&);             // non-copyable
-  Asynchronous& operator=(const Asynchronous&);  // non-copyable (assignment)
+  PlayerAsync(const PlayerAsync&);             // non-copyable
+  PlayerAsync& operator=(const PlayerAsync&);  // non-copyable (assignment)
 
-  inline virtual void Play();
-  inline virtual void Pause();
+  inline void Play();
+  inline void Pause();
 
   inline void GoTo(const std::chrono::microseconds& pos);
   inline std::chrono::microseconds CurrentTimePos();
@@ -81,17 +81,17 @@ class Asynchronous : public player::Abstract {
 namespace cxxmidi {
 namespace player {
 
-Asynchronous::Asynchronous(output::Abstract* output)
-    : Abstract(output), pause_request_(false), thread_(0) {}
+PlayerAsync::PlayerAsync(output::Abstract* output)
+    : PlayerImpl(output), pause_request_(false), thread_(0) {}
 
-Asynchronous::~Asynchronous() {
+PlayerAsync::~PlayerAsync() {
   if (thread_) {
     if (thread_->joinable()) thread_->join();
     delete thread_;
   }  //! @FIXME
 }
 
-void Asynchronous::Play() {
+void PlayerAsync::Play() {
   bool reject = false;
 
   mutex_.lock();
@@ -108,10 +108,10 @@ void Asynchronous::Play() {
     if (thread_->joinable()) thread_->join();
     delete thread_;
   }  //! @FIXME
-  thread_ = new std::thread(Asynchronous::PlayerLoop, this);
+  thread_ = new std::thread(PlayerAsync::PlayerLoop, this);
 }
 
-void Asynchronous::Pause() {
+void PlayerAsync::Pause() {
   mutex_.lock();
   pause_request_ = true;
   mutex_.unlock();
@@ -123,8 +123,8 @@ void Asynchronous::Pause() {
   thread_ = 0;
 }
 
-void* Asynchronous::PlayerLoop(void* caller) {
-  Asynchronous* that = reinterpret_cast<Asynchronous*>(caller);
+void* PlayerAsync::PlayerLoop(void* caller) {
+  PlayerAsync* that = reinterpret_cast<PlayerAsync*>(caller);
 
   bool finished = false;
   bool pause_request = false;
@@ -141,8 +141,8 @@ void* Asynchronous::PlayerLoop(void* caller) {
     // copy player data
     that->mutex_.lock();
     if (!(pause_request = that->pause_request_)) {
-      if (!(finished = that->Abstract::Finished())) {
-        track_num = that->Abstract::TrackPending();
+      if (!(finished = that->PlayerImpl::Finished())) {
+        track_num = that->PlayerImpl::TrackPending();
         event_num = that->player_state_[track_num].track_pointer_;
         dt = that->player_state_[track_num].track_dt_;
         us = converters::Dt2us(dt, that->tempo_, that->file_->TimeDivision());
@@ -168,8 +168,8 @@ void* Asynchronous::PlayerLoop(void* caller) {
     }
 
     // Note that the _heartbeatHelper is not protected by the _mutex.
-    // It should be used only in Acynchronous::Asynchronous::playerLoop()
-    // and in Abstract::goTo() (these two are exclusive).
+    // It should be used only in Acynchronous::PlayerAsync::playerLoop()
+    // and in PlayerImpl::goTo() (these two are exclusive).
     while ((that->heartbeat_helper_ + us.count()) >= 10000) {
       unsigned int partial = 10000 - that->heartbeat_helper_;
       that->heartbeat_helper_ = 0;
@@ -215,7 +215,7 @@ void* Asynchronous::PlayerLoop(void* caller) {
   return 0;
 }
 
-void Asynchronous::GoTo(const std::chrono::microseconds& pos) {
+void PlayerAsync::GoTo(const std::chrono::microseconds& pos) {
   //! @TODO If goTo is called from player's callback, different impl is needed
 
   mutex_.lock();
@@ -225,13 +225,13 @@ void Asynchronous::GoTo(const std::chrono::microseconds& pos) {
   if (was_playing) this->Pause();
 
   mutex_.lock();
-  Abstract::GoTo(pos);
+  PlayerImpl::GoTo(pos);
   mutex_.unlock();
 
   if (was_playing) this->Play();
 }
 
-std::chrono::microseconds Asynchronous::CurrentTimePos() {
+std::chrono::microseconds PlayerAsync::CurrentTimePos() {
   std::chrono::microseconds r;
   mutex_.lock();
   r = played_us_;
@@ -239,19 +239,19 @@ std::chrono::microseconds Asynchronous::CurrentTimePos() {
   return r;
 }
 
-void Asynchronous::SetFile(const File* file) {
+void PlayerAsync::SetFile(const File* file) {
   mutex_.lock();
-  Abstract::SetFile(file);
+  PlayerImpl::SetFile(file);
   mutex_.unlock();
 }
 
-void Asynchronous::SetOutput(output::Abstract* output) {
+void PlayerAsync::SetOutput(output::Abstract* output) {
   mutex_.lock();
   output_ = output;
   mutex_.unlock();
 }
 
-output::Abstract* Asynchronous::output() {
+output::Abstract* PlayerAsync::output() {
   output::Abstract* r;
   mutex_.lock();
   r = output_;
@@ -259,15 +259,15 @@ output::Abstract* Asynchronous::output() {
   return r;
 }
 
-bool Asynchronous::Finished() {
+bool PlayerAsync::Finished() {
   bool r;
   mutex_.lock();
-  r = player::Abstract::Finished();
+  r = guts::PlayerImpl::Finished();
   mutex_.unlock();
   return r;
 }
 
-bool Asynchronous::IsPlaying() {
+bool PlayerAsync::IsPlaying() {
   bool r;
   mutex_.lock();
   r = is_playing_;
@@ -275,7 +275,7 @@ bool Asynchronous::IsPlaying() {
   return r;
 }
 
-bool Asynchronous::IsPaused() {
+bool PlayerAsync::IsPaused() {
   bool r;
   mutex_.lock();
   r = !is_playing_;
@@ -283,13 +283,13 @@ bool Asynchronous::IsPaused() {
   return r;
 }
 
-void Asynchronous::SetSpeed(float speed) {
+void PlayerAsync::SetSpeed(float speed) {
   mutex_.lock();
   speed_ = speed;
   mutex_.unlock();
 }
 
-float Asynchronous::Speed() {
+float PlayerAsync::Speed() {
   float r;
   mutex_.lock();
   r = speed_;
@@ -298,13 +298,13 @@ float Asynchronous::Speed() {
   return r;
 }
 
-void Asynchronous::SetCallbackHeartbeat(const std::function<void()>& callback) {
+void PlayerAsync::SetCallbackHeartbeat(const std::function<void()>& callback) {
   mutex_.lock();
   clbk_fun_heartbeat_ = callback;
   mutex_.unlock();
 }
 
-void Asynchronous::SetCallbackFinished(const std::function<void()>& callback) {
+void PlayerAsync::SetCallbackFinished(const std::function<void()>& callback) {
   mutex_.lock();
   clbk_fun_finished_ = callback;
   mutex_.unlock();
@@ -313,4 +313,4 @@ void Asynchronous::SetCallbackFinished(const std::function<void()>& callback) {
 }  // namespace player
 }  // namespace cxxmidi
 
-#endif  // INCLUDE_CXXMIDI_PLAYER_ASYNCHRONOUS_HPP_
+#endif  // INCLUDE_CXXMIDI_PLAYER_PLAYER_ASYNC_HPP_
