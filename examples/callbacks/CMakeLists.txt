@@ -3,8 +3,8 @@ find_package(Threads REQUIRED)
 
 add_executable(callbacks main.cpp)
 
-target_compile_options(asynchronous PRIVATE -Wall -pedantic -Wextra)
-target_compile_features(asynchronous PRIVATE cxx_std_17)
+target_compile_options(callbacks PRIVATE -Wall -pedantic -Wextra)
+target_compile_features(callbacks PRIVATE cxx_std_17)
 
 target_include_directories(callbacks
   PRIVATE
