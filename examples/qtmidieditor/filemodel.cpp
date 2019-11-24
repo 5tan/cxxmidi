@@ -22,7 +22,8 @@ SOFTWARE.
 
 #include "filemodel.h"  // NOLINT(build/include_subdir) INCLUDE_NO_DIR
 
-FileModel::FileModel(QObject *parent) : QAbstractListModel(parent) {}
+FileModel::FileModel(QObject *parent)
+    : QAbstractListModel(parent), file_(nullptr) {}
 
 int FileModel::rowCount(const QModelIndex & /* index */) const {
   if (file_) return static_cast<int>(file_->Tracks());
