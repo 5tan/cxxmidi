@@ -23,20 +23,14 @@ SOFTWARE.
 #ifndef INCLUDE_CXXMIDI_GUTS_SIMULATOR_HPP_
 #define INCLUDE_CXXMIDI_GUTS_SIMULATOR_HPP_
 
-#include <cxxmidi/player/abstract.hpp>
+#include <cxxmidi/guts/player_impl.hpp>
 
 namespace cxxmidi {
 namespace guts {
 
-class Simulator : public player::Abstract {
+class Simulator : protected PlayerImpl {
  public:
   inline std::chrono::microseconds Duration(const File &file);
-
- private:
-  inline virtual void Play() {}
-  inline virtual void Play(const File * /*file*/) {}
-  inline virtual void Pause() {}
-  inline virtual void Resume() {}
 };
 
 }  // namespace guts
