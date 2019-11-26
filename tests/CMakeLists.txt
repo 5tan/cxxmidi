@@ -17,4 +17,4 @@ target_link_libraries(tests
   GTest::GTest
   Threads::Threads)
 
-gtest_discover_tests(tests WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}) 
+gtest_discover_tests(tests WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})

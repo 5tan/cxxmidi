@@ -87,6 +87,13 @@ jobs:
       script: 
         - export CXX='/home/travis/Clazy-x86_64-1.5.AppImage'
         - *cmd_build
+    - stage: test
+      name: cmakelint
+      before_install: 
+      install: sudo pip install cmakelint
+      env: 
+      compiler: 
+      script: cmakelint `find . -name CMakeLists.txt`
     - stage: coverage
       compiler: gcc
       install:

@@ -4,7 +4,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 find_package(Qt5 COMPONENTS Gui Widgets REQUIRED)
 
-add_executable(qtmidieditor 
+add_executable(qtmidieditor
   filemodel.cpp
   fileview.cpp
   main.cpp
@@ -16,7 +16,7 @@ add_executable(qtmidieditor
 target_compile_options(qtmidieditor PRIVATE -Wall -pedantic -Wextra)
 target_compile_features(qtmidieditor PRIVATE cxx_std_17)
 
-target_include_directories(qtmidieditor 
+target_include_directories(qtmidieditor
   PRIVATE
     ${ALSA_INCLUDE_DIRS})
 
