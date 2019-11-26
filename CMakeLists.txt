@@ -23,30 +23,31 @@ configure_package_config_file(cmake/CxxMidiConfig.cmake.in
   INSTALL_DESTINATION ${LIB_INSTALL_DIR}/cxxmidi/cmake
   PATH_VARS INCLUDE_INSTALL_DIR SYSCONFIG_INSTALL_DIR)
 
-write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/CxxMidiConfigVersion.cmake 
+write_basic_package_version_file(
+  ${CMAKE_CURRENT_BINARY_DIR}/CxxMidiConfigVersion.cmake
   VERSION ${PROJECT_VERSION}
   COMPATIBILITY SameMajorVersion)
 
 install(
-  FILES 
+  FILES
     ${CMAKE_CURRENT_BINARY_DIR}/CxxMidiConfig.cmake
     ${CMAKE_CURRENT_BINARY_DIR}/CxxMidiConfigVersion.cmake
-  DESTINATION 
+  DESTINATION
     ${LIB_INSTALL_DIR}/cxxmidi/cmake)
 
 install(DIRECTORY include/cxxmidi
   DESTINATION ${INCLUDE_INSTALL_DIR})
 
-install(TARGETS CxxMidi 
-  EXPORT CxxMidi 
+install(TARGETS CxxMidi
+  EXPORT CxxMidi
   DESTINATION ${LIB_INSTALL_DIR}/cxxmidi/cmake)
 
-install(EXPORT CxxMidi 
-  FILE CxxMidiTargets.cmake 
-  NAMESPACE CxxMidi:: 
+install(EXPORT CxxMidi
+  FILE CxxMidiTargets.cmake
+  NAMESPACE CxxMidi::
   DESTINATION ${LIB_INSTALL_DIR}/cxxmidi/cmake)
 
-if(BUILD_TESTING) 
+if(BUILD_TESTING)
   enable_testing()
   add_subdirectory(tests)
 endif()
