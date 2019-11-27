@@ -129,7 +129,6 @@ void* PlayerAsync::PlayerLoop(void* caller) {
   PlayerAsync* that = reinterpret_cast<PlayerAsync*>(caller);
 
   bool finished = false;
-  bool pause_request = false;
   unsigned int track_num = 0;
   unsigned int event_num = 0;
   uint32_t dt = 0;
@@ -140,6 +139,7 @@ void* PlayerAsync::PlayerLoop(void* caller) {
   std::function<void()> clbk_fun_finished;
 
   while (true) {
+    bool pause_request = false;
     // copy player data
     {
       std::scoped_lock lock(that->mutex_);
