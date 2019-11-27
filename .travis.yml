@@ -5,6 +5,7 @@ compiler:
   - gcc
   - clang
 env: 
+  - JOB_CXX_FLAGS=''
   - JOB_CXX_FLAGS='-fsanitize=thread -g -O1'
   - JOB_CXX_FLAGS='-fsanitize=address -fno-optimize-sibling-calls -fsanitize-address-use-after-scope -fno-omit-frame-pointer -g -O1'
   - JOB_CXX_FLAGS='-fsanitize=leak -fno-omit-frame-pointer -g -O1'
@@ -15,7 +16,7 @@ before_install:
      sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y `# for g++-8` ;
    elif [ "$TRAVIS_COMPILER" = "clang" ] ; then
      wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add - &&
-     sudo apt-add-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-8 main" ;
+     sudo apt-add-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-9 main" ;
    fi &&
    sudo add-apt-repository ppa:beineri/opt-qt-5.11.1-xenial -y `# for Qt 5.11` &&
    sudo apt-get update ;
@@ -24,10 +25,12 @@ install:
   - &install_build_deps
    if [ "$TRAVIS_COMPILER" = "gcc" ] ; then
      sudo apt-get install -y g++-8 &&
-     export CXX=/usr/bin/g++-8 ;
+     export CXX=/usr/bin/g++-8 &&
+     export CC=/usr/bin/gcc-8 ;
    elif [ "$TRAVIS_COMPILER" = "clang" ] ; then
-     sudo apt-get install -y clang-8 &&
-     export CXX=/usr/bin/clang++-8 ;
+     sudo apt-get install -y clang-9 &&
+     export CXX=/usr/bin/clang++-9 &&
+     export CC=/usr/bin/clang-9 ;
    fi &&
     sudo apt-get install -y 
       cmake
@@ -62,7 +65,7 @@ jobs:
       install: sudo apt-get install -y cppcheck
       env: 
       compiler: 
-      script: cppcheck --enable=all --language=c++ --std=c++14 --file-list=<(find ./ -path ./build -prune -o -type f \( -iname \*.hpp -o -iname \*.cpp -o -iname *.h \) -print) --error-exitcode=2
+      script: cppcheck --enable=all --language=c++ --std=c++11 --file-list=<(find ./ -path ./build -prune -o -type f \( -iname \*.hpp -o -iname \*.cpp -o -iname *.h \) -print) --error-exitcode=2
     - stage: test
       name: clang-tidy
       env: EXTRA='-DCMAKE_CXX_CLANG_TIDY=/usr/bin/clang-tidy;-checks=*'
