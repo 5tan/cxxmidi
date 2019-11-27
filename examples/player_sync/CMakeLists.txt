@@ -4,7 +4,9 @@ find_package(Threads REQUIRED)
 add_executable(player_sync main.cpp)
 
 target_compile_options(player_sync PRIVATE -Wall -pedantic -Wextra)
-target_compile_features(player_sync PRIVATE cxx_std_17)
+set_target_properties(player_sync PROPERTIES
+  CXX_STANDARD 17
+  CXX_EXTENSIONS OFF)
 
 target_include_directories(player_sync
   PRIVATE

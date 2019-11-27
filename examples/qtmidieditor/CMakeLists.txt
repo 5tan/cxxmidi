@@ -14,7 +14,9 @@ add_executable(qtmidieditor
   trackview.cpp)
 
 target_compile_options(qtmidieditor PRIVATE -Wall -pedantic -Wextra)
-target_compile_features(qtmidieditor PRIVATE cxx_std_17)
+set_target_properties(qtmidieditor PROPERTIES
+  CXX_STANDARD 17
+  CXX_EXTENSIONS OFF)
 
 target_include_directories(qtmidieditor
   PRIVATE
