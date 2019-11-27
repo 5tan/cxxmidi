@@ -30,6 +30,7 @@ install:
      export CXX=/usr/bin/clang++-8 ;
    fi &&
     sudo apt-get install -y 
+      cmake
       libasound2-dev 
       qt511-meta-minimal 
       libgl1-mesa-dev 
