@@ -13,6 +13,9 @@ before_install:
   -
    if [ "$TRAVIS_COMPILER" = "gcc" ] ; then
      sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y `# for g++-8` ;
+   elif [ "$TRAVIS_COMPILER" = "clang" ] ; then
+     wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add - &&
+     sudo apt-add-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-8 main" ;
    fi &&
    sudo add-apt-repository ppa:beineri/opt-qt-5.11.1-xenial -y `# for Qt 5.11` &&
    sudo apt-get update ;
@@ -21,7 +24,10 @@ install:
   - &install_build_deps
    if [ "$TRAVIS_COMPILER" = "gcc" ] ; then
      sudo apt-get install -y g++-8 &&
-     sudo ln -s /usr/bin/g++-8 /usr/local/bin/g++ ;
+     export CXX=/usr/bin/g++-8 ;
+   elif [ "$TRAVIS_COMPILER" = "clang" ] ; then
+     sudo apt-get install -y clang-8 &&
+     export CXX=/usr/bin/clang++-8 ;
    fi &&
     sudo apt-get install -y 
       libasound2-dev 
