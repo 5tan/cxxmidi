@@ -4,7 +4,9 @@ find_package(Threads REQUIRED)
 add_executable(sequencing main.cpp)
 
 target_compile_options(sequencing PRIVATE -Wall -pedantic -Wextra)
-target_compile_features(sequencing PRIVATE cxx_std_17)
+set_target_properties(sequencing PROPERTIES
+  CXX_STANDARD 17
+  CXX_EXTENSIONS OFF)
 
 target_include_directories(sequencing
   PRIVATE
