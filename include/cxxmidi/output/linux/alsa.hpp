@@ -116,13 +116,12 @@ Alsa::~Alsa() {
 size_t Alsa::portInfo(snd_seq_t *seq, snd_seq_port_info_t *pinfo,
                       unsigned int type, int portNumber) {
   snd_seq_client_info_t *cinfo;
-  int client;
   size_t count = 0;
   snd_seq_client_info_alloca(&cinfo);
 
   snd_seq_client_info_set_client(cinfo, -1);
   while (snd_seq_query_next_client(seq, cinfo) >= 0) {
-    client = snd_seq_client_info_get_client(cinfo);
+    int client = snd_seq_client_info_get_client(cinfo);
     if (client == 0) continue;
     // Reset query info
     snd_seq_port_info_set_client(pinfo, client);
