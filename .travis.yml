@@ -67,7 +67,7 @@ jobs:
       env:      
       install: 
         - *install_build_deps
-        - wget https://downloads.kdab.com/clazy/1.5/Clazy-x86_64-1.5.AppImage -P /tmp && chmod +x tmp/Clazy-x86_64-1.5.AppImage
+        - wget https://downloads.kdab.com/clazy/1.5/Clazy-x86_64-1.5.AppImage -P /tmp && chmod +x /tmp/Clazy-x86_64-1.5.AppImage
       compiler: 
       script: 
         - export CXX='/tmp/Clazy-x86_64-1.5.AppImage'
