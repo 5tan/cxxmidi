@@ -9,9 +9,7 @@ add_executable(qtmidiplayer
   mainwindow.cpp)
 
 target_compile_options(qtmidiplayer PRIVATE -Wall -pedantic -Wextra)
-set_target_properties(qtmidiplayer PROPERTIES
-  CXX_STANDARD 17
-  CXX_EXTENSIONS OFF)
+target_compile_features(qtmidiplayer PRIVATE cxx_std_17)
 
 target_include_directories(qtmidiplayer
   PRIVATE

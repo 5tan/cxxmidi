@@ -4,9 +4,7 @@ find_package(Threads REQUIRED)
 add_executable(callbacks main.cpp)
 
 target_compile_options(callbacks PRIVATE -Wall -pedantic -Wextra)
-set_target_properties(callbacks PROPERTIES
-  CXX_STANDARD 17
-  CXX_EXTENSIONS OFF)
+target_compile_features(callbacks PRIVATE cxx_std_17)
 
 target_include_directories(callbacks
   PRIVATE
