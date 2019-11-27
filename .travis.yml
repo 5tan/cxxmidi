@@ -10,9 +10,9 @@ env:
   - JOB_CXX_FLAGS='-fsanitize=address -fno-optimize-sibling-calls -fsanitize-address-use-after-scope -fno-omit-frame-pointer -g -O1'
   - JOB_CXX_FLAGS='-fsanitize=leak -fno-omit-frame-pointer -g -O1'
   - JOB_CXX_FLAGS='-fsanitize=undefined'
-before_install: sudo apt-get update
 install: 
   - &install_build_deps 
+   sudo apt-get update &&
    sudo apt-get install -y qtbase5-dev libqt5widgets5 libasound-dev &&
    (cd /tmp && 
      wget https://github.com/google/googletest/archive/release-1.10.0.tar.gz ; 
@@ -22,15 +22,13 @@ install:
      cd googletest/build && 
      cmake -DBUILD_SHARED_LIBS=ON .. && 
      sudo make install -j$(nproc)) ;
-before_script: mkdir build
 script: 
-  - &cmd_build (cd build && cmake -DCMAKE_CXX_FLAGS="$JOB_CXX_FLAGS" $EXTRA .. && make VERBOSE=1 -j$(nproc))
+  - &cmd_build (mkdir build && cd build && cmake -DCMAKE_CXX_FLAGS="$JOB_CXX_FLAGS" $EXTRA .. && make VERBOSE=1 -j$(nproc))
   - &cmd_test (cd build && ctest)
 jobs:
   include:
     - stage: test
       name: cpplint
-      before_install: 
       install: sudo pip install cpplint
       env: 
       compiler: 
@@ -74,7 +72,6 @@ jobs:
         - *cmd_build
     - stage: test
       name: cmakelint
-      before_install: 
       install: sudo pip install cmakelint
       env: 
       compiler: 
