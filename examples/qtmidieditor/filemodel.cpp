@@ -25,6 +25,7 @@ SOFTWARE.
 FileModel::FileModel(QObject *parent)
     : QAbstractListModel(parent), file_(nullptr) {}
 
+// cppcheck-suppress unusedFunction API_FUNC
 int FileModel::rowCount(const QModelIndex & /* index */) const {
   if (file_) return static_cast<int>(file_->Tracks());
 
