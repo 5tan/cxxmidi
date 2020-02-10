@@ -38,7 +38,7 @@ jobs:
       install: sudo apt-get install -y cppcheck
       env: 
       compiler: 
-      script: cppcheck --enable=all --language=c++ --std=c++14 --inline-suppr --file-list=<(find ./ -path ./build -prune -o -type f \( -iname \*.hpp -o -iname \*.cpp -o -iname *.h \) -print) --error-exitcode=2
+      script: cppcheck --enable=all --language=c++ --std=c++14 --inline-suppr -I include -I /usr/include/x86_64-linux-gnu/qt5/ -I /usr/include/x86_64-linux-gnu/qt5/QtWidgets/ -I /usr/include/x86_64-linux-gnu/qt5/QtCore --file-list=<(find ./ -path ./build -prune -o -type f \( -iname \*.hpp -o -iname \*.cpp -o -iname *.h \) -print) --error-exitcode=2
     - stage: test
       name: clang-tidy
       env: EXTRA='-DCMAKE_CXX_CLANG_TIDY=/usr/bin/clang-tidy;-checks=*'

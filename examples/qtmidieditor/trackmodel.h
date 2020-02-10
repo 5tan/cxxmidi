@@ -45,7 +45,7 @@ class TrackModel : public QAbstractTableModel {
   explicit TrackModel(QObject* parent = 0);
   virtual ~TrackModel() = default;
 
-  Qt::ItemFlags flags(const QModelIndex& /*index*/) const;
+  virtual Qt::ItemFlags flags(const QModelIndex& /*index*/) const override;
   virtual int rowCount(const QModelIndex& index) const;
   virtual int columnCount(const QModelIndex& index) const;
   virtual QVariant data(const QModelIndex& index,

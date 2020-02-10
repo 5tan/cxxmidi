@@ -94,7 +94,6 @@ Mark | Related check name | Reason for suppression
 
 Mark | Related check name | Reason for suppression
 --- | --- | ---
-`API_FUNC` | `unusedFunction` | `(style) The function '...' is never used.` is reported for virtual API functions (e.g. in Qt derived classes in examples) .
 `RAII` | `unreadVariable` | `(style) Variable '...' is assigned a value that is never used.` is reported for RAII objects.
 
 ## License
