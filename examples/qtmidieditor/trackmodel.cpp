@@ -34,7 +34,6 @@ const char* TrackModel::columnNames[] = {"Dt [ticks]", "Data", "Type",
 TrackModel::TrackModel(QObject* parent)
     : QAbstractTableModel(parent), track_(0) {}
 
-// cppcheck-suppress unusedFunction API_FUNC
 Qt::ItemFlags TrackModel::flags(const QModelIndex& index) const {
   if ((index.column() == COLUMN_DT) || (index.column() == COLUMN_DATA))
     return Qt::ItemIsSelectable | Qt::ItemIsEditable | Qt::ItemIsEnabled;
@@ -94,7 +93,6 @@ bool TrackModel::setData(const QModelIndex& index, const QVariant& value,
   return false;
 }
 
-// cppcheck-suppress unusedFunction API_FUNC
 int TrackModel::columnCount(const QModelIndex& /*index*/) const {
   return COLUMN_TOTAL;
 }
@@ -240,7 +238,6 @@ void TrackModel::RemoveEvent(int num) {
   this->endRemoveRows();
 }
 
-// cppcheck-suppress unusedFunction API_FUNC
 QVariant TrackModel::headerData(int section, Qt::Orientation orientation,
                                 int role) const {
   if (orientation == Qt::Vertical)
