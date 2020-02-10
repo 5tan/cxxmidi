@@ -95,6 +95,7 @@ void PlayerAsync::Play() {
   bool reject = false;
 
   {
+    // cppcheck-suppress unreadVariable RAII
     std::scoped_lock lock(mutex_);
     reject = is_playing_ || (!output_) || (!file_);
     if (!reject) {
@@ -114,6 +115,7 @@ void PlayerAsync::Play() {
 
 void PlayerAsync::Pause() {
   {
+    // cppcheck-suppress unreadVariable RAII
     std::scoped_lock lock(mutex_);
     pause_request_ = true;
   }
@@ -142,6 +144,7 @@ void* PlayerAsync::PlayerLoop(void* caller) {
     bool pause_request = false;
     // copy player data
     {
+      // cppcheck-suppress unreadVariable RAII
       std::scoped_lock lock(that->mutex_);
       if (!(pause_request = that->pause_request_)) {
         if (!(finished = that->PlayerImpl::Finished())) {
@@ -159,6 +162,7 @@ void* PlayerAsync::PlayerLoop(void* caller) {
 
     if (pause_request || finished) {
       {
+        // cppcheck-suppress unreadVariable RAII
         std::scoped_lock lock(that->mutex_);
         that->pause_request_ = false;
         that->is_playing_ = false;
@@ -181,6 +185,7 @@ void* PlayerAsync::PlayerLoop(void* caller) {
 
       // update player data before sleep
       {
+        // cppcheck-suppress unreadVariable RAII
         std::scoped_lock lock(that->mutex_);
         pause_request = that->pause_request_;
         speed = that->speed_;
@@ -191,6 +196,7 @@ void* PlayerAsync::PlayerLoop(void* caller) {
 
       if (pause_request) {
         {
+          // cppcheck-suppress unreadVariable RAII
           std::scoped_lock lock(that->mutex_);
           that->pause_request_ = false;
           that->is_playing_ = false;
@@ -201,6 +207,7 @@ void* PlayerAsync::PlayerLoop(void* caller) {
       unsigned int wait = partial / speed;
       std::this_thread::sleep_for(std::chrono::microseconds(wait));
       {
+        // cppcheck-suppress unreadVariable RAII
         std::scoped_lock lock(that->mutex_);
         that->played_us_ += std::chrono::microseconds(partial);
       }
@@ -213,6 +220,7 @@ void* PlayerAsync::PlayerLoop(void* caller) {
     that->heartbeat_helper_ += us.count();
 
     {
+      // cppcheck-suppress unreadVariable RAII
       std::scoped_lock lock(that->mutex_);
       that->played_us_ += std::chrono::microseconds(us);
       that->ExecEvent((*that->file_)[track_num][event_num]);
@@ -228,6 +236,7 @@ void PlayerAsync::GoTo(const std::chrono::microseconds& pos) {
 
   bool was_playing;
   {
+    // cppcheck-suppress unreadVariable RAII
     std::scoped_lock lock(mutex_);
     was_playing = is_playing_;
   }
@@ -235,6 +244,7 @@ void PlayerAsync::GoTo(const std::chrono::microseconds& pos) {
   if (was_playing) this->Pause();
 
   {
+    // cppcheck-suppress unreadVariable RAII
     std::scoped_lock lock(mutex_);
     PlayerImpl::GoTo(pos);
   }
@@ -243,56 +253,67 @@ void PlayerAsync::GoTo(const std::chrono::microseconds& pos) {
 }
 
 std::chrono::microseconds PlayerAsync::CurrentTimePos() {
+  // cppcheck-suppress unreadVariable RAII
   std::scoped_lock lock(mutex_);
   return played_us_;
 }
 
 void PlayerAsync::SetFile(const File* file) {
+  // cppcheck-suppress unreadVariable RAII
   std::scoped_lock lock(mutex_);
   PlayerImpl::SetFile(file);
 }
 
 void PlayerAsync::SetOutput(output::Abstract* output) {
+  // cppcheck-suppress unreadVariable RAII
   std::scoped_lock lock(mutex_);
   output_ = output;
 }
 
 output::Abstract* PlayerAsync::output() {
+  // cppcheck-suppress unreadVariable RAII
   std::scoped_lock lock(mutex_);
   return output_;
 }
 
 bool PlayerAsync::Finished() {
+  // cppcheck-suppress unreadVariable RAII
   std::scoped_lock lock(mutex_);
   return guts::PlayerImpl::Finished();
 }
 
 bool PlayerAsync::IsPlaying() {
+  // cppcheck-suppress unreadVariable RAII
   std::scoped_lock lock(mutex_);
   return is_playing_;
 }
 
 bool PlayerAsync::IsPaused() {
+  // cppcheck-suppress unreadVariable RAII
   std::scoped_lock lock(mutex_);
   return !is_playing_;
 }
 
 void PlayerAsync::SetSpeed(float speed) {
+  // cppcheck-suppress unreadVariable RAII
   std::scoped_lock lock(mutex_);
   speed_ = speed;
 }
 
 float PlayerAsync::Speed() {
+  // cppcheck-suppress unreadVariable RAII
   std::scoped_lock lock(mutex_);
   return speed_;
 }
 
 void PlayerAsync::SetCallbackHeartbeat(const std::function<void()>& callback) {
+  // cppcheck-suppress unreadVariable RAII
   std::scoped_lock lock(mutex_);
   clbk_fun_heartbeat_ = callback;
 }
 
 void PlayerAsync::SetCallbackFinished(const std::function<void()>& callback) {
+  // cppcheck-suppress unreadVariable RAII
   std::scoped_lock lock(mutex_);
   clbk_fun_finished_ = callback;
 }

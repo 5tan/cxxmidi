@@ -76,15 +76,25 @@ make
 
 `cpplint` suppressions in the code are marked:
 ```
-// NOLINT(...) ${Mark}
+// NOLINT(${checkName}) ${mark}
 ```
 
-Mark | Reason for suppression
---- | ---
-`SIGNAL_SLOT_SPECIFIER` | `[whitespace/indent] [3]` is reported when parsing Qt `signal`/`slot` specifiers. 
-`CPP11_INCLUDES` | `[build/c++11] [5]` is reported when parsing include directive of unapproved C++11 header file (like `chrono`, `thread` or `mutex`). These files have custom implementations in Chrome, but not in this project.
-`INCLUDE_NO_DIR` | `[build/include_subdir] [4]` is reported if no directory name is present in include directive, but it is common in Qt code to skip it. This exception is allowed only in examples code.
+Mark | Related check name | Reason for suppression
+--- | --- | ---
+`SIGNAL_SLOT_SPECIFIER` | `[whitespace/indent]` | `[whitespace/indent] [3]` is reported when parsing Qt `signal`/`slot` specifiers. 
+`CPP11_INCLUDES` | `build/c++11` | `[build/c++11] [5]` is reported when parsing include directive of unapproved C++11 header file (like `chrono`, `thread` or `mutex`). These files have custom implementations in Chrome, but not in this project.
+`INCLUDE_NO_DIR` | `build/include_subdir` |`[build/include_subdir] [4]` is reported if no directory name is present in include directive, but it is common in Qt code to skip it. This exception is allowed only in examples code.
 
+## cppcheck suppressions
+
+`cppcheck` suppressions in the code are marked:
+```
+// cppcheck-suppress ${checkName} ${mark}
+```
+
+Mark | Related check name | Reason for suppression
+--- | --- | ---
+`RAII` | `unreadVariable` | `(style) Variable '...' is assigned a value that is never used.` is reported for RAII objects.
 
 ## License
 
