@@ -24,6 +24,36 @@ SOFTWARE.
 
 #include <cxxmidi/message.hpp>
 
+TEST(Message, IsRealtime) {
+  using cxxmidi::Message;
+
+  EXPECT_TRUE(Message(Message::kClock).IsRealtime());
+  EXPECT_TRUE(Message(Message::kTick).IsRealtime());
+  EXPECT_TRUE(Message(Message::kStart).IsRealtime());
+  EXPECT_TRUE(Message(Message::kContinue).IsRealtime());
+  EXPECT_TRUE(Message(Message::kStop).IsRealtime());
+  EXPECT_TRUE(Message(Message::kActiveSense).IsRealtime());
+  EXPECT_TRUE(Message(Message::kReset).IsRealtime());
+
+  EXPECT_FALSE(Message(Message::kSysExBegin).IsRealtime());
+  EXPECT_FALSE(Message(Message::kMtcQuarterFrame).IsRealtime());
+  EXPECT_FALSE(Message(Message::kSongPositionPointer).IsRealtime());
+  EXPECT_FALSE(Message(Message::kSongSelect).IsRealtime());
+  EXPECT_FALSE(Message(Message::kTuneRequest).IsRealtime());
+  EXPECT_FALSE(Message(Message::kSysExEnd).IsRealtime());
+  // EXPECT_FALSE(Message(Message::kMeta).IsRealtime()); // kMeta == kReset
+
+  for (uint8_t ch = 0; ch < 16; ch++) {
+    EXPECT_FALSE(Message(ch | Message::kNoteOff).IsRealtime());
+    EXPECT_FALSE(Message(ch | Message::kNoteOn).IsRealtime());
+    EXPECT_FALSE(Message(ch | Message::kNoteAftertouch).IsRealtime());
+    EXPECT_FALSE(Message(ch | Message::kControlChange).IsRealtime());
+    EXPECT_FALSE(Message(ch | Message::kProgramChange).IsRealtime());
+    EXPECT_FALSE(Message(ch | Message::kChannelAftertouch).IsRealtime());
+    EXPECT_FALSE(Message(ch | Message::kPitchWheel).IsRealtime());
+  }
+}
+
 TEST(Message, IsVoiceCategory) {
   using cxxmidi::Message;
 
@@ -115,4 +145,10 @@ TEST(Message, GetName) {
     EXPECT_EQ(Msg(ch | Msg::kChannelAftertouch).GetName(), "ChannelAftertouch");
     EXPECT_EQ(Msg(ch | Msg::kPitchWheel).GetName(), "PitchWheel");
   }
+}
+
+TEST(Message, GetType) {
+  using cxxmidi::Message;
+  Message msg(Message::kNoteOn);
+  ASSERT_EQ(msg.GetType(), Message::kNoteOn);
 }
