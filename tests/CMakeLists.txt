@@ -7,6 +7,7 @@ add_executable(tests
   instrument.cpp
   main.cpp
   message.cpp
+  note.cpp
   other.cpp)
 
 target_compile_options(tests PRIVATE -Wall -pedantic -Wextra)
