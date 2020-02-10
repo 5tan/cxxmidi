@@ -54,7 +54,6 @@ class PlayerAsync : public guts::PlayerImpl {
   inline bool Finished();
 
   inline bool IsPlaying();
-  inline bool IsPaused();
 
   inline void SetSpeed(float speed);
   inline float Speed();
@@ -286,12 +285,6 @@ bool PlayerAsync::IsPlaying() {
   // cppcheck-suppress unreadVariable RAII
   std::scoped_lock lock(mutex_);
   return is_playing_;
-}
-
-bool PlayerAsync::IsPaused() {
-  // cppcheck-suppress unreadVariable RAII
-  std::scoped_lock lock(mutex_);
-  return !is_playing_;
 }
 
 void PlayerAsync::SetSpeed(float speed) {

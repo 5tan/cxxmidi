@@ -58,7 +58,6 @@ class PlayerImpl {
   inline bool Finished() const;
 
   inline bool IsPlaying() const { return is_playing_; }
-  inline bool IsPaused() const { return !is_playing_; }
 
   inline void SetSpeed(float speed) { speed_ = speed; }
   inline float Speed() const { return speed_; }
