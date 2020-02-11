@@ -60,7 +60,7 @@ class PlayerBase {
   inline bool IsPlaying() const { return is_playing_; }
 
   inline void SetSpeed(float speed) { speed_ = speed; }
-  inline float Speed() const { return speed_; }
+  inline float GetSpeed() const { return speed_; }
 
   inline void SetCallbackHeartbeat(const std::function<void()>& callback);
   inline void SetCallbackFinished(const std::function<void()>& callback);
@@ -114,8 +114,9 @@ namespace guts {
 PlayerBase::PlayerBase()
     : tempo_(500000),
       is_playing_(false),
-      speed_(1),
+      speed_(1.),
       file_(nullptr),
+      played_us_(std::chrono::microseconds(0)),
       output_(0),
       heartbeat_helper_(0) {
   PlayerBase::SetupWindowsTimers();
@@ -124,8 +125,9 @@ PlayerBase::PlayerBase()
 PlayerBase::PlayerBase(output::Abstract* output)
     : tempo_(500000),
       is_playing_(false),
-      speed_(1),
+      speed_(1.),
       file_(nullptr),
+      played_us_(std::chrono::microseconds(0)),
       output_(output),
       heartbeat_helper_(0) {
   PlayerBase::SetupWindowsTimers();
