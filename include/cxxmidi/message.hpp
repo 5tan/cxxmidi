@@ -135,8 +135,7 @@ bool Message::IsMeta(MetaType meta_type) const {
 }
 
 bool Message::IsSysex() const {
-  if (!empty())
-    return ((*this)[0] == kSysExBegin) || ((*this)[0] == kSysExEnd);
+  if (!empty()) return ((*this)[0] == kSysExBegin) || ((*this)[0] == kSysExEnd);
   return false;
 }
 
@@ -172,8 +171,7 @@ bool Message::ContainsText() const {
 std::string Message::GetText() const {
   std::string r;
   if (ContainsText()) {
-    for (size_t i = 2; i < size(); i++)
-      r += static_cast<char>((*this)[i]);
+    for (size_t i = 2; i < size(); i++) r += static_cast<char>((*this)[i]);
   }
   return r;
 }
