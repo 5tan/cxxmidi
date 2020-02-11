@@ -24,6 +24,4 @@ SOFTWARE.
 
 #include <cxxmidi/note.hpp>
 
-TEST(Note, A440) {
-    ASSERT_EQ(cxxmidi::Note::A440Hz(), 69); 
-}
+TEST(Note, A440) { ASSERT_EQ(cxxmidi::Note::A440Hz(), 69); }
