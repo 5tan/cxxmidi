@@ -35,9 +35,9 @@ class FileModel : public QAbstractListModel {
   explicit FileModel(QObject *parent = 0);
   virtual ~FileModel() = default;
 
-  virtual int rowCount(const QModelIndex &index) const override;
-  virtual QVariant data(const QModelIndex &index,
-                        int role = Qt::DisplayRole) const override;
+  int rowCount(const QModelIndex &index) const override;
+  QVariant data(const QModelIndex &index,
+                int role = Qt::DisplayRole) const override;
 
   void SetFile(cxxmidi::File *file);
 

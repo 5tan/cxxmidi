@@ -64,16 +64,16 @@ class Windows : public Output::Abstract {
   Windows(const Windows &);             // non-copyable
   Windows &operator=(const Windows &);  // non-copyable (assignment)
 
-  inline virtual void OpenPort(unsigned int portNumber_ = 0) override;
-  inline virtual void ClosePort() override;
-  inline virtual void OpenVirtualPort(
+  inline void OpenPort(unsigned int portNumber_ = 0) override;
+  inline void ClosePort() override;
+  inline void OpenVirtualPort(
       const std::string &portName_ = std::string("CxxMidi Output"));
-  inline virtual size_t GetPortCount() override;
-  inline virtual std::string GetPortName(unsigned int portNumber_ = 0) override;
-  inline virtual void SendMessage(const std::vector<uint8_t> *msg_) override;
+  inline size_t GetPortCount() override;
+  inline std::string GetPortName(unsigned int portNumber_ = 0) override;
+  inline void SendMessage(const std::vector<uint8_t> *msg_) override;
 
  protected:
-  inline virtual void Initialize() override;
+  inline void Initialize() override;
 
  private:
   void *api_data_;
