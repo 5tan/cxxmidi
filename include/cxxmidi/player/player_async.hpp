@@ -27,13 +27,13 @@ SOFTWARE.
 #include <mutex>   // NOLINT() CPP11_INCLUDES
 #include <thread>  // NOLINT() CPP11_INCLUDES
 
-#include <cxxmidi/guts/player_impl.hpp>
+#include <cxxmidi/guts/player_base.hpp>
 
 namespace cxxmidi {
 class File;
 namespace player {
 
-class PlayerAsync : public guts::PlayerImpl {
+class PlayerAsync : public guts::PlayerBase {
  public:
   inline explicit PlayerAsync(output::Abstract* output);
   inline ~PlayerAsync();
@@ -81,7 +81,7 @@ namespace cxxmidi {
 namespace player {
 
 PlayerAsync::PlayerAsync(output::Abstract* output)
-    : PlayerImpl(output), pause_request_(false), thread_(0) {}
+    : PlayerBase(output), pause_request_(false), thread_(0) {}
 
 PlayerAsync::~PlayerAsync() {
   if (thread_) {
@@ -146,8 +146,8 @@ void* PlayerAsync::PlayerLoop(void* caller) {
       // cppcheck-suppress unreadVariable RAII
       std::scoped_lock lock(that->mutex_);
       if (!(pause_request = that->pause_request_)) {
-        if (!(finished = that->PlayerImpl::Finished())) {
-          track_num = that->PlayerImpl::TrackPending();
+        if (!(finished = that->PlayerBase::Finished())) {
+          track_num = that->PlayerBase::TrackPending();
           event_num = that->player_state_[track_num].track_pointer_;
           dt = that->player_state_[track_num].track_dt_;
           us = converters::Dt2us(dt, that->tempo_, that->file_->TimeDivision());
@@ -245,7 +245,7 @@ void PlayerAsync::GoTo(const std::chrono::microseconds& pos) {
   {
     // cppcheck-suppress unreadVariable RAII
     std::scoped_lock lock(mutex_);
-    PlayerImpl::GoTo(pos);
+    PlayerBase::GoTo(pos);
   }
 
   if (was_playing) Play();
@@ -260,7 +260,7 @@ std::chrono::microseconds PlayerAsync::CurrentTimePos() {
 void PlayerAsync::SetFile(const File* file) {
   // cppcheck-suppress unreadVariable RAII
   std::scoped_lock lock(mutex_);
-  PlayerImpl::SetFile(file);
+  PlayerBase::SetFile(file);
 }
 
 void PlayerAsync::SetOutput(output::Abstract* output) {
@@ -278,7 +278,7 @@ output::Abstract* PlayerAsync::output() {
 bool PlayerAsync::Finished() {
   // cppcheck-suppress unreadVariable RAII
   std::scoped_lock lock(mutex_);
-  return guts::PlayerImpl::Finished();
+  return guts::PlayerBase::Finished();
 }
 
 bool PlayerAsync::IsPlaying() {
