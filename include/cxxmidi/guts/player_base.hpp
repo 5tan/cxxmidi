@@ -185,7 +185,7 @@ void PlayerBase::GoTo(const std::chrono::microseconds& pos) {
 }
 
 PlayerBase::PlayerStateElem::PlayerStateElem(unsigned int track_ptr,
-                                           uint32_t track_dt)
+                                             uint32_t track_dt)
     : track_pointer_(track_ptr), track_dt_(track_dt) {}
 
 void PlayerBase::SetOutput(output::Abstract* output) { output_ = output; }
