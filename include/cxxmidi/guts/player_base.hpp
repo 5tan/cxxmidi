@@ -42,10 +42,10 @@ class File;
 class Event;
 namespace guts {
 
-class PlayerImpl {
+class PlayerBase {
  public:
-  inline PlayerImpl();
-  inline explicit PlayerImpl(output::Abstract* output);
+  inline PlayerBase();
+  inline explicit PlayerBase(output::Abstract* output);
   // no virtual destructor: non-poymorphic class
 
   inline void GoTo(const std::chrono::microseconds& pos);
@@ -111,27 +111,27 @@ class PlayerImpl {
 namespace cxxmidi {
 namespace guts {
 
-PlayerImpl::PlayerImpl()
+PlayerBase::PlayerBase()
     : tempo_(500000),
       is_playing_(false),
       speed_(1),
       file_(nullptr),
       output_(0),
       heartbeat_helper_(0) {
-  PlayerImpl::SetupWindowsTimers();
+  PlayerBase::SetupWindowsTimers();
 }
 
-PlayerImpl::PlayerImpl(output::Abstract* output)
+PlayerBase::PlayerBase(output::Abstract* output)
     : tempo_(500000),
       is_playing_(false),
       speed_(1),
       file_(nullptr),
       output_(output),
       heartbeat_helper_(0) {
-  PlayerImpl::SetupWindowsTimers();
+  PlayerBase::SetupWindowsTimers();
 }
 
-void PlayerImpl::SetupWindowsTimers() {
+void PlayerBase::SetupWindowsTimers() {
 #ifdef WIN32
   static bool once = true;
   if (once) {
@@ -148,7 +148,7 @@ void PlayerImpl::SetupWindowsTimers() {
 #endif
 }
 
-void PlayerImpl::SetFile(const File* file) {
+void PlayerBase::SetFile(const File* file) {
   file_ = file;
   player_state_.clear();
   played_us_ = std::chrono::microseconds::zero();
@@ -158,7 +158,7 @@ void PlayerImpl::SetFile(const File* file) {
   InitPlayerState();
 }
 
-void PlayerImpl::GoTo(const std::chrono::microseconds& pos) {
+void PlayerBase::GoTo(const std::chrono::microseconds& pos) {
   if (!file_ || !output_) return;
 
   tempo_ = 500000;
@@ -184,13 +184,13 @@ void PlayerImpl::GoTo(const std::chrono::microseconds& pos) {
   }
 }
 
-PlayerImpl::PlayerStateElem::PlayerStateElem(unsigned int track_ptr,
+PlayerBase::PlayerStateElem::PlayerStateElem(unsigned int track_ptr,
                                            uint32_t track_dt)
     : track_pointer_(track_ptr), track_dt_(track_dt) {}
 
-void PlayerImpl::SetOutput(output::Abstract* output) { output_ = output; }
+void PlayerBase::SetOutput(output::Abstract* output) { output_ = output; }
 
-void PlayerImpl::InitPlayerState() {
+void PlayerBase::InitPlayerState() {
   if (!file_) return;
 
   player_state_.clear();
@@ -198,27 +198,27 @@ void PlayerImpl::InitPlayerState() {
     player_state_.push_back(PlayerStateElem(0, (*file_)[i][0].Dt()));
 }
 
-bool PlayerImpl::Finished() const {
+bool PlayerBase::Finished() const {
   for (size_t i = 0; i < player_state_.size(); i++)
     if (!TrackFinished(i)) return false;
 
   return true;
 }
 
-void PlayerImpl::SetCallbackHeartbeat(const std::function<void()>& callback) {
+void PlayerBase::SetCallbackHeartbeat(const std::function<void()>& callback) {
   clbk_fun_heartbeat_ = callback;
 }
 
-void PlayerImpl::SetCallbackFinished(const std::function<void()>& callback) {
+void PlayerBase::SetCallbackFinished(const std::function<void()>& callback) {
   clbk_fun_finished_ = callback;
 }
 
-bool PlayerImpl::TrackFinished(size_t track_num) const {
+bool PlayerBase::TrackFinished(size_t track_num) const {
   return (player_state_[track_num].track_pointer_ >=
           (*file_)[track_num].size());
 }
 
-unsigned int PlayerImpl::TrackPending() const {
+unsigned int PlayerBase::TrackPending() const {
   uint32_t dt = -1;
   size_t r = 0;
 
@@ -234,7 +234,7 @@ unsigned int PlayerImpl::TrackPending() const {
   return static_cast<unsigned int>(r);
 }
 
-void PlayerImpl::UpdatePlayerState(unsigned int track_num, unsigned int dt) {
+void PlayerBase::UpdatePlayerState(unsigned int track_num, unsigned int dt) {
   for (size_t i = 0; i < player_state_.size(); i++)
     if (!TrackFinished(i)) {
       if (i == track_num) {
@@ -248,7 +248,7 @@ void PlayerImpl::UpdatePlayerState(unsigned int track_num, unsigned int dt) {
     }
 }
 
-void PlayerImpl::ExecEvent(const Event& event) {
+void PlayerBase::ExecEvent(const Event& event) {
   if (event.IsMeta()) {
     if (event.IsMeta(Event::kTempo))
       tempo_ = cxxmidi::utils::ExtractTempo(event[2], event[3], event[4]);
