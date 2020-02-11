@@ -20,8 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***************************************************************************** */
 
-#ifndef INCLUDE_CXXMIDI_GUTS_PLAYER_IMPL_HPP_
-#define INCLUDE_CXXMIDI_GUTS_PLAYER_IMPL_HPP_
+#ifndef INCLUDE_CXXMIDI_GUTS_PLAYER_BASE_HPP_
+#define INCLUDE_CXXMIDI_GUTS_PLAYER_BASE_HPP_
 
 #ifdef WIN32
 #include <Windows.h>
@@ -262,4 +262,4 @@ void PlayerBase::ExecEvent(const Event& event) {
 }  // namespace guts
 }  // namespace cxxmidi
 
-#endif  // INCLUDE_CXXMIDI_GUTS_PLAYER_IMPL_HPP_
+#endif  // INCLUDE_CXXMIDI_GUTS_PLAYER_BASE_HPP_
