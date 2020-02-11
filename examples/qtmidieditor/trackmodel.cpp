@@ -220,22 +220,22 @@ QVariant TrackModel::data(const QModelIndex& index, int role) const {
 
 void TrackModel::SetTrack(cxxmidi::Track* track) {
   track_ = track;
-  this->layoutChanged();
+  layoutChanged();
 }
 
 void TrackModel::AddEvent(int num) {
-  this->beginInsertRows(QModelIndex(), num, num);
+  beginInsertRows(QModelIndex(), num, num);
   std::cerr << "num_: " << num << std::endl;
   cxxmidi::Track::iterator it = track_->begin() + num;
   track_->insert(it, cxxmidi::Event());
-  this->endInsertRows();
+  endInsertRows();
 }
 
 void TrackModel::RemoveEvent(int num) {
-  this->beginRemoveRows(QModelIndex(), num, num);
+  beginRemoveRows(QModelIndex(), num, num);
   cxxmidi::Track::iterator it = track_->begin() + num;
   track_->erase(it);
-  this->endRemoveRows();
+  endRemoveRows();
 }
 
 QVariant TrackModel::headerData(int section, Qt::Orientation orientation,

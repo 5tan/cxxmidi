@@ -73,16 +73,16 @@ void Abstract::Reset() {
   for (int i = 176; i <= 191; i++) {
     message[0] = i;
     message[1] = 120;  // all sound off
-    this->SendMessage(&message);
+    SendMessage(&message);
 
     message[1] = 121;  // reset all controllers
-    this->SendMessage(&message);
+    SendMessage(&message);
 
     message[1] = 122;  // local control off
-    this->SendMessage(&message);
+    SendMessage(&message);
 
     message[1] = 123;  // all notes off
-    this->SendMessage(&message);
+    SendMessage(&message);
   }
 }
 
