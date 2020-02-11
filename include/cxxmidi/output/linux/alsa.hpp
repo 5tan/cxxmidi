@@ -67,16 +67,16 @@ class Alsa : public output::Abstract {
   Alsa(const Alsa &);             // non-copyable
   Alsa &operator=(const Alsa &);  // non-copyable (assignment)
 
-  inline virtual void OpenPort(unsigned int port_num = 0) override;
-  inline virtual void ClosePort() override;
-  inline virtual void OpenVirtualPort(
+  inline void OpenPort(unsigned int port_num = 0) override;
+  inline void ClosePort() override;
+  inline void OpenVirtualPort(
       const std::string &port_name = std::string("RtMidi Output")) override;
-  inline virtual size_t GetPortCount() override;
-  inline virtual std::string GetPortName(unsigned int port_num = 0) override;
-  inline virtual void SendMessage(const std::vector<uint8_t> *msg) override;
+  inline size_t GetPortCount() override;
+  inline std::string GetPortName(unsigned int port_num = 0) override;
+  inline void SendMessage(const std::vector<uint8_t> *msg) override;
 
  protected:
-  inline virtual void Initialize() override;
+  inline void Initialize() override;
 
  private:
   inline static size_t portInfo(snd_seq_t *seq, snd_seq_port_info_t *pinfo,
