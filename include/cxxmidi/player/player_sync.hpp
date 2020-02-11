@@ -27,13 +27,13 @@ SOFTWARE.
 #include <assert.h>
 #include <thread>  // NOLINT() CPP11_INCLUDES
 
-#include <cxxmidi/guts/player_impl.hpp>
+#include <cxxmidi/guts/player_base.hpp>
 
 namespace cxxmidi {
 class File;
 namespace player {
 
-class PlayerSync : public guts::PlayerImpl {
+class PlayerSync : public guts::PlayerBase {
  public:
   inline explicit PlayerSync(output::Abstract* output);
 
@@ -53,7 +53,7 @@ class PlayerSync : public guts::PlayerImpl {
 namespace cxxmidi {
 namespace player {
 
-PlayerSync::PlayerSync(output::Abstract* output) : guts::PlayerImpl(output) {}
+PlayerSync::PlayerSync(output::Abstract* output) : guts::PlayerBase(output) {}
 
 void PlayerSync::Play() {
   if (!output_ || !file_) return;
