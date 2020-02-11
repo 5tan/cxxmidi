@@ -27,6 +27,16 @@ SOFTWARE.
 TEST(Message, IsRealtime) {
   using cxxmidi::Message;
 
+  for (uint8_t ch = 0; ch < 16; ch++) {
+    EXPECT_FALSE(Message(ch | Message::kNoteOff).IsRealtime());
+    EXPECT_FALSE(Message(ch | Message::kNoteOn).IsRealtime());
+    EXPECT_FALSE(Message(ch | Message::kNoteAftertouch).IsRealtime());
+    EXPECT_FALSE(Message(ch | Message::kControlChange).IsRealtime());
+    EXPECT_FALSE(Message(ch | Message::kProgramChange).IsRealtime());
+    EXPECT_FALSE(Message(ch | Message::kChannelAftertouch).IsRealtime());
+    EXPECT_FALSE(Message(ch | Message::kPitchWheel).IsRealtime());
+  }
+
   EXPECT_TRUE(Message(Message::kClock).IsRealtime());
   EXPECT_TRUE(Message(Message::kTick).IsRealtime());
   EXPECT_TRUE(Message(Message::kStart).IsRealtime());
@@ -41,85 +51,96 @@ TEST(Message, IsRealtime) {
   EXPECT_FALSE(Message(Message::kSongSelect).IsRealtime());
   EXPECT_FALSE(Message(Message::kTuneRequest).IsRealtime());
   EXPECT_FALSE(Message(Message::kSysExEnd).IsRealtime());
+
   // EXPECT_FALSE(Message(Message::kMeta).IsRealtime()); // kMeta == kReset
+}
+
+TEST(Message, IsSystemCommon) {
+  using cxxmidi::Message;
 
   for (uint8_t ch = 0; ch < 16; ch++) {
-    EXPECT_FALSE(Message(ch | Message::kNoteOff).IsRealtime());
-    EXPECT_FALSE(Message(ch | Message::kNoteOn).IsRealtime());
-    EXPECT_FALSE(Message(ch | Message::kNoteAftertouch).IsRealtime());
-    EXPECT_FALSE(Message(ch | Message::kControlChange).IsRealtime());
-    EXPECT_FALSE(Message(ch | Message::kProgramChange).IsRealtime());
-    EXPECT_FALSE(Message(ch | Message::kChannelAftertouch).IsRealtime());
-    EXPECT_FALSE(Message(ch | Message::kPitchWheel).IsRealtime());
+    EXPECT_FALSE(Message(ch | Message::kNoteOff).IsSystemCommon());
+    EXPECT_FALSE(Message(ch | Message::kNoteOn).IsSystemCommon());
+    EXPECT_FALSE(Message(ch | Message::kNoteAftertouch).IsSystemCommon());
+    EXPECT_FALSE(Message(ch | Message::kControlChange).IsSystemCommon());
+    EXPECT_FALSE(Message(ch | Message::kProgramChange).IsSystemCommon());
+    EXPECT_FALSE(Message(ch | Message::kChannelAftertouch).IsSystemCommon());
+    EXPECT_FALSE(Message(ch | Message::kPitchWheel).IsSystemCommon());
   }
+
+  EXPECT_FALSE(Message(Message::kClock).IsSystemCommon());
+  EXPECT_FALSE(Message(Message::kTick).IsSystemCommon());
+  EXPECT_FALSE(Message(Message::kStart).IsSystemCommon());
+  EXPECT_FALSE(Message(Message::kContinue).IsSystemCommon());
+  EXPECT_FALSE(Message(Message::kStop).IsSystemCommon());
+  EXPECT_FALSE(Message(Message::kActiveSense).IsSystemCommon());
+  EXPECT_FALSE(Message(Message::kReset).IsSystemCommon());
+
+  EXPECT_TRUE(Message(Message::kSysExBegin).IsSystemCommon());
+  EXPECT_TRUE(Message(Message::kMtcQuarterFrame).IsSystemCommon());
+  EXPECT_TRUE(Message(Message::kSongPositionPointer).IsSystemCommon());
+  EXPECT_TRUE(Message(Message::kSongSelect).IsSystemCommon());
+  EXPECT_TRUE(Message(Message::kTuneRequest).IsSystemCommon());
+  EXPECT_TRUE(Message(Message::kSysExEnd).IsSystemCommon());
+
+  EXPECT_FALSE(Message(Message::kMeta).IsSystemCommon());
 }
 
 TEST(Message, IsVoiceCategory) {
-  using cxxmidi::Message;
-
-  EXPECT_FALSE(Message(Message::kSysExBegin).IsVoiceCategory());
-  EXPECT_FALSE(Message(Message::kMtcQuarterFrame).IsVoiceCategory());
-  EXPECT_FALSE(Message(Message::kSongPositionPointer).IsVoiceCategory());
-  EXPECT_FALSE(Message(Message::kSongSelect).IsVoiceCategory());
-  EXPECT_FALSE(Message(Message::kTuneRequest).IsVoiceCategory());
-  EXPECT_FALSE(Message(Message::kSysExEnd).IsVoiceCategory());
-  EXPECT_FALSE(Message(Message::kClock).IsVoiceCategory());
-  EXPECT_FALSE(Message(Message::kTick).IsVoiceCategory());
-  EXPECT_FALSE(Message(Message::kStart).IsVoiceCategory());
-  EXPECT_FALSE(Message(Message::kContinue).IsVoiceCategory());
-  EXPECT_FALSE(Message(Message::kStop).IsVoiceCategory());
-  EXPECT_FALSE(Message(Message::kActiveSense).IsVoiceCategory());
-  EXPECT_FALSE(Message(Message::kReset).IsVoiceCategory());
-  EXPECT_FALSE(Message(Message::kMeta).IsVoiceCategory());
+  using Msg = cxxmidi::Message;
 
   for (uint8_t ch = 0; ch < 16; ch++) {
-    EXPECT_TRUE(Message(ch | Message::kNoteOff).IsVoiceCategory());
-    EXPECT_TRUE(Message(ch | Message::kNoteOn).IsVoiceCategory());
-    EXPECT_TRUE(Message(ch | Message::kNoteAftertouch).IsVoiceCategory());
-    EXPECT_TRUE(Message(ch | Message::kControlChange).IsVoiceCategory());
-    EXPECT_TRUE(Message(ch | Message::kProgramChange).IsVoiceCategory());
-    EXPECT_TRUE(Message(ch | Message::kChannelAftertouch).IsVoiceCategory());
-    EXPECT_TRUE(Message(ch | Message::kPitchWheel).IsVoiceCategory());
-    // clang-format off
-    EXPECT_TRUE(Message(ch | Message::kNoteOff)
-      .IsVoiceCategory(Message::kNoteOff));
-    EXPECT_TRUE(Message(ch | Message::kNoteOn)
-      .IsVoiceCategory(Message::kNoteOn));
-    EXPECT_TRUE(Message(ch | Message::kNoteAftertouch)
-      .IsVoiceCategory(Message::kNoteAftertouch));
-    EXPECT_TRUE(Message(ch | Message::kControlChange)
-      .IsVoiceCategory(Message::kControlChange));
-    EXPECT_TRUE(Message(ch | Message::kProgramChange)
-      .IsVoiceCategory(Message::kProgramChange));
-    EXPECT_TRUE(Message(ch | Message::kChannelAftertouch)
-      .IsVoiceCategory(Message::kChannelAftertouch));
-    EXPECT_TRUE(Message(ch | Message::kPitchWheel)
-      .IsVoiceCategory(Message::kPitchWheel));
+    EXPECT_TRUE(Msg(ch | Msg::kNoteOff).IsVoiceCategory());
+    EXPECT_TRUE(Msg(ch | Msg::kNoteOn).IsVoiceCategory());
+    EXPECT_TRUE(Msg(ch | Msg::kNoteAftertouch).IsVoiceCategory());
+    EXPECT_TRUE(Msg(ch | Msg::kControlChange).IsVoiceCategory());
+    EXPECT_TRUE(Msg(ch | Msg::kProgramChange).IsVoiceCategory());
+    EXPECT_TRUE(Msg(ch | Msg::kChannelAftertouch).IsVoiceCategory());
+    EXPECT_TRUE(Msg(ch | Msg::kPitchWheel).IsVoiceCategory());
 
-    EXPECT_FALSE(Message(ch | Message::kNoteOff).
-      IsVoiceCategory(Message::kNoteOn));
-    // clang-format on
+    EXPECT_TRUE(Msg(ch | Msg::kNoteOff).IsVoiceCategory(Msg::kNoteOff));
+    EXPECT_TRUE(Msg(ch | Msg::kNoteOn).IsVoiceCategory(Msg::kNoteOn));
+    EXPECT_TRUE(
+        Msg(ch | Msg::kNoteAftertouch).IsVoiceCategory(Msg::kNoteAftertouch));
+    EXPECT_TRUE(
+        Msg(ch | Msg::kControlChange).IsVoiceCategory(Msg::kControlChange));
+    EXPECT_TRUE(
+        Msg(ch | Msg::kProgramChange).IsVoiceCategory(Msg::kProgramChange));
+    EXPECT_TRUE(Msg(ch | Msg::kChannelAftertouch)
+                    .IsVoiceCategory(Msg::kChannelAftertouch));
+    EXPECT_TRUE(Msg(ch | Msg::kPitchWheel).IsVoiceCategory(Msg::kPitchWheel));
+
+    EXPECT_FALSE(Msg(ch | Msg::kNoteOff).IsVoiceCategory(Msg::kNoteOn));
   }
+
+  EXPECT_FALSE(Msg(Msg::kSysExBegin).IsVoiceCategory());
+  EXPECT_FALSE(Msg(Msg::kMtcQuarterFrame).IsVoiceCategory());
+  EXPECT_FALSE(Msg(Msg::kSongPositionPointer).IsVoiceCategory());
+  EXPECT_FALSE(Msg(Msg::kSongSelect).IsVoiceCategory());
+  EXPECT_FALSE(Msg(Msg::kTuneRequest).IsVoiceCategory());
+  EXPECT_FALSE(Msg(Msg::kSysExEnd).IsVoiceCategory());
+  EXPECT_FALSE(Msg(Msg::kClock).IsVoiceCategory());
+  EXPECT_FALSE(Msg(Msg::kTick).IsVoiceCategory());
+  EXPECT_FALSE(Msg(Msg::kStart).IsVoiceCategory());
+  EXPECT_FALSE(Msg(Msg::kContinue).IsVoiceCategory());
+  EXPECT_FALSE(Msg(Msg::kStop).IsVoiceCategory());
+  EXPECT_FALSE(Msg(Msg::kActiveSense).IsVoiceCategory());
+  EXPECT_FALSE(Msg(Msg::kReset).IsVoiceCategory());
+  EXPECT_FALSE(Msg(Msg::kMeta).IsVoiceCategory());
 }
 
 TEST(Message, GetName) {
   using Msg = cxxmidi::Message;
 
-  EXPECT_EQ(Msg(Msg::kMeta, Msg::kSequenceNumber).GetName(), "SequenceNumber");
-  EXPECT_EQ(Msg(Msg::kMeta, Msg::kText).GetName(), "Text");
-  EXPECT_EQ(Msg(Msg::kMeta, Msg::kCopyright).GetName(), "Copyright");
-  EXPECT_EQ(Msg(Msg::kMeta, Msg::kTrackName).GetName(), "TrackName");
-  EXPECT_EQ(Msg(Msg::kMeta, Msg::kInstrumentName).GetName(), "InstrumentName");
-  EXPECT_EQ(Msg(Msg::kMeta, Msg::kLyrics).GetName(), "Lyrics");
-  EXPECT_EQ(Msg(Msg::kMeta, Msg::kMarker).GetName(), "Marker");
-  EXPECT_EQ(Msg(Msg::kMeta, Msg::kCuePoint).GetName(), "CuePoint");
-  EXPECT_EQ(Msg(Msg::kMeta, Msg::kChannelPrefix).GetName(), "ChannelPrefix");
-  EXPECT_EQ(Msg(Msg::kMeta, Msg::kOutputCable).GetName(), "OutputCable");
-  EXPECT_EQ(Msg(Msg::kMeta, Msg::kEndOfTrack).GetName(), "EndOfTrack");
-  EXPECT_EQ(Msg(Msg::kMeta, Msg::kTempo).GetName(), "Tempo");
-  EXPECT_EQ(Msg(Msg::kMeta, Msg::kSmpteOffset).GetName(), "SmpteOffset");
-  EXPECT_EQ(Msg(Msg::kMeta, Msg::kTimeSignature).GetName(), "TimeSignature");
-  EXPECT_EQ(Msg(Msg::kMeta, Msg::kKeySignature).GetName(), "KeySignature");
+  for (uint8_t ch = 0; ch < 16; ch++) {
+    EXPECT_EQ(Msg(ch | Msg::kNoteOff).GetName(), "NoteOff");
+    EXPECT_EQ(Msg(ch | Msg::kNoteOn).GetName(), "NoteOn");
+    EXPECT_EQ(Msg(ch | Msg::kNoteAftertouch).GetName(), "NoteAftertouch");
+    EXPECT_EQ(Msg(ch | Msg::kControlChange).GetName(), "ControlChange");
+    EXPECT_EQ(Msg(ch | Msg::kProgramChange).GetName(), "ProgramChange");
+    EXPECT_EQ(Msg(ch | Msg::kChannelAftertouch).GetName(), "ChannelAftertouch");
+    EXPECT_EQ(Msg(ch | Msg::kPitchWheel).GetName(), "PitchWheel");
+  }
 
   EXPECT_EQ(Msg(Msg::kSysExBegin).GetName(), "SysExBegin");
   EXPECT_EQ(Msg(Msg::kMtcQuarterFrame).GetName(), "MtcQuarterFrame");
@@ -136,15 +157,21 @@ TEST(Message, GetName) {
   EXPECT_EQ(Msg(Msg::kActiveSense).GetName(), "ActiveSense");
   EXPECT_EQ(Msg(Msg::kReset).GetName(), "Reset");
 
-  for (uint8_t ch = 0; ch < 16; ch++) {
-    EXPECT_EQ(Msg(ch | Msg::kNoteOff).GetName(), "NoteOff");
-    EXPECT_EQ(Msg(ch | Msg::kNoteOn).GetName(), "NoteOn");
-    EXPECT_EQ(Msg(ch | Msg::kNoteAftertouch).GetName(), "NoteAftertouch");
-    EXPECT_EQ(Msg(ch | Msg::kControlChange).GetName(), "ControlChange");
-    EXPECT_EQ(Msg(ch | Msg::kProgramChange).GetName(), "ProgramChange");
-    EXPECT_EQ(Msg(ch | Msg::kChannelAftertouch).GetName(), "ChannelAftertouch");
-    EXPECT_EQ(Msg(ch | Msg::kPitchWheel).GetName(), "PitchWheel");
-  }
+  EXPECT_EQ(Msg(Msg::kMeta, Msg::kSequenceNumber).GetName(), "SequenceNumber");
+  EXPECT_EQ(Msg(Msg::kMeta, Msg::kText).GetName(), "Text");
+  EXPECT_EQ(Msg(Msg::kMeta, Msg::kCopyright).GetName(), "Copyright");
+  EXPECT_EQ(Msg(Msg::kMeta, Msg::kTrackName).GetName(), "TrackName");
+  EXPECT_EQ(Msg(Msg::kMeta, Msg::kInstrumentName).GetName(), "InstrumentName");
+  EXPECT_EQ(Msg(Msg::kMeta, Msg::kLyrics).GetName(), "Lyrics");
+  EXPECT_EQ(Msg(Msg::kMeta, Msg::kMarker).GetName(), "Marker");
+  EXPECT_EQ(Msg(Msg::kMeta, Msg::kCuePoint).GetName(), "CuePoint");
+  EXPECT_EQ(Msg(Msg::kMeta, Msg::kChannelPrefix).GetName(), "ChannelPrefix");
+  EXPECT_EQ(Msg(Msg::kMeta, Msg::kOutputCable).GetName(), "OutputCable");
+  EXPECT_EQ(Msg(Msg::kMeta, Msg::kEndOfTrack).GetName(), "EndOfTrack");
+  EXPECT_EQ(Msg(Msg::kMeta, Msg::kTempo).GetName(), "Tempo");
+  EXPECT_EQ(Msg(Msg::kMeta, Msg::kSmpteOffset).GetName(), "SmpteOffset");
+  EXPECT_EQ(Msg(Msg::kMeta, Msg::kTimeSignature).GetName(), "TimeSignature");
+  EXPECT_EQ(Msg(Msg::kMeta, Msg::kKeySignature).GetName(), "KeySignature");
 }
 
 TEST(Message, GetType) {
