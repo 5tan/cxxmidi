@@ -8,7 +8,8 @@ add_executable(tests
   main.cpp
   message.cpp
   note.cpp
-  other.cpp)
+  other.cpp
+  player_base.cpp)
 
 target_compile_options(tests PRIVATE -Wall -pedantic -Wextra)
 target_compile_features(tests PRIVATE cxx_std_17)
