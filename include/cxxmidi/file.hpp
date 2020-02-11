@@ -84,7 +84,7 @@ uint32_t File::Write(std::ofstream &file, const uint8_t *c,
 
 File::File() : time_division_(500) {}
 
-File::File(const char *path) : time_division_(500) { this->Load(path); }
+File::File(const char *path) : time_division_(500) { Load(path); }
 
 void File::SaveAs(const char *path) const {
   std::ofstream out_file(path, std::ios_base::binary);
@@ -97,10 +97,10 @@ void File::SaveAs(const char *path) const {
   }
 
   // save header
-  this->SaveHeaderChunk(out_file);
+  SaveHeaderChunk(out_file);
 
   // loop over tracks
-  for (const auto &track : *this) this->SaveTrackChunk(out_file, track);
+  for (const auto &track : *this) SaveTrackChunk(out_file, track);
 
   out_file.close();
 }
@@ -118,7 +118,7 @@ void File::SaveTrackChunk(std::ofstream &output_file,
   uint8_t last_cmd = 0;
 
   for (const auto &event : track)
-    chunk_size += this->SaveEvent(output_file, event, &last_cmd);
+    chunk_size += SaveEvent(output_file, event, &last_cmd);
 
   // go back to chunk size
   output_file.seekp(size_pos);
@@ -169,12 +169,12 @@ void File::SaveHeaderChunk(std::ofstream &output_file) const {
   guts::endianness::WriteBe<uint32_t>(output_file, 6);
 
   // save file type
-  uint16_t fileType = (this->Tracks() > 1) ? 1 : 0;
+  uint16_t fileType = (Tracks() > 1) ? 1 : 0;
   guts::endianness::WriteBe<uint16_t>(output_file, fileType);
 
   // save tracks numer
   guts::endianness::WriteBe<uint16_t>(output_file,
-                                      static_cast<uint16_t>(this->Tracks()));
+                                      static_cast<uint16_t>(Tracks()));
 
   // save time division
   guts::endianness::WriteBe<uint16_t>(output_file, time_division_);
@@ -186,11 +186,11 @@ std::chrono::microseconds File::Duration() const {
 }
 
 Track &File::AddTrack() {
-  this->push_back(Track());
-  return this->back();
+  push_back(Track());
+  return back();
 }
 
-File::size_type File::Tracks() const { return this->size(); }
+File::size_type File::Tracks() const { return size(); }
 
 uint16_t File::TimeDivision() const { return time_division_; }
 
@@ -199,7 +199,7 @@ void File::SetTimeDivision(uint16_t time_division) {
 }
 
 void File::Load(const char *path) {
-  this->clear();
+  clear();
 
   // open file
   std::ifstream file(path, std::ifstream::in | std::ifstream::binary);
@@ -226,12 +226,12 @@ void File::Load(const char *path) {
 
     switch (chunk_id) {
       case 0x4D546864:  // "MThd"
-        this->ReadHeaderChunk(file);
+        ReadHeaderChunk(file);
         headers++;
         break;
 
       case 0x4D54726B:  // "MTrk"
-        this->ReadTrackChunk(file);
+        ReadTrackChunk(file);
         break;
 
       default:
@@ -239,7 +239,7 @@ void File::Load(const char *path) {
         std::cerr << "CxxMidi: ignoring unknown chunk: 0x" << std::hex
                   << static_cast<int>(chunk_id) << std::endl;
 #endif
-        this->ReadUnknownChunk(file);
+        ReadUnknownChunk(file);
         break;
     }
 
@@ -278,7 +278,7 @@ void File::ReadHeaderChunk(std::ifstream &file) {
   uint16_t tracks_num = guts::endianness::ReadBe<uint16_t>(file);
 
   // reserve vector capacity
-  this->reserve(tracks_num);
+  reserve(tracks_num);
 
   // read time division
   time_division_ = guts::endianness::ReadBe<uint16_t>(file);
@@ -301,7 +301,7 @@ void File::ReadUnknownChunk(std::ifstream &file) {
 
 void File::ReadTrackChunk(std::ifstream &file) {
   // push back new track
-  Track &track = this->AddTrack();
+  Track &track = AddTrack();
 
   // read track chunk size
   uint32_t chunk_size = guts::endianness::ReadBe<uint32_t>(file);
@@ -319,7 +319,7 @@ void File::ReadTrackChunk(std::ifstream &file) {
     event.SetDt(dt);                    // save event delta time
 
     // read event data
-    this->ReadEvent(file, &event, &track_continue, &running_status);
+    ReadEvent(file, &event, &track_continue, &running_status);
   }
 
 #ifndef CXXMIDI_QUIET

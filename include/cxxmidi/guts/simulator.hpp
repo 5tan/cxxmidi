@@ -46,15 +46,15 @@ std::chrono::microseconds Simulator::Duration(const File &file) {
 
   tempo_ = 500000;  // default tempo
   file_ = &file;
-  this->InitPlayerState();
+  InitPlayerState();
 
-  while (!this->Finished()) {
-    unsigned int trackNum = this->TrackPending();
+  while (!Finished()) {
+    unsigned int trackNum = TrackPending();
     unsigned int eventNum = player_state_[trackNum].track_pointer_;
     uint32_t dt = player_state_[trackNum].track_dt_;
     r += converters::Dt2us(dt, tempo_, file_->TimeDivision());
-    this->ExecEvent((*file_)[trackNum][eventNum]);
-    this->UpdatePlayerState(trackNum, dt);
+    ExecEvent((*file_)[trackNum][eventNum]);
+    UpdatePlayerState(trackNum, dt);
   }
 
   return r;

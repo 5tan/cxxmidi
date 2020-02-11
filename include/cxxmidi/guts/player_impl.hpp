@@ -155,7 +155,7 @@ void PlayerImpl::SetFile(const File* file) {
   heartbeat_helper_ = 0;
   tempo_ = 500000;
   output_->Reset();
-  this->InitPlayerState();
+  InitPlayerState();
 }
 
 void PlayerImpl::GoTo(const std::chrono::microseconds& pos) {
@@ -163,12 +163,12 @@ void PlayerImpl::GoTo(const std::chrono::microseconds& pos) {
 
   tempo_ = 500000;
   output_->Reset();
-  this->InitPlayerState();
+  InitPlayerState();
   played_us_ = std::chrono::microseconds::zero();
   heartbeat_helper_ = 0;
 
-  while (!this->Finished()) {
-    unsigned int track_mum = this->TrackPending();
+  while (!Finished()) {
+    unsigned int track_mum = TrackPending();
     unsigned int event_num = player_state_[track_mum].track_pointer_;
     uint32_t dt = player_state_[track_mum].track_dt_;
     played_us_ += converters::Dt2us(dt, tempo_, file_->TimeDivision());
@@ -176,9 +176,9 @@ void PlayerImpl::GoTo(const std::chrono::microseconds& pos) {
     Event event = (*file_)[track_mum][event_num];
     if (!event.IsVoiceCategory(Message::kNoteOn) &&
         !event.IsVoiceCategory(Message::kNoteOff))
-      this->ExecEvent(event);
+      ExecEvent(event);
 
-    this->UpdatePlayerState(track_mum, dt);
+    UpdatePlayerState(track_mum, dt);
 
     if (played_us_ >= pos) break;
   }
@@ -200,7 +200,7 @@ void PlayerImpl::InitPlayerState() {
 
 bool PlayerImpl::Finished() const {
   for (size_t i = 0; i < player_state_.size(); i++)
-    if (!this->TrackFinished(i)) return false;
+    if (!TrackFinished(i)) return false;
 
   return true;
 }
@@ -223,7 +223,7 @@ unsigned int PlayerImpl::TrackPending() const {
   size_t r = 0;
 
   for (size_t i = 0; i < player_state_.size(); i++) {
-    if (!this->TrackFinished(i)) {
+    if (!TrackFinished(i)) {
       if (player_state_[i].track_dt_ < dt) {
         dt = player_state_[i].track_dt_;
         r = i;
@@ -236,10 +236,10 @@ unsigned int PlayerImpl::TrackPending() const {
 
 void PlayerImpl::UpdatePlayerState(unsigned int track_num, unsigned int dt) {
   for (size_t i = 0; i < player_state_.size(); i++)
-    if (!this->TrackFinished(i)) {
+    if (!TrackFinished(i)) {
       if (i == track_num) {
         unsigned int num = ++player_state_[i].track_pointer_;
-        if (!this->TrackFinished(i)) {
+        if (!TrackFinished(i)) {
           player_state_[i].track_dt_ = (*file_)[i][num].Dt();
         }
       } else {

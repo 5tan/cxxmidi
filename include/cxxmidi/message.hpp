@@ -105,63 +105,63 @@ class Message : public std::vector<uint8_t> {
 
 namespace cxxmidi {
 
-Message::Message(uint8_t b1) { this->push_back(b1); }
+Message::Message(uint8_t b1) { push_back(b1); }
 
 Message::Message(uint8_t b1, uint8_t b2) {
-  this->reserve(2);
-  this->push_back(b1);
-  this->push_back(b2);
+  reserve(2);
+  push_back(b1);
+  push_back(b2);
 }
 
 Message::Message(uint8_t b1, uint8_t b2, uint8_t b3) {
-  this->reserve(3);
-  this->push_back(b1);
-  this->push_back(b2);
-  this->push_back(b3);
+  reserve(3);
+  push_back(b1);
+  push_back(b2);
+  push_back(b3);
 }
 
 Message::Type Message::GetType() const {
-  if (!this->empty()) return static_cast<Type>((*this)[0]);
+  if (!empty()) return static_cast<Type>((*this)[0]);
   return kUndefined;
 }
 
 bool Message::IsMeta() const {
-  if (this->size() >= 2) return ((*this)[0] == 0xff);
+  if (size() >= 2) return ((*this)[0] == 0xff);
   return false;
 }
 
 bool Message::IsMeta(MetaType meta_type) const {
-  return this->IsMeta() && ((*this)[1] == meta_type);
+  return IsMeta() && ((*this)[1] == meta_type);
 }
 
 bool Message::IsSysex() const {
-  if (!this->empty())
+  if (!empty())
     return ((*this)[0] == kSysExBegin) || ((*this)[0] == kSysExEnd);
   return false;
 }
 
 bool Message::IsRealtime() const {
-  if (!this->empty()) return (*this)[0] >= 0xf8;
+  if (!empty()) return (*this)[0] >= 0xf8;
   return false;
 }
 
 bool Message::IsVoiceCategory() const {
-  if (!this->empty()) return ((*this)[0] >= 0x80) && ((*this)[0] <= 0xef);
+  if (!empty()) return ((*this)[0] >= 0x80) && ((*this)[0] <= 0xef);
   return false;
 }
 
 bool Message::IsVoiceCategory(Type type) const {
-  if (!this->empty()) return ((*this)[0] & 0xf0) == type;
+  if (!empty()) return ((*this)[0] & 0xf0) == type;
   return false;
 }
 
 bool Message::IsSystemCommon() const {
-  if (!this->empty()) return ((*this)[0] >= 0xf0) && ((*this)[0] <= 0xf7);
+  if (!empty()) return ((*this)[0] >= 0xf0) && ((*this)[0] <= 0xf7);
   return false;
 }
 
 bool Message::ContainsText() const {
-  if (this->size() > 1)
+  if (size() > 1)
     return ((*this)[0] == 0xff) &&
            (((*this)[1] == kText) || ((*this)[1] == kLyrics) ||
             ((*this)[1] == kInstrumentName) || ((*this)[1] == kTrackName) ||
@@ -171,15 +171,15 @@ bool Message::ContainsText() const {
 
 std::string Message::GetText() const {
   std::string r;
-  if (this->ContainsText()) {
-    for (size_t i = 2; i < this->size(); i++)
+  if (ContainsText()) {
+    for (size_t i = 2; i < size(); i++)
       r += static_cast<char>((*this)[i]);
   }
   return r;
 }
 
 std::string Message::GetName() const {
-  if (this->IsMeta()) {
+  if (IsMeta()) {
     switch ((*this)[1]) {
       case kSequenceNumber:
         return "SequenceNumber";
@@ -216,7 +216,7 @@ std::string Message::GetName() const {
     }
   }
 
-  if (this->size()) {
+  if (size()) {
     switch ((*this)[0]) {
       // System common:
       case kSysExBegin:

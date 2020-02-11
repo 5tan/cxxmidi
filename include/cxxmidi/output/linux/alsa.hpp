@@ -92,11 +92,11 @@ namespace cxxmidi {
 namespace output {
 namespace linuxo {
 
-Alsa::Alsa() : _apiData(0) { this->Initialize(); }
+Alsa::Alsa() : _apiData(0) { Initialize(); }
 
 Alsa::Alsa(unsigned int initial_port) : _apiData(0) {
-  this->Initialize();
-  this->OpenPort(initial_port);
+  Initialize();
+  OpenPort(initial_port);
 }
 
 Alsa::~Alsa() {
@@ -214,9 +214,9 @@ void Alsa::Initialize() {
 }
 
 void Alsa::OpenPort(unsigned int port_num) {
-  if (connected_) this->ClosePort();
+  if (connected_) ClosePort();
 
-  unsigned int nSrc = this->GetPortCount();
+  unsigned int nSrc = GetPortCount();
 #ifndef CXXMIDI_QUIET
   if (nSrc < 1) std::cerr << "CxxMidi: no MIDI output sources" << std::endl;
 #endif

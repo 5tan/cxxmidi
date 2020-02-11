@@ -85,16 +85,16 @@ class Windows : public Output::Abstract {
 namespace cxxmidi {
 namespace Output {
 
-Windows::Windows() { this->Initialize(); }
+Windows::Windows() { Initialize(); }
 
 Windows::Windows(unsigned int initialPort_) {
-  this->Initialize();
-  this->OpenPort(initialPort_);
+  Initialize();
+  OpenPort(initialPort_);
 }
 
 Windows::~Windows() {
   // Close a connection if it exists.
-  this->ClosePort();
+  ClosePort();
 
   // Cleanup
   WinMidiData *data = static_cast<WinMidiData *>(api_data_);
@@ -130,7 +130,7 @@ std::string Windows::GetPortName(unsigned int portNumber_) {
 void Windows::Initialize() {
   // We'll issue a warning here if no devices are available but not
   // throw an error since the user can plug something in later.
-  size_t nDevices = this->GetPortCount();
+  size_t nDevices = GetPortCount();
 #ifndef CXXMIDI_QUIET
   if (nDevices == 0) std::cerr << "CxxMidi: no devices available" << std::endl;
 #endif
@@ -148,7 +148,7 @@ void Windows::OpenPort(unsigned int portNumber_) {
     return;
   }
 
-  size_t nDevices = this->GetPortCount();
+  size_t nDevices = GetPortCount();
 #ifndef CXXMIDI_QUIET
   if (nDevices < 1)
     std::cerr << "CxxMidi: no MIDI output destinations found" << std::endl;

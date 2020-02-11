@@ -42,8 +42,8 @@ class Track : public std::vector<Event> {
 namespace cxxmidi {
 
 Event& Track::AddEvent() {
-  this->push_back(Event());
-  return this->back();
+  push_back(Event());
+  return back();
 }
 
 std::string Track::GetName() const {

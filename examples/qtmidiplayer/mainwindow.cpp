@@ -36,13 +36,13 @@ MainWindow::MainWindow(QWidget* parent)
       slider_locked_(false) {
   ui_->setupUi(this);
 
-  this->CreateMenuBar();
-  this->centralWidget()->setDisabled(true);
-  this->resize(this->minimumSizeHint());
+  CreateMenuBar();
+  centralWidget()->setDisabled(true);
+  resize(minimumSizeHint());
 
   midi_player_->SetCallbackHeartbeat(
-      [this]() { this->PlayerTimeChanged(midi_player_->CurrentTimePos()); });
-  midi_player_->SetCallbackFinished([this]() { this->PlayerFinished(); });
+      [this]() { PlayerTimeChanged(midi_player_->CurrentTimePos()); });
+  midi_player_->SetCallbackFinished([this]() { PlayerFinished(); });
   connect(this, &MainWindow::PlayerTimeChanged, this,
           &MainWindow::UpdateTimeCode, Qt::QueuedConnection);
   connect(this, &MainWindow::PlayerFinished, this,
@@ -67,13 +67,13 @@ MainWindow::MainWindow(QWidget* parent)
   // first argument is file name
   if (QApplication::arguments().size() >= 2) {
     QString fileName = QApplication::arguments().at(1);
-    this->OpenFile(fileName);
+    OpenFile(fileName);
   }
 
   // second argument is output num
   if (QApplication::arguments().size() >= 3) {
     int num = QApplication::arguments().at(2).toInt();
-    this->SetOutput(num);
+    SetOutput(num);
     outputs_action_group_->actions()[num]->setChecked(true);
   }
 
@@ -85,7 +85,7 @@ MainWindow::~MainWindow() { delete ui_; }
 
 void MainWindow::CreateMenuBar() {
   // file menu
-  QMenu* file_menu = this->menuBar()->addMenu(tr("&File"));
+  QMenu* file_menu = menuBar()->addMenu(tr("&File"));
   QAction* action = file_menu->addAction("&Open");
 
   connect(action, &QAction::triggered, this, [this](bool) { OpenFile(); });
@@ -97,7 +97,7 @@ void MainWindow::CreateMenuBar() {
           &QApplication::quit);
 
   // output menu
-  QMenu* output_menu = this->menuBar()->addMenu(tr("&Output"));
+  QMenu* output_menu = menuBar()->addMenu(tr("&Output"));
   outputs_action_group_ = new QActionGroup(this);
   outputs_action_group_->setExclusive(true);
 
@@ -118,7 +118,7 @@ void MainWindow::CreateMenuBar() {
 
 void MainWindow::OnOutputSelected(QAction* action) {
   int num = action->text().split(".")[0].toInt();
-  this->SetOutput(num);
+  SetOutput(num);
 }
 
 void MainWindow::SetOutput(int num) {
@@ -136,7 +136,7 @@ void MainWindow::OpenFile() {
       this, tr("Open file"), ".",
       tr("MIDI files (*.mid *.midi);;Any files (*)"));
   if (file_name.size()) {
-    this->OpenFile(file_name);
+    OpenFile(file_name);
     midi_player_->Play();
   }
 }
@@ -152,7 +152,7 @@ void MainWindow::OpenFile(const QString& path) {
   total_us_ = midi_file_->Duration();
   ui_->labelTotal->setText(std::to_string(total_us_.count()).c_str());
 
-  this->centralWidget()->setDisabled(false);
+  centralWidget()->setDisabled(false);
 }
 
 void MainWindow::OnPlayClicked() { midi_player_->Play(); }
