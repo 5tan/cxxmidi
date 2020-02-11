@@ -60,13 +60,13 @@ MainWindow::MainWindow(QWidget *parent_)
   splitter->addWidget(&track_view_);
   splitter->setStretchFactor(1, 2);
 
-  this->setCentralWidget(splitter);
+  setCentralWidget(splitter);
 
-  this->CreateMenu();
+  CreateMenu();
 }
 
 void MainWindow::CreateMenu() {
-  QMenu *file_menu = this->menuBar()->addMenu(tr("&File"));
+  QMenu *file_menu = menuBar()->addMenu(tr("&File"));
 
   QAction *action = file_menu->addAction(tr("&Open"));
   connect(action, &QAction::triggered, this, &MainWindow::OnOpenFile);

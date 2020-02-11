@@ -53,7 +53,7 @@ Event::Event(uint32_t dt) : dt_(dt) {}
 
 Event::Event(uint32_t dt, const Message &message) : Message(message), dt_(dt) {}
 
-Event::Event(uint32_t dt, uint8_t b1) : dt_(dt) { this->push_back(b1); }
+Event::Event(uint32_t dt, uint8_t b1) : dt_(dt) { push_back(b1); }
 
 Event::Event(uint32_t dt, uint8_t b1, uint8_t b2) : Message(b1, b2), dt_(dt) {}
 

@@ -58,12 +58,12 @@ PlayerSync::PlayerSync(output::Abstract* output) : guts::PlayerImpl(output) {}
 void PlayerSync::Play() {
   if (!output_ || !file_) return;
 
-  this->PlayerLoop();
+  PlayerLoop();
 }
 
 void PlayerSync::PlayerLoop() {
-  while (!this->Finished()) {
-    unsigned int track_num = this->TrackPending();
+  while (!Finished()) {
+    unsigned int track_num = TrackPending();
     unsigned int event_num = player_state_[track_num].track_pointer_;
     uint32_t dt = player_state_[track_num].track_dt_;
     auto us = converters::Dt2us(dt, tempo_, file_->TimeDivision());
@@ -84,8 +84,8 @@ void PlayerSync::PlayerLoop() {
     std::this_thread::sleep_for(std::chrono::microseconds(wait));
     heartbeat_helper_ += us.count();
     played_us_ += std::chrono::microseconds(us);
-    this->ExecEvent((*file_)[track_num][event_num]);
-    this->UpdatePlayerState(track_num, dt);
+    ExecEvent((*file_)[track_num][event_num]);
+    UpdatePlayerState(track_num, dt);
   }
 
   if (clbk_fun_finished_) clbk_fun_finished_();

@@ -25,7 +25,7 @@ SOFTWARE.
 #include "fileview.h"  // NOLINT(build/include_subdir) INCLUDE_NO_DIR
 
 FileView::FileView(QWidget* parent) : QListView(parent) {
-  this->setContextMenuPolicy(Qt::CustomContextMenu);
+  setContextMenuPolicy(Qt::CustomContextMenu);
 
   connect(this, &QListView::customContextMenuRequested, this,
           &FileView::ShowContextMenu);
@@ -33,7 +33,7 @@ FileView::FileView(QWidget* parent) : QListView(parent) {
 
 void FileView::ShowContextMenu(const QPoint& pos) {
   QAction* action;
-  int p = this->indexAt(pos).row();
+  int p = indexAt(pos).row();
 
   QMenu my_menu;
 
@@ -49,7 +49,7 @@ void FileView::ShowContextMenu(const QPoint& pos) {
     action->setData(3);
   }
 
-  QPoint global_pos = this->mapToGlobal(pos);
+  QPoint global_pos = mapToGlobal(pos);
   QAction* selected_item = my_menu.exec(global_pos);
 
   if (selected_item) {

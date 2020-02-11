@@ -240,7 +240,7 @@ void PlayerAsync::GoTo(const std::chrono::microseconds& pos) {
     was_playing = is_playing_;
   }
 
-  if (was_playing) this->Pause();
+  if (was_playing) Pause();
 
   {
     // cppcheck-suppress unreadVariable RAII
@@ -248,7 +248,7 @@ void PlayerAsync::GoTo(const std::chrono::microseconds& pos) {
     PlayerImpl::GoTo(pos);
   }
 
-  if (was_playing) this->Play();
+  if (was_playing) Play();
 }
 
 std::chrono::microseconds PlayerAsync::CurrentTimePos() {

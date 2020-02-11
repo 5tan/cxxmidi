@@ -25,7 +25,7 @@ SOFTWARE.
 #include "trackview.h"  // NOLINT(build/include_subdir) INCLUDE_NO_DIR
 
 TrackView::TrackView(QWidget* parent) : QTableView(parent) {
-  this->setContextMenuPolicy(Qt::CustomContextMenu);
+  setContextMenuPolicy(Qt::CustomContextMenu);
 
   connect(this, &TrackView::customContextMenuRequested, this,
           &TrackView::ShowContextMenu);
@@ -34,7 +34,7 @@ TrackView::TrackView(QWidget* parent) : QTableView(parent) {
 void TrackView::ShowContextMenu(const QPoint& pos) {
   QAction* action;
 
-  int p = this->indexAt(pos).row();
+  int p = indexAt(pos).row();
 
   QMenu my_menu;
 
@@ -52,22 +52,22 @@ void TrackView::ShowContextMenu(const QPoint& pos) {
 
   //! @FIXME menu should not be shown if there is no track selected
 
-  QPoint global_pos = this->mapToGlobal(pos);
+  QPoint global_pos = mapToGlobal(pos);
   QAction* selected_item = my_menu.exec(global_pos);
 
   if (selected_item) {
     switch (selected_item->data().toInt()) {
       case 0:
-        this->RequestAddEvent(0);
+        RequestAddEvent(0);
         break;
       case 1:
-        this->RequestDeleteEvent(p);
+        RequestDeleteEvent(p);
         break;
       case 2:
-        this->RequestAddEvent(p);
+        RequestAddEvent(p);
         break;
       case 3:
-        this->RequestAddEvent(p + 1);
+        RequestAddEvent(p + 1);
         break;
       default:
         break;
