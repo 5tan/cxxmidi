@@ -39,12 +39,14 @@ jobs:
       env: 
       compiler: 
       script: 
-        -
-          FILE_LIST=`find ./ -path ./build -prune -o -type f \( -iname \*.hpp -o -iname \*.cpp -o -iname *.h \) -print` &&
-          INCLUDES="-I include -I /usr/include/x86_64-linux-gnu/qt5/ -I /usr/include/x86_64-linux-gnu/qt5/QtWidgets/ -I /usr/include/x86_64-linux-gnu/qt5/QtCore" &&
-          CMD="cppcheck --enable=all --language=c++ --std=c++14 --inline-suppr ${INCLUDES} --file-list=<(echo '${FILE_LIST}') --error-exitcode=2" &&
-          $CMD --check-config &&
-          $CMD ;
+        - FILE_LIST=`find . -path ./build -prune -o -type f \( -iname \*.hpp -o -iname \*.cpp -o -iname *.h \) -print`
+        - QTCORE_INCLUDE=`dirname $(find / -name QFile -print -quit 2>/dev/null)`
+        - QTWIDGETS_INCLUDE="${QTCORE_INCLUDE}/../QtWidgets"
+        - QT_INCLUDE="${QTCORE_INCLUDE}/.."
+        - INCLUDES="-I include -I ${QT_INCLUDE} -I ${QTCORE_INCLUDE} -I ${QTWIDGETS_INCLUDE}"
+        - CMD="cppcheck --enable=all --language=c++ --std=c++14 --inline-suppr ${INCLUDES} --file-list=<(echo '${FILE_LIST}') --error-exitcode=2"
+        - $CMD --check-config
+        - $CMD
     - stage: test
       name: clang-tidy
       env: EXTRA='-DCMAKE_CXX_CLANG_TIDY=/usr/bin/clang-tidy;-checks=*'
