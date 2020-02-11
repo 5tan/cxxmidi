@@ -24,14 +24,14 @@ SOFTWARE.
 
 #include <cxxmidi/guts/player_base.hpp>
 
-TEST(PlayerBase, InitialState) { 
-    cxxmidi::guts::PlayerBase player_base;
-    ASSERT_EQ(player_base.CurrentTimePos(), std::chrono::microseconds(0));
-    ASSERT_EQ(player_base.GetSpeed(), 1.0); 
+TEST(PlayerBase, InitialState) {
+  cxxmidi::guts::PlayerBase player_base;
+  ASSERT_EQ(player_base.CurrentTimePos(), std::chrono::microseconds(0));
+  ASSERT_EQ(player_base.GetSpeed(), 1.0);
 }
 
-TEST(PlayerBase, SetGetSpeed) { 
-    cxxmidi::guts::PlayerBase player_base;
-    player_base.SetSpeed(2.0);
-    ASSERT_EQ(player_base.GetSpeed(), 2.0); 
+TEST(PlayerBase, SetGetSpeed) {
+  cxxmidi::guts::PlayerBase player_base;
+  player_base.SetSpeed(2.0);
+  ASSERT_EQ(player_base.GetSpeed(), 2.0);
 }
