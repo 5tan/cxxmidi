@@ -105,7 +105,7 @@ void Tests::stream()
     CxxMidi::File file = Tests::buildTestFile();
     std::stringstream output;
     file.streamInto(output);
-    QCOMPARE(output.str().length(), 233);
+    QCOMPARE(output.str().length(), 233UL);
 }
 
 void Tests::instrument()
