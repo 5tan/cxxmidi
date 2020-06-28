@@ -22,6 +22,7 @@ SOFTWARE.
 
 #include <gtest/gtest.h>
 #include <string>
+#include <sstream>
 
 #include <array>
 #include <cxxmidi/file.hpp>
@@ -82,6 +83,13 @@ TEST_F(FileTestFixture, Creation) {
   cxxmidi::File file = CreateTestFile();
   EXPECT_EQ(file.Duration().count(), 1000000);
   EXPECT_EQ(file.Tracks(), static_cast<size_t>(3));
+}
+
+TEST_F(FileTestFixture, StreamInto) {
+  cxxmidi::File file = CreateTestFile();
+  std::stringstream output;
+  file.StreamInto(output);
+  EXPECT_EQ(output.str().length(), 233);
 }
 
 TEST_F(FileTestFixture, ReadWrite) {
