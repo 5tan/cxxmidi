@@ -56,7 +56,7 @@ inline uint32_t getVlq(std::fstream &file_)
     return r;
 }
 
-inline size_t saveVlq(std::ofstream & outputFile_, unsigned int _val)
+inline size_t saveVlq(std::ostream & outputFile_, unsigned int _val)
 {
     size_t r =0;
     uint32_t vlq = _val & 0x7f;

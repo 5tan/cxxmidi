@@ -1,3 +1,5 @@
+#include <sstream>
+
 #include <QtTest/QtTest>
 #include <QDebug>
 
@@ -18,6 +20,7 @@ private slots:
     void stdint();
     void time();
     void file();
+    void stream();
     void instrument();
 //#if __cplusplus > 199711L
     void noexceptMoveCtors();
@@ -94,6 +97,15 @@ void Tests::file()
     CxxMidi::File file = Tests::buildTestFile();
     QCOMPARE(file.duration().toTimecode().c_str(),"00:00:01");
     QCOMPARE(file.tracks(),static_cast<size_t>(3));
+
+}
+
+void Tests::stream()
+{
+    CxxMidi::File file = Tests::buildTestFile();
+    std::stringstream output;
+    file.streamInto(output);
+    QCOMPARE(output.str().length(), 233);
 }
 
 void Tests::instrument()

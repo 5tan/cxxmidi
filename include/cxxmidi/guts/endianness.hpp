@@ -51,7 +51,7 @@ T readBE(std::fstream &file_)
 }
 
 template <typename T>
-size_t writeBE(std::ofstream &file_, T val_)
+size_t writeBE(std::ostream &file_, T val_)
 {
     size_t size = sizeof(val_);
 

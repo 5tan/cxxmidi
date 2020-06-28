@@ -21,6 +21,7 @@ public:
 
     inline void load(const char *path_);
     inline void saveAs(const char *path_) const;
+    inline std::ostream& streamInto(std::ostream& output) const;
 
     inline Track& addTrack();
     inline size_t tracks() const;
@@ -42,14 +43,14 @@ private:
                           bool &trackContinue_,
                           uint8_t &runningStatus_);
 
-    inline void saveHeaderChunk(std::ofstream &outputFile_) const;
-    inline void saveTrackChunk(std::ofstream & outputFile_,
+    inline void saveHeaderChunk(std::ostream &outputFile_) const;
+    inline void saveTrackChunk(std::ostream & outputFile_,
                                size_t num_) const;
-    inline size_t saveEvent(std::ofstream & outputFile_,
+    inline size_t saveEvent(std::ostream & outputFile_,
                             const Event & event_,
                             uint8_t & lastCmd_) const;
 
-    inline static void putc(std::ofstream& file_, uint8_t c_);
+    inline static void putc(std::ostream& file_, uint8_t c_);
 
 };
 
@@ -62,7 +63,7 @@ private:
 
 namespace CxxMidi {
 
-void File::putc(std::ofstream& file_, uint8_t c_)
+void File::putc(std::ostream& file_, uint8_t c_)
 {
     file_.write(reinterpret_cast<char*>(&c_),1);
 }
@@ -90,17 +91,22 @@ void File::saveAs(const char * path_) const
         return;
     }
 
-    // save header
-    this->saveHeaderChunk(outputFile);
-
-    // loop over tracks
-    for(unsigned int i=0; i<this->tracks(); i++)
-        this->saveTrackChunk(outputFile,i);
+    this->streamInto(outputFile);
 
     outputFile.close();
 }
 
-void File::saveTrackChunk(std::ofstream & outputFile_,
+std::ostream& File::streamInto(std::ostream& output) const
+{
+    this->saveHeaderChunk(output);
+
+    for(size_t i=0; i<this->tracks(); i++)
+        this->saveTrackChunk(output,i);
+
+    return output;
+}
+
+void File::saveTrackChunk(std::ostream & outputFile_,
                           size_t num_) const
 {
     const Track & track = this->at(num_);
@@ -131,7 +137,7 @@ void File::saveTrackChunk(std::ofstream & outputFile_,
     outputFile_.seekp(0,std::ios_base::end);
 }
 
-size_t File::saveEvent(std::ofstream & outputFile_,
+size_t File::saveEvent(std::ostream & outputFile_,
                        const Event & event_,
                        uint8_t & lastCmd_) const
 {
@@ -206,7 +212,7 @@ size_t File::saveEvent(std::ofstream & outputFile_,
     return r;
 }
 
-void File::saveHeaderChunk(std::ofstream &outputFile_) const
+void File::saveHeaderChunk(std::ostream &outputFile_) const
 {
     // save chunk id
     Guts::Endianness::writeBE<uint32_t>(outputFile_,0x4D546864); // "MThd"
@@ -270,7 +276,7 @@ void File::load(const char *path_)
 
     // calculate file length
     file.seekg (0, std::fstream::end);
-    std::fstream::streampos fileLength = file.tellg();
+    auto fileLength = file.tellg();
     file.seekg (0, std::fstream::beg);
 
     // control counters
@@ -370,7 +376,7 @@ void File::readTrackChunk(std::fstream & file_)
     // we will not use this size to read data (we wait for end event)
 
     uint8_t runningStatus = 0; // start with no running status
-    std::fstream::streampos begin = file_.tellg();
+    auto begin = file_.tellg();
     bool trackContinue = true;
 
     // read track data
