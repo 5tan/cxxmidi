@@ -40,6 +40,7 @@ class File : public std::vector<Track> {
 
   inline void Load(const char* path);
   inline void SaveAs(const char* path) const;
+  inline std::ostream& StreamInto(std::ostream& output) const;
 
   inline Track& AddTrack();
   inline File::size_type Tracks() const;
@@ -58,13 +59,13 @@ class File : public std::vector<Track> {
   inline void ReadEvent(std::ifstream& file, Event* event, bool* track_continue,
                         uint8_t* running_status);
 
-  inline void SaveHeaderChunk(std::ofstream& output_file) const;
-  inline void SaveTrackChunk(std::ofstream& output_file,
+  inline void SaveHeaderChunk(std::ostream& output_file) const;
+  inline void SaveTrackChunk(std::ostream& output_file,
                              const Track& track) const;
-  inline uint32_t SaveEvent(std::ofstream& output_file, const Event& event,
+  inline uint32_t SaveEvent(std::ostream& output_file, const Event& event,
                             uint8_t* last_cmd) const;
 
-  inline static uint32_t Write(std::ofstream& file, const uint8_t* c,
+  inline static uint32_t Write(std::ostream& file, const uint8_t* c,
                                std::streamsize size = 1);
 };
 
@@ -76,7 +77,7 @@ class File : public std::vector<Track> {
 
 namespace cxxmidi {
 
-uint32_t File::Write(std::ofstream& file, const uint8_t* c,
+uint32_t File::Write(std::ostream& file, const uint8_t* c,
                      std::streamsize size) {
   file.write(reinterpret_cast<const char*>(c), size);
   return size;
@@ -96,17 +97,22 @@ void File::SaveAs(const char* path) const {
     return;
   }
 
-  // save header
-  SaveHeaderChunk(out_file);
-
-  // loop over tracks
-  for (const auto& track : *this) SaveTrackChunk(out_file, track);
+  StreamInto(out_file);
 
   out_file.close();
 }
 
-void File::SaveTrackChunk(std::ofstream& output_file,
-                          const Track& track) const {
+std::ostream& File::StreamInto(std::ostream& output) const {
+  SaveHeaderChunk(output);
+
+  for (const auto& track : *this) {
+    SaveTrackChunk(output, track);
+  }
+
+  return output;
+}
+
+void File::SaveTrackChunk(std::ostream& output_file, const Track& track) const {
   // save chunk id
   internal::endianness::WriteBe<uint32_t>(output_file, 0x4D54726B);  // "MTrk"
 
@@ -129,7 +135,7 @@ void File::SaveTrackChunk(std::ofstream& output_file,
   output_file.seekp(0, std::ios_base::end);
 }
 
-uint32_t File::SaveEvent(std::ofstream& output_file, const Event& event,
+uint32_t File::SaveEvent(std::ostream& output_file, const Event& event,
                          uint8_t* last_cmd) const {
   uint32_t r = utils::SaveVlq(output_file, event.Dt());
 
@@ -161,7 +167,7 @@ uint32_t File::SaveEvent(std::ofstream& output_file, const Event& event,
   return r;
 }
 
-void File::SaveHeaderChunk(std::ofstream& output_file) const {
+void File::SaveHeaderChunk(std::ostream& output_file) const {
   // save chunk id
   internal::endianness::WriteBe<uint32_t>(output_file, 0x4D546864);  // "MThd"
 

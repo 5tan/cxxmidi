@@ -87,7 +87,7 @@ T ReadBe(std::ifstream& file) {
 
 // Write big-endian value to file
 template <typename T>
-size_t WriteBe(std::ofstream& file, T val) {
+size_t WriteBe(std::ostream& file, T val) {
   static_assert(std::is_integral_v<T>, "WriteBe only supports integral types");
   static_assert(sizeof(T) > 1, "WriteBe requires multi-byte types");
   if (MachineIsLittleEndian()) {
