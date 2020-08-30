@@ -274,6 +274,7 @@ void Alsa::ClosePort() {
   }
 }
 
+// cppcheck-suppress unusedFunction LIB_FUNC
 void Alsa::OpenVirtualPort(const std::string &port_name) {
   if (_apiData->vport < 0) {
     _apiData->vport = snd_seq_create_simple_port(

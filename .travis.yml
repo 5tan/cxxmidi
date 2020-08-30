@@ -1,6 +1,6 @@
+os: linux
 dist: bionic
 language: cpp
-os: linux
 compiler: 
   - gcc
   - clang
@@ -40,11 +40,7 @@ jobs:
       compiler: 
       script: 
         - FILE_LIST=`find . -path ./build -prune -o -type f \( -iname \*.hpp -o -iname \*.cpp -o -iname *.h \) -print`
-        - QTCORE_INCLUDE=`dirname $(find / -name QFile -print -quit 2>/dev/null)`
-        - QTWIDGETS_INCLUDE="dirname $(find / -name QApplication -print -quit 2>/dev/null)"
-        - QT_INCLUDE="${QTCORE_INCLUDE}/.."
-        - INCLUDES="-I include -I ${QT_INCLUDE} -I ${QTCORE_INCLUDE} -I ${QTWIDGETS_INCLUDE}"
-        - CMD="cppcheck --enable=all --language=c++ --std=c++14 --inline-suppr ${INCLUDES} --file-list=<(echo '${FILE_LIST}') --error-exitcode=2"
+        - CMD="cppcheck --enable=all --language=c++ --std=c++14 --inline-suppr -I include --file-list=<(echo \"${FILE_LIST}\") --error-exitcode=2"
         - $CMD --check-config
         - $CMD
     - stage: test

@@ -94,7 +94,8 @@ Mark | Related check name | Reason for suppression
 
 Mark | Related check name | Reason for suppression
 --- | --- | ---
-`RAII` | `unreadVariable` | `(style) Variable '...' is assigned a value that is never used.` is reported for RAII objects.
+`RAII` | `unreadVariable` | `(style) Variable '...' is assigned a value that is never used.` is reported for RAII objects like mutexes.
+`LIB_FUNC` | `unusedFunction` | `(style) The function '...' is never used.` is reported for library functions.
 
 ## License
 
