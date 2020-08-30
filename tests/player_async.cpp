@@ -20,45 +20,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***************************************************************************** */
 
-#include "filemodel.h"  // NOLINT(build/include_subdir) INCLUDE_NO_DIR
+#include <gtest/gtest.h>
 
-FileModel::FileModel(QObject *parent)
-    : QAbstractListModel(parent), file_(nullptr) {}
+#include <cxxmidi/output/null.hpp>
+#include <cxxmidi/player/player_async.hpp>
 
-// cppcheck-suppress unusedFunction LIB_FUNC
-int FileModel::rowCount(const QModelIndex & /* index */) const {
-  if (file_) return static_cast<int>(file_->Tracks());
-
-  return 0;
-}
-
-void FileModel::SetFile(cxxmidi::File *file) {
-  file_ = file;
-  layoutChanged();
-}
-
-void FileModel::RemoveTrack(int num) {
-  beginRemoveRows(QModelIndex(), num, num);
-  file_->erase(file_->begin() + num);
-  endRemoveRows();
-}
-
-void FileModel::AddTrack(int num) {
-  beginInsertRows(QModelIndex(), num, num);
-  cxxmidi::File::iterator it = file_->begin() + num;
-  file_->insert(it, cxxmidi::Track());
-  endInsertRows();
-}
-
-QVariant FileModel::data(const QModelIndex &index, int role) const {
-  if (!index.isValid()) return QVariant();
-
-  int row = index.row();
-
-  if (role == Qt::DisplayRole) {
-    cxxmidi::Track *track = &file_->at(row);
-    return QVariant(QString("%1. %2").arg(row).arg(track->GetName().c_str()));
-  }
-
-  return QVariant();
+TEST(PlayerAsync, SetGetSpeed) {
+  cxxmidi::output::Null o;
+  cxxmidi::player::PlayerAsync p(&o);
+  EXPECT_FLOAT_EQ(p.Speed(), 1.0);
+  p.SetSpeed(2.0);
+  EXPECT_FLOAT_EQ(p.Speed(), 2.0);
 }
