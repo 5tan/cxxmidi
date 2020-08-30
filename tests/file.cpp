@@ -98,6 +98,13 @@ TEST_F(FileTestFixture, ReadWrite) {
   // Note: This test will work only for files that were generatated optimally.
 }
 
+TEST_F(FileTestFixture, SetGetTimeDivision) {
+  cxxmidi::File file = CreateTestFile();
+  EXPECT_EQ(file.TimeDivision(), 500);  // default time division
+  file.SetTimeDivision(600);
+  EXPECT_EQ(file.TimeDivision(), 600);
+}
+
 TEST(File, ReadSomeTestFiles) {
   cxxmidi::File file;
   file.Load("music/chopin.mid");
