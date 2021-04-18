@@ -29,6 +29,9 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef INCLUDE_CXXMIDI_OUTPUT_NULL_HPP_
 #define INCLUDE_CXXMIDI_OUTPUT_NULL_HPP_
 
+#include <string>
+#include <vector>
+
 #include <cxxmidi/output/abstract.hpp>
 
 namespace cxxmidi {
@@ -36,7 +39,7 @@ namespace output {
 
 class Null : public output::Abstract {
  public:
-  inline Null(){};
+  inline Null() {}
 
   Null(const Null &) = delete;             // non-copyable
   Null &operator=(const Null &) = delete;  // non-copyable (assignment)
@@ -52,7 +55,7 @@ class Null : public output::Abstract {
   inline void SendMessage(const std::vector<uint8_t> * /* msg */) override {}
 
  protected:
-  inline void Initialize() override{};
+  inline void Initialize() override {}
 };
 
 }  // namespace output
