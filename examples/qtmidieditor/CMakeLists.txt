@@ -2,7 +2,7 @@ find_package(ALSA REQUIRED)
 find_package(Threads REQUIRED)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
-find_package(Qt5 COMPONENTS Gui Widgets REQUIRED)
+find_package(Qt6 COMPONENTS Gui Widgets REQUIRED)
 
 add_executable(qtmidieditor
   filemodel.cpp
@@ -24,4 +24,4 @@ target_link_libraries(qtmidieditor
   CxxMidi::CxxMidi
   Threads::Threads
   ${ALSA_LIBRARIES}
-  Qt5::Widgets)
+  Qt6::Widgets)

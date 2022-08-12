@@ -13,7 +13,7 @@ env:
 install: 
   - &install_build_deps 
    sudo apt-get update &&
-   sudo apt-get install -y qtbase5-dev libqt5widgets5 libasound-dev &&
+   sudo apt-get install -y qt6-tools-dev-tools libasound-dev &&
    (cd /tmp && 
      wget https://github.com/google/googletest/archive/refs/tags/release-1.12.1.tar.gz ;
      mkdir googletest &&
