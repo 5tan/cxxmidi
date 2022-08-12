@@ -15,12 +15,12 @@ install:
    sudo apt-get update &&
    sudo apt-get install -y qtbase5-dev libqt5widgets5 libasound-dev &&
    (cd /tmp && 
-     wget https://github.com/google/googletest/archive/release-1.10.0.tar.gz ; 
+     wget https://github.com/google/googletest/archive/refs/tags/release-1.12.1.tar.gz ;
      mkdir googletest &&
-     tar xf release-1.10.0.tar.gz -C googletest --strip-components=1 && 
+     tar xf release-1.12.1.tar.gz -C googletest --strip-components=1 &&
      mkdir googletest/build && 
-     cd googletest/build && 
-     cmake -DBUILD_SHARED_LIBS=ON .. && 
+     cd googletest/build &&
+     cmake -DBUILD_SHARED_LIBS=ON .. &&
      sudo make install -j$(nproc)) ;
 script: 
   - &cmd_build (mkdir build && cd build && cmake -DCMAKE_CXX_FLAGS="$JOB_CXX_FLAGS" $EXTRA .. && make VERBOSE=1 -j$(nproc))
