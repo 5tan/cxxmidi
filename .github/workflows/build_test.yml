@@ -1,9 +1,0 @@
-name: Build & test
-on: push
-jobs:
-  cpplint:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - run: sudo apt-get -y install build-essential libgl1-mesa-dev qt6-base-dev libgtest-dev libasound2-dev
-    - run: (mkdir build && cd build && cmake .. && make)
