@@ -1,0 +1,80 @@
+name: CI workflow
+on: push
+jobs:
+  cmakelint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-python@v1
+    - run: pip install cmakelint
+    - run: cmakelint `find . -name CMakeLists.txt`
+  cpplint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - run: sudo apt-get install -y cpplint
+    - run: cpplint --recursive .
+  build_and_test:
+    strategy:
+      matrix:
+        os: 
+          - ubuntu-latest
+        compiler: 
+          - g++
+          - clang++
+        sanitizer_flags:
+          - '-fsanitize=thread -g -O1'
+          - '-fsanitize=address -fno-optimize-sibling-calls -fsanitize-address-use-after-scope -fno-omit-frame-pointer -g -O1'
+          - '-fsanitize=leak -fno-omit-frame-pointer -g -O1'
+          - '-fsanitize=undefined'
+        include:
+          - os: ubuntu-latest
+            sanitizer_flags: ''
+            compiler: clazy
+            checker: clazy
+          - os: ubuntu-latest
+            sanitizer_flags: ''
+            compiler: clang++
+            checker: clang-tidy
+            checker_flag: '-DCMAKE_CXX_CLANG_TIDY="/usr/bin/clang-tidy;-checks=*"'
+          - os: ubuntu-latest
+            sanitizer_flags: ''
+            compiler: clang++
+            checker: lwyu
+            checker_flag: '-DCMAKE_LINK_WHAT_YOU_USE=TRUE'
+          - os: ubuntu-latest
+            sanitizer_flags: ''
+            compiler: clang++
+            checker: iwyu
+            checker_flag: '-DCMAKE_CXX_INCLUDE_WHAT_YOU_USE="/usr/bin/iwyu"'
+    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.checker || join(matrix.*) }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies (linux)
+        if: matrix.os == 'ubuntu-latest' 
+        run: sudo apt-get -y install libgl1-mesa-dev qt6-base-dev libgtest-dev libasound2-dev
+
+      - name: Install clang (linux)
+        if: matrix.os == 'ubuntu-latest' 
+        run: sudo apt-get -y install clang
+
+      - name: Install clazy
+        if: matrix.compiler == 'clazy' 
+        run:  sudo apt-get -y install clazy
+
+      - name: Install clang-tidy
+        if: matrix.checker == 'cland-tidy'
+        run: sudo apt-get install -y clang-tidy
+
+      - name: Install IWYU
+        if: matrix.checker == 'iwyu'
+        run: sudo apt-get install -y iwyu
+
+      - name: Build
+        run: (mkdir build && cd build && cmake .. -DCMAKE_CXX_FLAGS="${{ matrix.sanitizer_flags }}" -DCMAKE_CXX_COMPILER="${{ matrix.compiler }}" ${{matrix.checker_flag}} && make)
+
+      - name: Test 
+        if: matrix.checker == ''
+        run: (cd build && ctest)
