@@ -2,7 +2,7 @@
 
 C++ MIDI library.
 
-![cpplint](https://github.com/5tan/cxxmidi/actions/workflows/cpplint.yml/badge.svg) ![cmakelint](https://github.com/5tan/cxxmidi/actions/workflows/cpplint.yml/badge.svg) [![codecov](https://codecov.io/gh/5tan/cxxmidi/branch/master/graph/badge.svg)](https://codecov.io/gh/5tan/cxxmidi)
+![cpplint](https://github.com/5tan/cxxmidi/actions/workflows/cpplint.yml/badge.svg) ![cmakelint](https://github.com/5tan/cxxmidi/actions/workflows/cmakelint.yml/badge.svg) [![codecov](https://codecov.io/gh/5tan/cxxmidi/branch/master/graph/badge.svg)](https://codecov.io/gh/5tan/cxxmidi)
 
 ## Key features
 * MIDI files read/write
