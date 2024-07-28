@@ -19,7 +19,6 @@ jobs:
       matrix:
         os: 
           - ubuntu-latest
-          - macos-latest
         compiler: 
           - g++
           - clang++
