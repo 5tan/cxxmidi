@@ -19,6 +19,7 @@ jobs:
       matrix:
         os: 
           - ubuntu-latest
+          - macos-latest
         compiler: 
           - g++
           - clang++
@@ -55,6 +56,10 @@ jobs:
       - name: Install dependencies (linux)
         if: matrix.os == 'ubuntu-latest' 
         run: sudo apt-get -y install libgl1-mesa-dev qt6-base-dev libgtest-dev libasound2-dev
+
+      - name: Install dependencies (macos)
+        if: matrix.os == 'macos-latest' 
+        run: brew install googletest qt6
 
       - name: Install clang (linux)
         if: matrix.os == 'ubuntu-latest' 
