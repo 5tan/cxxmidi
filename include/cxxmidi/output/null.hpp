@@ -40,7 +40,7 @@ namespace output {
 class Null : public output::Abstract {
  public:
   inline Null() {}
-  inline Null(size_t) {}
+  explicit Null(size_t) {}
 
   Null(const Null &) = delete;             // non-copyable
   Null &operator=(const Null &) = delete;  // non-copyable (assignment)
