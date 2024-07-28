@@ -31,7 +31,12 @@ typedef output::windows Default;
 }  // namespace output
 }  // namespace cxxmidi
 #elif __APPLE__  // Mac OS X
-#error "CxxMidi: OSX Midi output not yet implemented"
+#include <cxxmidi/output/null.hpp>
+namespace cxxmidi {
+namespace output {
+typedef output::Null Default;
+}  // namespace output
+}  // namespace cxxmidi
 #elif __unix  // Linux, *BSD, Mac OS X
 #include <cxxmidi/output/linux/alsa.hpp>
 namespace cxxmidi {
