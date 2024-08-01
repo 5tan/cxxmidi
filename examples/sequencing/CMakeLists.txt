@@ -8,7 +8,11 @@ endif()
 
 add_executable(sequencing main.cpp)
 
-target_compile_options(sequencing PRIVATE -Wall -pedantic -Wextra)
+if(MSVC)
+  target_compile_options(sequencing PRIVATE /W4)
+else()
+  target_compile_options(sequencing PRIVATE -Wall -pedantic -Wextra)
+endif()
 target_compile_features(sequencing PRIVATE cxx_std_17)
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")

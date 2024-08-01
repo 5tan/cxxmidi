@@ -8,7 +8,11 @@ endif()
 
 add_executable(player_sync main.cpp)
 
-target_compile_options(player_sync PRIVATE -Wall -pedantic -Wextra)
+if(MSVC)
+  target_compile_options(player_sync PRIVATE /W4)
+else()
+  target_compile_options(player_sync PRIVATE -Wall -pedantic -Wextra)
+endif()
 target_compile_features(player_sync PRIVATE cxx_std_17)
 
 

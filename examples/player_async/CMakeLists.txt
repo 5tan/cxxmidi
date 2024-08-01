@@ -8,7 +8,11 @@ endif()
 
 add_executable(player_async main.cpp)
 
-target_compile_options(player_async PRIVATE -Wall -pedantic -Wextra)
+if(MSVC)
+  target_compile_options(player_async PRIVATE /W4)
+else()
+  target_compile_options(player_async PRIVATE -Wall -pedantic -Wextra)
+endif()
 target_compile_features(player_async PRIVATE cxx_std_17)
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")

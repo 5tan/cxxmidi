@@ -14,7 +14,11 @@ add_executable(qtmidiplayer
   main.cpp
   mainwindow.cpp)
 
-target_compile_options(qtmidiplayer PRIVATE -Wall -pedantic -Wextra)
+if(MSVC)
+  target_compile_options(qtmidiplayer PRIVATE /W4)
+else()
+  target_compile_options(qtmidiplayer PRIVATE -Wall -pedantic -Wextra)
+endif()
 target_compile_features(qtmidiplayer PRIVATE cxx_std_17)
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")

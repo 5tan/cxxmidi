@@ -141,7 +141,8 @@ void PlayerBase::SetupWindowsTimers() {
     UINT wTimerRes;
 
     if (timeGetDevCaps(&tc, sizeof(TIMECAPS)) == TIMERR_NOERROR) {
-      wTimerRes = min(max(tc.wPeriodMin, 1 /* [ms] */), tc.wPeriodMax);
+      wTimerRes =
+          std::min(std::max(tc.wPeriodMin, 1u /* [ms] */), tc.wPeriodMax);
       timeBeginPeriod(wTimerRes);
     }
 

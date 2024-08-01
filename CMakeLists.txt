@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10.2)
+cmake_minimum_required(VERSION 3.14)
 
 project(cxxmidi VERSION 0.2.0 LANGUAGES CXX)
 

@@ -27,6 +27,9 @@ jobs:
         extra_check:
           - ''
         include:
+          - os: windows-latest
+            compiler: g++
+            generator_flag: '-G "MinGW Makefiles"'
           - os: ubuntu-latest
             compiler: clazy
             extra_check: clazy
@@ -50,14 +53,28 @@ jobs:
 
       - name: Install dependencies (linux)
         if: matrix.os == 'ubuntu-latest' 
-        run: sudo apt-get -y install libgl1-mesa-dev qt6-base-dev libgtest-dev libasound2-dev
+        run: sudo apt-get -y install libgl1-mesa-dev qt6-base-dev libgtest-dev libasound2-dev ninja-build
 
       - name: Install dependencies (macos)
         if: matrix.os == 'macos-latest'
-        run: brew install googletest qt6
+        run: brew install googletest qt6 ninja
+
+      - name: Install Qt6 (windows)
+        if: matrix.os == 'windows-latest'
+        uses: jurplel/install-qt-action@v4
+        with:
+          aqtversion: '==3.1.*'
+          version: '6.7.1'
+          host: 'windows'
+          target: 'desktop'
+          arch: 'win64_mingw'
+          dir: '${{ github.workspace }}/build/qt6/'
+          set-env: 'true'
+          tools: 'tools_mingw1310,13.1.0-202401290621,qt.tools.win64_mingw1310 tools_cmake,3.29.3-202405151154,qt.tools.cmake'
+          add-tools-to-path: 'true'
 
       - name: Install clang (linux)
-        if: matrix.os == 'ubuntu-latest' 
+        if: matrix.os == 'ubuntu-latest' && matrix.compiler == 'clang++'
         run: sudo apt-get -y install clang
 
       - name: Install clang (macos)
@@ -76,9 +93,12 @@ jobs:
         if: matrix.extra_check == 'iwyu'
         run: sudo apt-get install -y iwyu
 
+      - name: Configure CMake
+        run: cmake -Bbuild ${{matrix.generator_flag}} . -DCMAKE_CXX_COMPILER="${{matrix.compiler}}" ${{matrix.extra_check_flag}}
+
       - name: Build
-        run: (mkdir build && cd build && cmake .. -DCMAKE_CXX_COMPILER="${{ matrix.compiler }}" ${{matrix.extra_check_flag}} && make)
+        run: cmake --build build
 
       - name: Test 
         if: matrix.extra_check == ''
-        run: (cd build && ctest)
+        run: ctest --test-dir build

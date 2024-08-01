@@ -22,6 +22,7 @@ SOFTWARE.
 
 #include <gtest/gtest.h>
 
+#include <array>
 #include <cxxmidi/file.hpp>
 #include <cxxmidi/note.hpp>
 
