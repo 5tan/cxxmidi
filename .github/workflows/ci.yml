@@ -67,11 +67,9 @@ jobs:
           version: '6.7.1'
           host: 'windows'
           target: 'desktop'
-          arch: 'win64_mingw'
+          arch: 'win64_msvc2019_64'
           dir: '${{ github.workspace }}/build/qt6/'
           set-env: 'true'
-          tools: 'tools_mingw1310,13.1.0-202401290621,qt.tools.win64_mingw1310 tools_cmake,3.29.3-202405151154,qt.tools.cmake'
-          add-tools-to-path: 'true'
 
       - name: Install clang (linux)
         if: matrix.os == 'ubuntu-latest' && matrix.compiler == 'clang++'
@@ -94,7 +92,7 @@ jobs:
         run: sudo apt-get install -y iwyu
 
       - name: Configure CMake
-        run: cmake -Bbuild ${{matrix.generator_flag}} . -DCMAKE_CXX_COMPILER="${{matrix.compiler}}" ${{matrix.extra_check_flag}}
+        run: cmake -Bbuild . -DCMAKE_CXX_COMPILER="${{matrix.compiler}}" ${{matrix.extra_check_flag}}
 
       - name: Build
         run: cmake --build build
