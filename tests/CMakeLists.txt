@@ -1,8 +1,9 @@
 set(THIS_TARGET "tests")
 
 find_package(Threads REQUIRED)
+find_package(GTest QUIET)
 
-if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows" OR CMAKE_SYSTEM_NAME MATCHES "CYGWIN")
+if(NOT GTest_FOUND)
   # https://google.github.io/googletest/quickstart-cmake.html
   cmake_policy(SET CMP0135 NEW) 
   include(FetchContent)
@@ -13,9 +14,6 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows" OR CMAKE_SYSTEM_NAME MATCHES "CYGWIN"
   # For Windows: Prevent overriding the parent project's compiler/linker settings
   set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
   FetchContent_MakeAvailable(googletest)
-  include(GoogleTest)
-else()
-  find_package(GTest REQUIRED)
 endif()
 
 add_executable(${THIS_TARGET}
@@ -44,4 +42,5 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows" OR CMAKE_SYSTEM_NAME MATCHES "CYGWIN"
   target_link_libraries(${THIS_TARGET} winmm)
 endif()
 
+include(GoogleTest)
 gtest_discover_tests(${THIS_TARGET} WORKING_DIRECTORY ${CMAKE_SOURCE_DIR} DISCOVERY_MODE PRE_TEST)

@@ -47,9 +47,9 @@ install(EXPORT CxxMidi
   NAMESPACE CxxMidi::
   DESTINATION ${LIB_INSTALL_DIR}/cxxmidi/cmake)
 
+add_subdirectory(examples)
 if(BUILD_TESTING)
   enable_testing()
   add_subdirectory(tests)
 endif()
 
-add_subdirectory(examples)

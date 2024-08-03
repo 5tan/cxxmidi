@@ -27,6 +27,10 @@ jobs:
         extra_check:
           - ''
         include:
+
+          - os: windows-latest
+            compiler: msvc
+            generator_flag: '-G "Visual Studio 17 2022"'
           - os: windows-latest
             compiler: g++
             generator_flag: '-G "MinGW Makefiles"'
@@ -59,8 +63,8 @@ jobs:
         if: matrix.os == 'macos-latest'
         run: brew install googletest qt6 ninja
 
-      - name: Install Qt6 (windows)
-        if: matrix.os == 'windows-latest'
+      - name: Install Qt6 (windows, msvc)
+        if: matrix.os == 'windows-latest' && matrix.compiler == 'msvc'
         uses: jurplel/install-qt-action@v4
         with:
           aqtversion: '==3.1.*'
@@ -68,8 +72,18 @@ jobs:
           host: 'windows'
           target: 'desktop'
           arch: 'win64_msvc2019_64'
-          dir: '${{ github.workspace }}/build/qt6/'
-          set-env: 'true'
+          #dir: '${{ github.workspace }}/build/qt6/'
+
+      - name: Install Qt6 (windows, MinGW)
+        if: matrix.os == 'windows-latest' && matrix.compiler == 'g++'
+        uses: jurplel/install-qt-action@v4
+        with:
+          aqtversion: '==3.1.*'
+          version: '6.7.1'
+          host: 'windows'
+          target: 'desktop'
+          arch: 'win64_mingw'
+          #dir: '${{ github.workspace }}/build/qt6/'
 
       - name: Install clang (linux)
         if: matrix.os == 'ubuntu-latest' && matrix.compiler == 'clang++'
@@ -98,5 +112,13 @@ jobs:
         run: cmake --build build
 
       - name: Test 
-        if: matrix.extra_check == ''
-        run: ctest --test-dir build || echo ---1 ; type D:/a/cxxmidi/cxxmidi/build/Testing/Temporary/LastTest.log ; echo ---2 ; cat D:/a/cxxmidi/cxxmidi/build/Testing/Temporary/LastTest.log ; echo ---3 ; cat D:/a/cxxmidi/cxxmidi/build/tests/tests[1]_include-.cmake ; echo ---4; type D:/a/cxxmidi/cxxmidi/build/tests/tests[1]_include-.cmake ; echo ---5
+        if: matrix.extra_check == '' # && matrix.os != 'windows-latest'
+        run: ctest --test-dir build
+
+      # for some reason ctest doesn't work on windows. Execute tests directly:
+      # - name: Test (windows, msvc)
+      #   if: matrix.os == 'windows-latest' && matrix.compiler == 'msvc'
+      #   run: ${{ github.workspace }}\build\tests\Debug\tests.exe
+      # - name: Test (windows, MinGW)
+      #   if: matrix.os == 'windows-latest' && matrix.compiler == 'g++'
+      #   run: ${{ github.workspace }}\build\tests\tests.exe
