@@ -99,4 +99,4 @@ jobs:
 
       - name: Test 
         if: matrix.extra_check == ''
-        run: ctest --test-dir build || echo ---1 ; type D:/a/cxxmidi/cxxmidi/build/Testing/Temporary/LastTest.log ; echo ---2 ; cat D:/a/cxxmidi/cxxmidi/build/Testing/Temporary/LastTest.log ; echo ---3 
+        run: ctest --test-dir build || echo ---1 ; type D:/a/cxxmidi/cxxmidi/build/Testing/Temporary/LastTest.log ; echo ---2 ; cat D:/a/cxxmidi/cxxmidi/build/Testing/Temporary/LastTest.log ; echo ---3 ; cat D:/a/cxxmidi/cxxmidi/build/tests/tests[1]_include-.cmake ; echo ---4; type D:/a/cxxmidi/cxxmidi/build/tests/tests[1]_include-.cmake ; echo ---5
