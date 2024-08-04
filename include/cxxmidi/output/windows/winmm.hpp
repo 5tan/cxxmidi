@@ -29,9 +29,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef INCLUDE_CXXMIDI_OUTPUT_WINDOWS_WINMM_HPP_
 #define INCLUDE_CXXMIDI_OUTPUT_WINDOWS_WINMM_HPP_
 
-#include <windows.h>
-//
 #include <mmsystem.h>
+#include <windows.h>
 
 #include <cstdint>
 #include <cxxmidi/output/abstract.hpp>

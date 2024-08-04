@@ -1,20 +1,29 @@
 set(THIS_TARGET "tests")
 
-find_package(Threads REQUIRED)
-find_package(GTest QUIET)
-
-if(NOT GTest_FOUND)
-  # https://google.github.io/googletest/quickstart-cmake.html
-  cmake_policy(SET CMP0135 NEW) 
-  include(FetchContent)
-  FetchContent_Declare(
-    googletest
-    URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
-  )
-  # For Windows: Prevent overriding the parent project's compiler/linker settings
-  set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-  FetchContent_MakeAvailable(googletest)
+if(DEFINED ENV{GITHUB_ACTIONS} AND DEFINED ENV{GITHUB_WORKSPACE})
+  set(ARTIFACTS_DIR "$ENV{GITHUB_WORKSPACE}/artifacts")
+  if(CMAKE_SYSTEM_NAME MATCHES "Windows")
+    set(GTest_DIR "${ARTIFACTS_DIR}/googletest/$ENV{googletest_tag}/windows-x64/lib/cmake/GTest")
+  endif()
 endif()
+
+find_package(Threads REQUIRED)
+find_package(GTest REQUIRED)
+
+# find_package(GTest QUIET)
+
+# if(NOT GTest_FOUND)
+#   # https://google.github.io/googletest/quickstart-cmake.html
+#   cmake_policy(SET CMP0135 NEW) 
+#   include(FetchContent)
+#   FetchContent_Declare(
+#     googletest
+#     URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
+#   )
+#   # For Windows: Prevent overriding the parent project's compiler/linker settings
+#   set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+#   FetchContent_MakeAvailable(googletest)
+# endif()
 
 add_executable(${THIS_TARGET}
   endianness.cpp
@@ -38,9 +47,9 @@ target_link_libraries(${THIS_TARGET}
   GTest::gtest_main
   Threads::Threads)
 
-if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows" OR CMAKE_SYSTEM_NAME MATCHES "CYGWIN")
-  target_link_libraries(${THIS_TARGET} winmm)
-endif()
+# if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows" OR CMAKE_SYSTEM_NAME MATCHES "CYGWIN")
+#   target_link_libraries(${THIS_TARGET} winmm)
+# endif()
 
 include(GoogleTest)
 gtest_discover_tests(${THIS_TARGET} WORKING_DIRECTORY ${CMAKE_SOURCE_DIR} DISCOVERY_MODE PRE_TEST)
