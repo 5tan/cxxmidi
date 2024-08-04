@@ -27,7 +27,6 @@ jobs:
         extra_check:
           - ''
         include:
-
           - os: windows-latest
             compiler: msvc
             generator_flag: '-G "Visual Studio 17 2022"'
@@ -63,27 +62,24 @@ jobs:
         if: matrix.os == 'macos-latest'
         run: brew install googletest qt6 ninja
 
-      - name: Install Qt6 (windows, msvc)
-        if: matrix.os == 'windows-latest' && matrix.compiler == 'msvc'
-        uses: jurplel/install-qt-action@v4
-        with:
-          aqtversion: '==3.1.*'
-          version: '6.7.1'
-          host: 'windows'
-          target: 'desktop'
-          arch: 'win64_msvc2019_64'
-          #dir: '${{ github.workspace }}/build/qt6/'
+      # - name: Build Google Test
+      #   if: matrix.os == 'windows-latest'
+      #   run: |
+      #     curl -LO https://github.com/google/googletest/releases/download/v1.15.2/googletest-1.15.2.tar.gz
+      #     tar -xf googletest-1.15.2.tar.gz
+      #     cd googletest-1.15.2
+      #     cmake -Bbuild ${{matrix.generator_flag}} . -DCMAKE_CXX_COMPILER="${{matrix.compiler}}"
+      #     cmake --build build --target install
 
-      - name: Install Qt6 (windows, MinGW)
-        if: matrix.os == 'windows-latest' && matrix.compiler == 'g++'
+      - name: Install Qt6 (windows)
+        if: matrix.os == 'windows-latest'
         uses: jurplel/install-qt-action@v4
         with:
           aqtversion: '==3.1.*'
           version: '6.7.1'
           host: 'windows'
           target: 'desktop'
-          arch: 'win64_mingw'
-          #dir: '${{ github.workspace }}/build/qt6/'
+          arch: ${{ matrix.compiler == 'msvc' && 'win64_msvc2019_64' || matrix.compiler == 'g++' && 'win64_mingw' }}
 
       - name: Install clang (linux)
         if: matrix.os == 'ubuntu-latest' && matrix.compiler == 'clang++'
@@ -106,13 +102,13 @@ jobs:
         run: sudo apt-get install -y iwyu
 
       - name: Configure CMake
-        run: cmake -Bbuild . -DCMAKE_CXX_COMPILER="${{matrix.compiler}}" ${{matrix.extra_check_flag}}
+        run: cmake -Bbuild ${{matrix.generator_flag}} . -DCMAKE_CXX_COMPILER="${{matrix.compiler}}" ${{matrix.extra_check_flag}}
 
       - name: Build
         run: cmake --build build
 
       - name: Test 
-        if: matrix.extra_check == '' # && matrix.os != 'windows-latest'
+        if: matrix.extra_check == '' #&& matrix.os != 'windows-latest'
         run: ctest --test-dir build
 
       # for some reason ctest doesn't work on windows. Execute tests directly:
@@ -121,4 +117,4 @@ jobs:
       #   run: ${{ github.workspace }}\build\tests\Debug\tests.exe
       # - name: Test (windows, MinGW)
       #   if: matrix.os == 'windows-latest' && matrix.compiler == 'g++'
-      #   run: ${{ github.workspace }}\build\tests\tests.exe
+      #   run: D:\a\cxxmidi\cxxmidi\build\tests\tests.exe
