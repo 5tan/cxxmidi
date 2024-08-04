@@ -136,13 +136,15 @@ PlayerBase::PlayerBase(output::Abstract* output)
 void PlayerBase::SetupWindowsTimers() {
 #ifdef WIN32
   static bool once = true;
+#ifdef __GNUC__
+  using namespace std;  // for min/max
+#endif
   if (once) {
     TIMECAPS tc;
     UINT wTimerRes;
 
     if (timeGetDevCaps(&tc, sizeof(TIMECAPS)) == TIMERR_NOERROR) {
-      wTimerRes =
-          min(max(tc.wPeriodMin, 1u /* [ms] */), tc.wPeriodMax);
+      wTimerRes = min(max(tc.wPeriodMin, 1u /* [ms] */), tc.wPeriodMax);
       timeBeginPeriod(wTimerRes);
     }
 
