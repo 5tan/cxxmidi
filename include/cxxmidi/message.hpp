@@ -164,11 +164,13 @@ bool Message::IsSystemCommon() const {
 }
 
 bool Message::ContainsText() const {
-  if (size() > 1)
-    return ((*this)[0] == 0xff) &&
-           (((*this)[1] == kText) || ((*this)[1] == kLyrics) ||
-            ((*this)[1] == kInstrumentName) || ((*this)[1] == kTrackName) ||
-            ((*this)[1] == kCopyright));
+  if (size() > 1) {
+    return (
+            (*this)[0] == 0xff &&
+            (*this)[1] >= kText && 
+            (*this)[1] <= kDeviceName
+           );
+  }
   return false;
 }
 
