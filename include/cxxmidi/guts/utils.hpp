@@ -61,6 +61,18 @@ inline uint32_t GetVlq(std::ifstream &file) {
   return r;
 }
 
+inline uint32_t GetVlq(std::istream &file) {
+  uint32_t r = 0;
+  uint8_t c;
+
+  do {
+    file.read(reinterpret_cast<char *>(&c), 1);
+    r = (r << 7) + (c & 0x7f);
+  } while (c & 0x80);
+
+  return r;
+}
+
 inline size_t SaveVlq(std::ofstream &output_file, unsigned int val) {
   size_t r = 0;
   uint32_t vlq = val & 0x7f;
