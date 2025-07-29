@@ -28,6 +28,8 @@ SOFTWARE.
 #include <thread>  // NOLINT() CPP11_INCLUDES
 
 #include <cxxmidi/guts/player_base.hpp>
+#include <cxxmidi/channel.hpp>
+#include <cxxmidi/note.hpp>
 
 namespace cxxmidi {
 class File;
@@ -38,6 +40,8 @@ class PlayerSync : public guts::PlayerBase {
   inline explicit PlayerSync(output::Abstract* output);
 
   inline void Play();
+
+  inline void Finish();
 
  private:
   inline void PlayerLoop();
@@ -58,11 +62,13 @@ PlayerSync::PlayerSync(output::Abstract* output) : guts::PlayerBase(output) {}
 void PlayerSync::Play() {
   if (!output_ || !file_) return;
 
+  _stopped = false;
+
   PlayerLoop();
 }
 
 void PlayerSync::PlayerLoop() {
-  while (!Finished()) {
+  while (!Finished() && !_stopped) {
     unsigned int track_num = TrackPending();
     unsigned int event_num = player_state_[track_num].track_pointer_;
     uint32_t dt = player_state_[track_num].track_dt_;
@@ -88,7 +94,17 @@ void PlayerSync::PlayerLoop() {
     UpdatePlayerState(track_num, dt);
   }
 
-  if (clbk_fun_finished_) clbk_fun_finished_();
+  
+
+  if (Finished() && clbk_fun_finished_) clbk_fun_finished_();
+}
+
+void PlayerSync::Finish()
+{
+    PlayerBase::Finish();
+
+    //Play();   // Nudge it over the finish line
+    NotesOff();   // Be sure to turn all notes off.
 }
 
 }  // namespace player

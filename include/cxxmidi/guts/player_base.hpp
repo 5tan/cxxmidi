@@ -34,6 +34,10 @@ SOFTWARE.
 #include <functional>
 #include <vector>
 
+#include <cxxmidi/note.hpp>
+#include <cxxmidi/channel.hpp>
+
+
 namespace cxxmidi {
 namespace output {
 class Abstract;
@@ -49,12 +53,18 @@ class PlayerBase {
   // no virtual destructor: non-poymorphic class
 
   inline void GoTo(const std::chrono::microseconds& pos);
+  inline void GoToTick(uint32_t dt);
   inline std::chrono::microseconds CurrentTimePos() const { return played_us_; }
 
   inline void SetFile(const File* file);
   inline void SetOutput(output::Abstract* output);
   inline output::Abstract* output() { return output_; }
 
+  inline void NotesOff();
+  inline void PetitNotesOff();
+  inline void Stop();
+  inline void Rewind();
+  inline void Finish();
   inline bool Finished() const;
 
   inline bool IsPlaying() const { return is_playing_; }
@@ -64,6 +74,7 @@ class PlayerBase {
 
   inline void SetCallbackHeartbeat(const std::function<void()>& callback);
   inline void SetCallbackFinished(const std::function<void()>& callback);
+  inline void SetCallbackEvent(const std::function<bool(Event& event)>& callback);
 
  protected:
   inline bool TrackFinished(size_t track_num) const;
@@ -71,6 +82,7 @@ class PlayerBase {
 
   uint32_t tempo_;  // [us per quarternote]
   bool is_playing_;
+  bool _stopped;
   float speed_;
   const File* file_;
   std::chrono::microseconds played_us_;
@@ -94,6 +106,7 @@ class PlayerBase {
 
   std::function<void()> clbk_fun_heartbeat_;
   std::function<void()> clbk_fun_finished_;
+  std::function<bool(Event& event)> clbk_fun_event_;
 
  private:
   static inline void SetupWindowsTimers();
@@ -164,7 +177,7 @@ void PlayerBase::GoTo(const std::chrono::microseconds& pos) {
   if (!file_ || !output_) return;
 
   tempo_ = 500000;
-  output_->Reset();
+  //output_->Reset();
   InitPlayerState();
   played_us_ = std::chrono::microseconds::zero();
   heartbeat_helper_ = 0;
@@ -186,6 +199,38 @@ void PlayerBase::GoTo(const std::chrono::microseconds& pos) {
   }
 }
 
+void PlayerBase::GoToTick(uint32_t tick)
+{
+  GoTo(std::chrono::microseconds::zero());
+  uint32_t dtTotal = 0;
+
+  while (!Finished()) 
+  {
+    unsigned int track_num = TrackPending();
+    unsigned int event_num = player_state_[track_num].track_pointer_;
+    uint32_t dt = player_state_[track_num].track_dt_;
+
+    Event event = (*file_)[track_num][event_num];
+    Message message = event;
+
+    if ((message[0] == Message::kMeta && message[1] == Message::kTempo) ||
+        (message[0] == Message::kMeta && message[1] == Message::kKeySignature))
+        {
+            ExecEvent(event);
+        }
+
+    UpdatePlayerState(track_num, dt);
+
+    if (track_num == 0) 
+    {
+        dtTotal += event.Dt();
+    }
+
+    if (dtTotal >= tick) break;
+  }
+}
+
+
 PlayerBase::PlayerStateElem::PlayerStateElem(unsigned int track_ptr,
                                              uint32_t track_dt)
     : track_pointer_(track_ptr), track_dt_(track_dt) {}
@@ -198,6 +243,22 @@ void PlayerBase::InitPlayerState() {
   player_state_.clear();
   for (size_t i = 0; i < file_->Tracks(); i++)
     player_state_.push_back(PlayerStateElem(0, (*file_)[i][0].Dt()));
+}
+
+void PlayerBase::Rewind()
+{
+    //output_->Reset();
+    InitPlayerState();
+    played_us_ = std::chrono::microseconds::zero();
+    heartbeat_helper_ = 0;
+    tempo_ = 500000;
+}
+
+void PlayerBase::Finish()
+{
+    for (size_t i = 0; i < file_->Tracks(); i++) {
+        player_state_[i].track_pointer_  = (*file_)[i].size() + 1;
+    }
 }
 
 bool PlayerBase::Finished() const {
@@ -213,6 +274,10 @@ void PlayerBase::SetCallbackHeartbeat(const std::function<void()>& callback) {
 
 void PlayerBase::SetCallbackFinished(const std::function<void()>& callback) {
   clbk_fun_finished_ = callback;
+}
+
+void PlayerBase::SetCallbackEvent(const std::function<bool(Event& event)>& callback) {
+  clbk_fun_event_ = callback;
 }
 
 bool PlayerBase::TrackFinished(size_t track_num) const {
@@ -236,6 +301,48 @@ unsigned int PlayerBase::TrackPending() const {
   return static_cast<unsigned int>(r);
 }
 
+
+void PlayerBase::NotesOff()   // Turn all notes off explicitly, one by one.  Some devices require this.
+{
+    if (!output_) return;
+
+    Event e;
+
+    for (int channel = Channel1; channel <= Channel3; channel++) 
+    {
+        for (int note = Note::kC2; note <= Note::kC7; note++)
+        {
+            e = Event(0, channel | Message::kNoteOn, note, 0); // Note Off message
+            output_->SendMessage(&e);
+        }
+    }
+}
+
+
+void PlayerBase::PetitNotesOff()    // Turn all notes off in vocal range on Channel 2
+{
+    if (!output_) return;
+
+    Event e;
+
+    int channel = Channel2;
+
+    for (int note = Note::kC3; note <= Note::kG6; note++)
+    {
+        e = Event(0, channel | Message::kNoteOn, note, 0); // Note Off message
+        output_->SendMessage(&e);
+    }
+}
+
+
+void PlayerBase::Stop()
+{
+    _stopped = true;
+
+    PetitNotesOff();
+}
+
+
 void PlayerBase::UpdatePlayerState(unsigned int track_num, unsigned int dt) {
   for (size_t i = 0; i < player_state_.size(); i++)
     if (!TrackFinished(i)) {
@@ -251,6 +358,15 @@ void PlayerBase::UpdatePlayerState(unsigned int track_num, unsigned int dt) {
 }
 
 void PlayerBase::ExecEvent(const Event& event) {
+  Event ev(event);
+
+  bool send = true;   // Send events to output by default
+
+  if (clbk_fun_event_)
+  {
+    send = clbk_fun_event_(ev);  // Call the event callback
+  }
+
   if (event.IsMeta()) {
     if (event.IsMeta(Event::kTempo))
       tempo_ = cxxmidi::utils::ExtractTempo(event[2], event[3], event[4]);
@@ -258,7 +374,7 @@ void PlayerBase::ExecEvent(const Event& event) {
     return;  // ignore other META events (?)
   }
 
-  if (output_) output_->SendMessage(&event);
+  if (output_ && send) output_->SendMessage(&ev);
 }
 
 }  // namespace guts

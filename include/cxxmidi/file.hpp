@@ -31,8 +31,8 @@ SOFTWARE.
 #include <vector>
 #include <functional>
 
-//#include <cxxmidi/guts/endianness.hpp>
-//#include <cxxmidi/guts/utils.hpp>
+#include <cxxmidi/guts/endianness.hpp>
+#include <cxxmidi/guts/utils.hpp>
 
 #include <cxxmidi/track.hpp>
 
@@ -80,9 +80,7 @@ class File : public std::vector<Track> {
 
 }  // namespace cxxmidi
 
-#include <cxxmidi/guts/endianness.hpp>
 #include <cxxmidi/guts/simulator.hpp>
-#include <cxxmidi/guts/utils.hpp>
 
 namespace cxxmidi {
 
