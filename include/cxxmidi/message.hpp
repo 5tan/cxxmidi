@@ -83,7 +83,8 @@ class Message : public std::vector<uint8_t> {
     kTempo = 0x51,          // size 3
     kSmpteOffset = 0x54,    // size 5
     kTimeSignature = 0x58,
-    kKeySignature = 0x59
+    kKeySignature = 0x59,
+    kSequencerSpecific = 0x7f  // variable size
   };
 
   Message() = default;
