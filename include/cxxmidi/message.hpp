@@ -66,6 +66,7 @@ class Message : public std::vector<uint8_t> {
 
   enum MetaType {
     kSequenceNumber = 0x00,  // size 2
+    // The following meta events have variable size: len text
     kText = 0x01,
     kCopyright = 0x02,
     kTrackName = 0x03,
@@ -73,6 +74,9 @@ class Message : public std::vector<uint8_t> {
     kLyrics = 0x05,
     kMarker = 0x06,
     kCuePoint = 0x07,
+    kProgramName = 0x08,  // RP-019 Program Name Meta Event
+    kDeviceName = 0x09,   // RP-019 Device Name Meta Event
+    // End len text meta events
     kChannelPrefix = 0x20,  // size 1
     kOutputCable = 0x21,    // size 1
     kEndOfTrack = 0x2f,     // size 0
@@ -160,11 +164,13 @@ bool Message::IsSystemCommon() const {
 }
 
 bool Message::ContainsText() const {
-  if (size() > 1)
-    return ((*this)[0] == 0xff) &&
-           (((*this)[1] == kText) || ((*this)[1] == kLyrics) ||
-            ((*this)[1] == kInstrumentName) || ((*this)[1] == kTrackName) ||
-            ((*this)[1] == kCopyright));
+  if (size() > 1) {
+    return (
+            (*this)[0] == 0xff &&
+            (*this)[1] >= kText && 
+            (*this)[1] <= kDeviceName
+           );
+  }
   return false;
 }
 
@@ -195,6 +201,10 @@ std::string Message::GetName() const {
         return "Marker";
       case kCuePoint:
         return "CuePoint";
+      case kProgramName:
+        return "ProgramName";
+      case kDeviceName:
+        return "DeviceName";
       case kChannelPrefix:
         return "ChannelPrefix";
       case kOutputCable:
