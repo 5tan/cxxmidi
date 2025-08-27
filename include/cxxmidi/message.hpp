@@ -33,58 +33,98 @@ class Message : public std::vector<uint8_t> {
  public:
   enum Type {
     kUndefined = 0x00,
+    Undefined = kUndefined,
 
     // voice
     kNoteOff = 0x80,
+    NoteOff = kNoteOff,
     kNoteOn = 0x90,
+    NoteOn = kNoteOn,
     kNoteAftertouch = 0xa0,
+    NoteAftertouch = kNoteAftertouch,
     kControlChange = 0xb0,
+    ControlChange = kControlChange,
     kProgramChange = 0xc0,      // size 1
+    ProgramChange = kProgramChange,
     kChannelAftertouch = 0xd0,  // size 1
+    ChannelAftertouch = kChannelAftertouch,
     kPitchWheel = 0xe0,
+    PitchWheel = kPitchWheel,
 
     // system common
     kSysExBegin = 0xf0,
+    SysExBegin = kSysExBegin,
     kMtcQuarterFrame = 0xf1,
+    MtcQuarterFrame = kMtcQuarterFrame,
     kSongPositionPointer = 0xf2,
+    SongPositionPointer = kSongPositionPointer,
     kSongSelect = 0xf3,
+    SongSelect = kSongSelect,
     kTuneRequest = 0xf6,
+    TuneRequest = kTuneRequest,
     kSysExEnd = 0xf7,
+    SysExEnd = kSysExEnd,
 
     // realtime
     kClock = 0xf8,
+    Clock = kClock,
     kTick = 0xf9,
+    Tick = kTick,
     kStart = 0xfa,
+    Start = kStart,
     kContinue = 0xfb,
+    Continue = kContinue,
     kStop = 0xfc,
+    Stop = kStop,
     kActiveSense = 0xfe,
+    ActiveSense = kActiveSense,
     kReset = 0xff,
+    Reset = kReset,
 
     // Meta events
-    kMeta = 0xff
+    kMeta = 0xff,
+    Meta = kMeta
   };
 
   enum MetaType {
     kSequenceNumber = 0x00,  // size 2
+    SequenceNumber = kSequenceNumber,
     // The following meta events have variable size: len text
     kText = 0x01,
+    Text = kText,
     kCopyright = 0x02,
+    Copyright = kCopyright,
     kTrackName = 0x03,
+    TrackName = kTrackName,
     kInstrumentName = 0x04,
+    InstrumentName = kInstrumentName,
     kLyrics = 0x05,
+    Lyrics = kLyrics,
     kMarker = 0x06,
+    Marker = kMarker,
     kCuePoint = 0x07,
+    CuePoint = kCuePoint,
     kProgramName = 0x08,  // RP-019 Program Name Meta Event
+    ProgramName = kProgramName,
     kDeviceName = 0x09,   // RP-019 Device Name Meta Event
+    DeviceName = kDeviceName,
     // End variable size text meta events
     kChannelPrefix = 0x20,  // size 1
+    ChannelPrefix = kChannelPrefix,
     kOutputCable = 0x21,    // size 1
+    OutputCable = kOutputCable,
     kEndOfTrack = 0x2f,     // size 0
+    EndOfTrack = kEndOfTrack,
     kTempo = 0x51,          // size 3
+    Tempo = kTempo,
     kSmpteOffset = 0x54,    // size 5
+    SmpteOffset = kSmpteOffset,
     kTimeSignature = 0x58,
+    TimeSignature = kTimeSignature,
     kKeySignature = 0x59,
-    kSequencerSpecific = 0x7f  // variable size
+    KeySignature = kKeySignature,
+    kSequencerSpecific = 0x7f,  // variable size
+    SequencerSpecific = kSequencerSpecific
   };
 
   Message() = default;
