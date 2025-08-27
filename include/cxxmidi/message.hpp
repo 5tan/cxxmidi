@@ -76,14 +76,15 @@ class Message : public std::vector<uint8_t> {
     kCuePoint = 0x07,
     kProgramName = 0x08,  // RP-019 Program Name Meta Event
     kDeviceName = 0x09,   // RP-019 Device Name Meta Event
-    // End len text meta events
+    // End variable size text meta events
     kChannelPrefix = 0x20,  // size 1
     kOutputCable = 0x21,    // size 1
     kEndOfTrack = 0x2f,     // size 0
     kTempo = 0x51,          // size 3
     kSmpteOffset = 0x54,    // size 5
     kTimeSignature = 0x58,
-    kKeySignature = 0x59
+    kKeySignature = 0x59,
+    kSequencerSpecific = 0x7f  // variable size
   };
 
   Message() = default;

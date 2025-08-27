@@ -83,6 +83,14 @@ T ReadBe(std::ifstream &file) {
 }
 
 template <typename T>
+T ReadBe(std::istream &file) {
+  T r;
+  file.read(reinterpret_cast<char *>(&r), sizeof(T));
+  if ((sizeof(T) > 1) && MachineIsLittleEndian()) r = Swap<T>(r);
+  return r;
+}
+
+template <typename T>
 size_t WriteBe(std::ofstream &file, T val) {
   size_t size = sizeof(val);
   if ((sizeof(T) > 1) && MachineIsLittleEndian()) val = Swap<T>(val);

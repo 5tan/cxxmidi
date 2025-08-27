@@ -26,8 +26,13 @@ SOFTWARE.
 #include <chrono>  // NOLINT() CPP11_INCLUDES
 #include <cstdint>
 #include <fstream>
+#include <sstream>
 #include <iostream>
 #include <vector>
+#include <functional>
+
+#include <cxxmidi/guts/endianness.hpp>
+#include <cxxmidi/guts/utils.hpp>
 
 #include <cxxmidi/track.hpp>
 
@@ -39,6 +44,7 @@ class File : public std::vector<Track> {
   inline explicit File(const char *path);
 
   inline void Load(const char *path);
+  inline void Load(std::istream& stream);
   inline void SaveAs(const char *path) const;
 
   inline Track &AddTrack();
@@ -49,13 +55,15 @@ class File : public std::vector<Track> {
 
   inline std::chrono::microseconds Duration() const;
 
+  inline void SetCallbackLoad(const std::function<bool(Event& event)>& callback);
+
  private:
   uint16_t time_division_;  // [ticks per quarternote]
 
-  inline void ReadHeaderChunk(std::ifstream &file);
-  inline void ReadUnknownChunk(std::ifstream &file);
-  inline void ReadTrackChunk(std::ifstream &file);
-  inline void ReadEvent(std::ifstream &file, Event *event, bool *track_continue,
+  inline void ReadHeaderChunk(std::istream &file);
+  inline void ReadUnknownChunk(std::istream &file);
+  inline void ReadTrackChunk(std::istream &file);
+  inline void ReadEvent(std::istream &file, Event *event, bool *track_continue,
                         uint8_t *running_status);
 
   inline void SaveHeaderChunk(std::ofstream &output_file) const;
@@ -66,13 +74,13 @@ class File : public std::vector<Track> {
 
   inline static uint32_t Write(std::ofstream &file, const uint8_t *c,
                                std::streamsize size = 1);
+
+  std::function<bool(Event& event)> callback_func_load_;
 };
 
 }  // namespace cxxmidi
 
-#include <cxxmidi/guts/endianness.hpp>
 #include <cxxmidi/guts/simulator.hpp>
-#include <cxxmidi/guts/utils.hpp>
 
 namespace cxxmidi {
 
@@ -117,8 +125,14 @@ void File::SaveTrackChunk(std::ofstream &output_file,
   uint32_t chunk_size = 0;  // chunk size
   uint8_t last_cmd = 0;
 
-  for (const auto &event : track)
+  for (const auto &event : track) {
+      const Message &message = event;
+      if (message.size() > 0) {
     chunk_size += SaveEvent(output_file, event, &last_cmd);
+      } else {
+          // What do we do with a zero-sized message?  Ignore?  Throw an exception?
+      }
+  }
 
   // go back to chunk size
   output_file.seekp(size_pos);
@@ -211,27 +225,37 @@ void File::Load(const char *path) {
     return;
   }
 
+  std::stringstream stream;
+  stream << file.rdbuf();
+
+  Load(stream);
+}
+
+void File::Load(std::istream& stream)
+{
+  clear();
+
   // calculate file length
-  file.seekg(0, std::ifstream::end);
-  auto fileLength = file.tellg();
-  file.seekg(0, std::ifstream::beg);
+  stream.seekg(0, std::istream::end);
+  auto fileLength = stream.tellg();
+  stream.seekg(0, std::istream::beg);
 
   // control counters
   unsigned int i = 0;
   unsigned int headers = 0;
 
   // loop over chunks while data still in buffer
-  while (file.good() && (fileLength - file.tellg())) {
-    uint32_t chunk_id = guts::endianness::ReadBe<uint32_t>(file);
+  while (stream.good() && (fileLength - stream.tellg())) {
+    uint32_t chunk_id = guts::endianness::ReadBe<uint32_t>(stream);
 
     switch (chunk_id) {
       case 0x4D546864:  // "MThd"
-        ReadHeaderChunk(file);
+        ReadHeaderChunk(stream);
         headers++;
         break;
 
       case 0x4D54726B:  // "MTrk"
-        ReadTrackChunk(file);
+        ReadTrackChunk(stream);
         break;
 
       default:
@@ -239,7 +263,7 @@ void File::Load(const char *path) {
         std::cerr << "CxxMidi: ignoring unknown chunk: 0x" << std::hex
                   << static_cast<int>(chunk_id) << std::endl;
 #endif
-        ReadUnknownChunk(file);
+        ReadUnknownChunk(stream);
         break;
     }
 
@@ -254,7 +278,7 @@ void File::Load(const char *path) {
   }
 }
 
-void File::ReadHeaderChunk(std::ifstream &file) {
+void File::ReadHeaderChunk(std::istream &file) {
   // read and check header size
   if (guts::endianness::ReadBe<uint32_t>(file) != 6) {
 #ifndef CXXMIDI_QUIET
@@ -291,7 +315,7 @@ void File::ReadHeaderChunk(std::ifstream &file) {
 #endif
 }
 
-void File::ReadUnknownChunk(std::ifstream &file) {
+void File::ReadUnknownChunk(std::istream &file) {
   // get chunk size
   uint32_t chunk_size = guts::endianness::ReadBe<uint32_t>(file);
 
@@ -299,9 +323,11 @@ void File::ReadUnknownChunk(std::ifstream &file) {
   file.seekg(chunk_size, std::ifstream::cur);
 }
 
-void File::ReadTrackChunk(std::ifstream &file) {
+void File::ReadTrackChunk(std::istream &file) {
   // push back new track
   Track &track = AddTrack();
+
+  uint32_t dtAdd = 0;
 
   // read track chunk size
   uint32_t chunk_size = guts::endianness::ReadBe<uint32_t>(file);
@@ -313,13 +339,31 @@ void File::ReadTrackChunk(std::ifstream &file) {
 
   // read track data
   while (track_continue) {
+    int initialTrackSize = track.size();
+
     Event &event = track.AddEvent();
 
     uint32_t dt = utils::GetVlq(file);  // get delta time
-    event.SetDt(dt);                    // save event delta time
+    event.SetDt(dt + dtAdd);            // save event delta time
+    dtAdd = 0;                          // Reset dtAdd
 
     // read event data
     ReadEvent(file, &event, &track_continue, &running_status);
+
+
+    // Call Load callback, sending the newly read Event.  
+    bool load = true;   // Load events to track by default
+
+    if (callback_func_load_)
+    {
+      load = callback_func_load_(event);  // Call the event callback
+    }
+
+    if (!load) {
+        // Save the DT of track.back() and add it to the DT of the next event.
+        dtAdd = track.back().Dt();
+        track.pop_back();   // if directed not to load, remove the newly added event
+    }
   }
 
 #ifndef CXXMIDI_QUIET
@@ -329,7 +373,7 @@ void File::ReadTrackChunk(std::ifstream &file) {
 #endif
 }
 
-void File::ReadEvent(std::ifstream &file, Event *event, bool *track_continue,
+void File::ReadEvent(std::istream &file, Event *event, bool *track_continue,
                      uint8_t *running_status) {
   uint8_t cmd = guts::endianness::ReadBe<uint8_t>(file);
 
@@ -433,10 +477,10 @@ void File::ReadEvent(std::ifstream &file, Event *event, bool *track_continue,
                 event->push_back(guts::endianness::ReadBe<uint8_t>(file));
             } break;
             default: {
-#ifndef CXXMIDI_QUIET
-              std::cerr << "CxxMidi: unknown meta event 0x" << std::hex
-                        << meta_event_type << std::endl;
-#endif
+              // Ignore non-standard Meta events - just pass them through
+              uint8_t strLength = guts::endianness::ReadBe<uint8_t>(file);
+              for (int i = 0; i < strLength; i++)
+                event->push_back(guts::endianness::ReadBe<uint8_t>(file));
             } break;
           }  // switch meta_event_type
           break;
@@ -457,6 +501,11 @@ void File::ReadEvent(std::ifstream &file, Event *event, bool *track_continue,
 #endif
       break;
   }
+}
+
+
+void File::SetCallbackLoad(const std::function<bool(Event& event)>& callback) {
+  callback_func_load_ = callback;
 }
 
 }  // namespace cxxmidi
