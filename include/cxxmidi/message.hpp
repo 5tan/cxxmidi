@@ -86,6 +86,85 @@ class Message : public std::vector<uint8_t> {
     Meta = kMeta
   };
 
+  enum ControlType {
+    BankSelect = 0x00,
+    ModulationWheelOrLever = 0x01,
+    BreathController = 0x02,
+    FootController = 0x04,
+    PortamentoTime = 0x05,
+    DataEntryMsb = 0x06,
+    ChannelVolume = 0x07,
+    Balance = 0x08,
+    Pan = 0x0A,
+    ExpressionController = 0x0B,
+    EffectControl1 = 0x0C,
+    EffectControl2 = 0x0D,
+    GeneralPurposeController1 = 0x10,
+    GeneralPurposeController2 = 0x11,
+    GeneralPurposeController3 = 0x12,
+    GeneralPurposeController4 = 0x13,
+    // LSB 
+    BankSelectLsb = 0x20,
+    ModulationWheelOrLeverLsb = 0x21,
+    BreathControllerLsb = 0x22,
+    FootControllerLsb = 0x24,
+    PortamentoTimeLsb = 0x25,
+    DataEntryLsb = 0x26,
+    ChannelVolumeLsb = 0x27,
+    BalanceLsb = 0x28,
+    PanLsb = 0x2A,
+    ExpressionControllerLsb = 0x2B,
+    EffectControl1Lsb = 0x2C,
+    EffectControl2Lsb = 0x2D,
+    GeneralPurposeController1Lsb = 0x30,
+    GeneralPurposeController2Lsb = 0x31,
+    GeneralPurposeController3Lsb = 0x32,
+    GeneralPurposeController4Lsb = 0x33,
+    // Switches <= 63 Off, >= 64 On
+    DamperPedal = 0x40,
+    PortamentoOnOff = 0x41,
+    SostenutoOnOff = 0x42,
+    SoftPedalOnOff = 0x43,
+    LegatoFootswitch = 0x44,
+    Hold2 = 0x45,
+    // Others
+    SoundController1 = 0x46,  // Default: Sound Variation
+    SoundController2 = 0x47,  // Default: Timbre/Harmonic Intensity
+    SoundController3 = 0x48,  // Default: Release Time
+    SoundController4 = 0x49,  // Default: Attack Time
+    SoundController5 = 0x4A,  // Default: Brightness
+    SoundController6 = 0x4B,  // Default: Decay Time - see MMA RP-021
+    SoundController7 = 0x4C,  // Default: Vibrato Rate - see MMA RP-021
+    SoundController8 = 0x4D,  // Default: Vibrato Depth - see MMA RP-021
+    SoundController9 = 0x4E,  // Default: Vibrato Delay - see MMA RP-021
+    SoundController10 = 0x4F, // Default: Undefined - see MMA RP-021
+    GeneralPurposeController5 = 0x50,
+    GeneralPurposeController6 = 0x51,
+    GeneralPurposeController7 = 0x52,
+    GeneralPurposeController8 = 0x53,
+    PortamentoControl = 0x54,
+    HighResolutionVelocityPrefix = 0x58,
+    Effects1Depth = 0x5B,
+    Effects2Depth = 0x5C,
+    Effects3Depth = 0x5D,
+    Effects4Depth = 0x5E,
+    Effects5Depth = 0x5F,
+    DataIncrement = 0x60,
+    DataDecrement = 0x61,
+    NonRegisteredParameterNumberLsb = 0x62,
+    NonRegisteredParameterNumberMsb = 0x63,
+    RegisteredParameterNumberLsb = 0x64,
+    RegisteredParameterNumberMsb = 0x65,
+    AllSoundOff = 0x78,
+    ResetAllControllers = 0x79,
+    LocalControlOnOff = 0x7A,
+    AllNotesOff = 0x7B,
+    OmniModeOff = 0x7C,
+    OmniModeOn = 0x7D,
+    MonoModeOn = 0x7E,
+    PolyModeOn = 0x7F
+  };
+
   enum MetaType {
     kSequenceNumber = 0x00,  // size 2
     SequenceNumber = kSequenceNumber,
@@ -138,6 +217,8 @@ class Message : public std::vector<uint8_t> {
   inline bool IsSystemCommon() const;
   inline bool IsSysex() const;
   inline bool IsRealtime() const;
+  inline bool IsControlChange() const;
+  inline bool IsControlChange(ControlType control) const;
   inline bool IsMeta() const;
   inline bool IsMeta(MetaType meta_type) const;
   inline bool ContainsText() const;
@@ -168,6 +249,14 @@ Message::Message(uint8_t b1, uint8_t b2, uint8_t b3) {
 Message::Type Message::GetType() const {
   if (!empty()) return static_cast<Type>((*this)[0]);
   return kUndefined;
+}
+
+bool Message::IsControlChange() const {
+  return IsVoiceCategory(ControlChange);
+}
+
+bool Message::IsControlChange(ControlType controllerType) const {
+  return IsControlChange() && ((*this)[1] == controllerType);
 }
 
 bool Message::IsMeta() const {
