@@ -2,8 +2,8 @@
 
 C++ MIDI library.
 
-[![ci](https://github.com/5tan/cxxmidi/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/5tan/cxxmidi/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/5tan/cxxmidi/branch/master/graph/badge.svg)](https://codecov.io/gh/5tan/cxxmidi)
+[![ci](https://github.com/5tan/cxxmidi/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/5tan/cxxmidi/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/5tan/cxxmidi/branch/main/graph/badge.svg)](https://codecov.io/gh/5tan/cxxmidi)
 
 ## Key features
 * MIDI files read/write
