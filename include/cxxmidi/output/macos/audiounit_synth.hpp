@@ -34,10 +34,11 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <CoreFoundation/CoreFoundation.h>
 
 #include <cstdint>
-#include <cxxmidi/output/abstract.hpp>
 #include <iostream>
 #include <string>
 #include <vector>
+
+#include <cxxmidi/output/abstract.hpp>
 
 namespace cxxmidi {
 namespace output {

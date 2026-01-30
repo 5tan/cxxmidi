@@ -1,5 +1,5 @@
 /* *****************************************************************************
-Copyright (c) 2018 5tan 
+Copyright (c) 2018 5tan
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -21,6 +21,7 @@ SOFTWARE.
 ***************************************************************************** */
 
 #include <gtest/gtest.h>
+#include <string>
 
 #include <cxxmidi/file.hpp>
 #include <cxxmidi/note.hpp>
@@ -37,7 +38,7 @@ class FileTestFixture : public ::testing::Test {
 
     // create 3 tracks
     for (int t = 0; t < 3; t++) {
-      cxxmidi::Track &track = file.AddTrack();
+      cxxmidi::Track& track = file.AddTrack();
 
       for (int i = 0; i < 10; i++) {
         track.push_back(
@@ -59,7 +60,7 @@ class FileTestFixture : public ::testing::Test {
     return file;
   }
 
-  bool CompareFiles(const std::string &p1, const std::string &p2) {
+  bool CompareFiles(const std::string& p1, const std::string& p2) {
     std::ifstream f1(p1, std::ifstream::binary | std::ifstream::ate);
     std::ifstream f2(p2, std::ifstream::binary | std::ifstream::ate);
 
@@ -88,7 +89,7 @@ TEST_F(FileTestFixture, ReadWrite) {
       "music/c_major_scale.mid", "music/fantaisie.mid",
       "music/mahavishnu.mid",    "music/MIDI_sample.mid"};
   cxxmidi::File file;
-  for (auto const &f : test_files) {
+  for (auto const& f : test_files) {
     file.Load(f.c_str());
     file.SaveAs("/tmp/test.mid");
 

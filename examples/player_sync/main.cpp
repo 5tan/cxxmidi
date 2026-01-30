@@ -20,6 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***************************************************************************** */
 
+#include <iostream>
+
 #include <cxxmidi/file.hpp>
 #include <cxxmidi/output/default.hpp>
 #include <cxxmidi/player/player_sync.hpp>

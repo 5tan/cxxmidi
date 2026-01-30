@@ -34,11 +34,12 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <CoreMIDI/CoreMIDI.h>
 
 #include <cstdint>
-#include <cxxmidi/output/abstract.hpp>
 #include <iostream>
 #include <sstream>
 #include <string>
 #include <vector>
+
+#include <cxxmidi/output/abstract.hpp>
 
 namespace cxxmidi {
 namespace output {
@@ -272,9 +273,8 @@ void CoreMidi::SendMessage(const std::vector<uint8_t>* msg) {
       std::cerr << "CxxMidi: error sending MIDI message" << std::endl;
 #endif
     }
-  }
-  // Or send to virtual endpoint
-  else if (_apiData->endpoint) {
+  } else if (_apiData->endpoint) {
+    // Or send to virtual endpoint
     result = MIDIReceived(_apiData->endpoint, &packet_list);
     if (result != noErr) {
 #ifndef CXXMIDI_QUIET
@@ -282,12 +282,11 @@ void CoreMidi::SendMessage(const std::vector<uint8_t>* msg) {
                 << std::endl;
 #endif
     }
-  }
+  } else {
 #ifndef CXXMIDI_QUIET
-  else {
     std::cerr << "CxxMidi: no valid output connection" << std::endl;
-  }
 #endif
+  }
 }
 
 }  // namespace macos

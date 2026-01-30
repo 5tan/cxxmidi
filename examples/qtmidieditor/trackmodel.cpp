@@ -1,5 +1,5 @@
 /* *****************************************************************************
-Copyright (c) 2018 5tan 
+Copyright (c) 2018 5tan
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,13 +20,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***************************************************************************** */
 
+#include "trackmodel.h"  // NOLINT(build/include_subdir) INCLUDE_NO_DIR
+
 #include <QStringList>
+
+#include <iostream>
 
 #include <cxxmidi/guts/utils.hpp>
 #include <cxxmidi/instrument.hpp>
 #include <cxxmidi/note.hpp>
-
-#include "trackmodel.h"  // NOLINT(build/include_subdir) INCLUDE_NO_DIR
 
 const char* TrackModel::columnNames[] = {"Dt [ticks]", "Data", "Type",
                                          "Description"};
@@ -179,9 +181,9 @@ QVariant TrackModel::data(const QModelIndex& index, int role) const {
           }
           case cxxmidi::Event::kPitchWheel: {
             uint16_t combined;  // 14 bit
-            combined = (uint16_t)event->at(2);
+            combined = Use static_cast<uint16_t>(event->at(2));
             combined <<= 7;
-            combined |= (uint16_t)event->at(1);
+            combined |= Use static_cast<uint16_t>(event->at(1));
 
             r += QString("Val=%1 ").arg(combined);
 
