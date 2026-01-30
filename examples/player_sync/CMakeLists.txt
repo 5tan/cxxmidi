@@ -3,7 +3,10 @@ find_package(Threads REQUIRED)
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
   find_package(ALSA REQUIRED)
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
-  # todo
+  find_library(COREMIDI_LIBRARY CoreMIDI REQUIRED)
+  find_library(COREAUDIO_LIBRARY CoreAudio REQUIRED)
+  find_library(COREFOUNDATION_LIBRARY CoreFoundation REQUIRED)
+  find_library(AUDIOTOOLBOX_LIBRARY AudioToolbox REQUIRED)
 endif()
 
 add_executable(player_sync main.cpp)
@@ -25,5 +28,9 @@ target_link_libraries(player_sync
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
   target_link_libraries(player_sync ${ALSA_LIBRARIES})
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
-  # todo
+  target_link_libraries(player_sync
+    ${COREMIDI_LIBRARY}
+    ${COREAUDIO_LIBRARY}
+    ${COREFOUNDATION_LIBRARY}
+    ${AUDIOTOOLBOX_LIBRARY})
 endif()

@@ -12,7 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - run: sudo apt-get install -y cpplint
+    - run: |
+        sudo apt-get update
+        sudo apt-get install -y cpplint
     - run: cpplint --recursive .
   build_and_test:
     strategy:
@@ -49,32 +51,42 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install dependencies (linux)
-        if: matrix.os == 'ubuntu-latest' 
-        run: sudo apt-get -y install libgl1-mesa-dev qt6-base-dev libgtest-dev libasound2-dev
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install libgl1-mesa-dev qt6-base-dev libgtest-dev libasound2-dev
 
       - name: Install dependencies (macos)
         if: matrix.os == 'macos-latest'
         run: brew install googletest qt6
 
       - name: Install clang (linux)
-        if: matrix.os == 'ubuntu-latest' 
-        run: sudo apt-get -y install clang
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install clang
 
       - name: Install clang (macos)
         if: matrix.os == 'macos-latest' && matrix.compiler == 'clang++' 
         run: brew install llvm
 
       - name: Install clazy
-        if: matrix.compiler == 'clazy' 
-        run:  sudo apt-get -y install clazy
+        if: matrix.compiler == 'clazy'
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install clazy
 
       - name: Install clang-tidy
         if: matrix.extra_check == 'cland-tidy'
-        run: sudo apt-get install -y clang-tidy
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-tidy
 
       - name: Install IWYU
         if: matrix.extra_check == 'iwyu'
-        run: sudo apt-get install -y iwyu
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y iwyu
 
       - name: Build
         run: (mkdir build && cd build && cmake .. -DCMAKE_CXX_COMPILER="${{ matrix.compiler }}" ${{matrix.extra_check_flag}} && make)
