@@ -27,7 +27,7 @@ target_link_libraries(callbacks
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
   target_link_libraries(callbacks ${ALSA_LIBRARIES})
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
-  target_link_libraries(callbacks 
+  target_link_libraries(callbacks
     ${COREMIDI_LIBRARY}
     ${COREAUDIO_LIBRARY}
     ${COREFOUNDATION_LIBRARY}

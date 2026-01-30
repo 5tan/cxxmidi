@@ -38,7 +38,7 @@ target_link_libraries(qtmidieditor
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
   target_link_libraries(qtmidieditor ${ALSA_LIBRARIES})
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
-  target_link_libraries(qtmidieditor 
+  target_link_libraries(qtmidieditor
     ${COREMIDI_LIBRARY}
     ${COREAUDIO_LIBRARY}
     ${COREFOUNDATION_LIBRARY}

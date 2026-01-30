@@ -27,7 +27,7 @@ target_link_libraries(sequencing
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
   target_link_libraries(sequencing ${ALSA_LIBRARIES})
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
-  target_link_libraries(sequencing 
+  target_link_libraries(sequencing
     ${COREMIDI_LIBRARY}
     ${COREAUDIO_LIBRARY}
     ${COREFOUNDATION_LIBRARY}

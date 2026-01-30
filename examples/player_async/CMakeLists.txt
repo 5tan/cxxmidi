@@ -28,7 +28,7 @@ target_link_libraries(player_async
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
   target_link_libraries(player_async ${ALSA_LIBRARIES})
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
-  target_link_libraries(player_async 
+  target_link_libraries(player_async
     ${COREMIDI_LIBRARY}
     ${COREAUDIO_LIBRARY}
     ${COREFOUNDATION_LIBRARY}
