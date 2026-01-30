@@ -181,9 +181,9 @@ QVariant TrackModel::data(const QModelIndex& index, int role) const {
           }
           case cxxmidi::Event::kPitchWheel: {
             uint16_t combined;  // 14 bit
-            combined = Use static_cast<uint16_t>(event->at(2));
+            combined = static_cast<uint16_t>(event->at(2));
             combined <<= 7;
-            combined |= Use static_cast<uint16_t>(event->at(1));
+            combined |= static_cast<uint16_t>(event->at(1));
 
             r += QString("Val=%1 ").arg(combined);
 
