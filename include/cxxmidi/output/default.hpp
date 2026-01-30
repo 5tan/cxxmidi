@@ -1,5 +1,5 @@
 /* *****************************************************************************
-Copyright (c) 2018 5tan 
+Copyright (c) 2018 5tan
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -31,10 +31,10 @@ typedef output::windows Default;
 }  // namespace output
 }  // namespace cxxmidi
 #elif __APPLE__  // Mac OS X
-#include <cxxmidi/output/null.hpp>
+#include <cxxmidi/output/macos/audiounit_synth.hpp>
 namespace cxxmidi {
 namespace output {
-typedef output::Null Default;
+typedef output::macos::AudioUnitSynth Default;
 }  // namespace output
 }  // namespace cxxmidi
 #elif __unix  // Linux, *BSD, Mac OS X

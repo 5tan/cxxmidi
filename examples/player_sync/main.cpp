@@ -1,5 +1,5 @@
 /* *****************************************************************************
-Copyright (c) 2018 5tan 
+Copyright (c) 2018 5tan
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,12 @@ SOFTWARE.
 #include <cxxmidi/player/player_sync.hpp>
 
 int main(int, char**) {
-  cxxmidi::output::Default output(1);
+  cxxmidi::output::Default output;
+  for (size_t i = 0; i < output.GetPortCount(); ++i) {
+    std::cout << "Port " << i << ": " << output.GetPortName(i) << std::endl;
+  }
+  output.OpenPort(0);
+
   cxxmidi::player::PlayerSync player(&output);
 
   cxxmidi::File file("music/chopin.mid");

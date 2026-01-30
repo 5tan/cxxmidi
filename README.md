@@ -9,8 +9,13 @@ C++ MIDI library.
 * MIDI files read/write
 * MIDI files parsing, editing, sequencing (composition)
 * MIDI outputs
-  * ALSA on Linux
-  * WinMM on Windows
+  * Linux
+    * Alsa
+  * Windows
+    * WinMM
+  * macOS
+    * CoreMidi
+    * AU Synth
 * Multiplatform MIDI players
   * synchronous
   * asynchronous

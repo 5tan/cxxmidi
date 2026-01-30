@@ -6,7 +6,10 @@ find_package(Qt6 COMPONENTS Gui Widgets REQUIRED)
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
   find_package(ALSA REQUIRED)
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
-  # todo
+  find_library(COREMIDI_LIBRARY CoreMIDI REQUIRED)
+  find_library(COREAUDIO_LIBRARY CoreAudio REQUIRED)
+  find_library(COREFOUNDATION_LIBRARY CoreFoundation REQUIRED)
+  find_library(AUDIOTOOLBOX_LIBRARY AudioToolbox REQUIRED)
 endif()
 
 add_executable(qtmidieditor
@@ -35,5 +38,9 @@ target_link_libraries(qtmidieditor
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
   target_link_libraries(qtmidieditor ${ALSA_LIBRARIES})
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
-  # todo
+  target_link_libraries(qtmidieditor 
+    ${COREMIDI_LIBRARY}
+    ${COREAUDIO_LIBRARY}
+    ${COREFOUNDATION_LIBRARY}
+    ${AUDIOTOOLBOX_LIBRARY})
 endif()
