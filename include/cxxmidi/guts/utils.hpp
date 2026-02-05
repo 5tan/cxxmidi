@@ -1,5 +1,5 @@
 /* *****************************************************************************
-Copyright (c) 2018 5tan 
+Copyright (c) 2018 5tan
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,44 +24,30 @@ SOFTWARE.
 #define INCLUDE_CXXMIDI_GUTS_UTILS_HPP_
 
 #include <cstdint>
-#include <cxxmidi/guts/endianness.hpp>
+#include <fstream>
 
 namespace cxxmidi {
 namespace utils {
 
 inline uint32_t ExtractTempo(uint8_t v0, uint8_t v1, uint8_t v2) {
-  union {
-    uint32_t one_tempo;
-    uint8_t tab_tempo[3];
-  };
-  one_tempo = 0;
-
-  if (guts::endianness::MachineIsLittleEndian()) {
-    tab_tempo[0] = v2;
-    tab_tempo[1] = v1;
-    tab_tempo[2] = v0;
-  } else {
-    tab_tempo[0] = v0;
-    tab_tempo[1] = v1;
-    tab_tempo[2] = v2;
-  }
-
-  return one_tempo;
+  // Combine three bytes into a 24-bit big-endian value
+  return (static_cast<uint32_t>(v0) << 16) | (static_cast<uint32_t>(v1) << 8) |
+         static_cast<uint32_t>(v2);
 }
 
-inline uint32_t GetVlq(std::ifstream &file) {
+inline uint32_t GetVlq(std::ifstream& file) {
   uint32_t r = 0;
   uint8_t c;
 
   do {
-    file.read(reinterpret_cast<char *>(&c), 1);
+    file.read(reinterpret_cast<char*>(&c), 1);
     r = (r << 7) + (c & 0x7f);
   } while (c & 0x80);
 
   return r;
 }
 
-inline size_t SaveVlq(std::ofstream &output_file, unsigned int val) {
+inline size_t SaveVlq(std::ofstream& output_file, unsigned int val) {
   size_t r = 0;
   uint32_t vlq = val & 0x7f;
 
@@ -75,7 +61,7 @@ inline size_t SaveVlq(std::ofstream &output_file, unsigned int val) {
   // save variable-length quantity
   while (true) {
     r++;
-    output_file.write(reinterpret_cast<char *>(&vlq), 1);
+    output_file.write(reinterpret_cast<char*>(&vlq), 1);
     if (vlq & 0x80)
       vlq >>= 8;
     else

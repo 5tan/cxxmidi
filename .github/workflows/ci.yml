@@ -89,7 +89,11 @@ jobs:
           sudo apt-get install -y iwyu
 
       - name: Build
-        run: (mkdir build && cd build && cmake .. -DCMAKE_CXX_COMPILER="${{ matrix.compiler }}" ${{matrix.extra_check_flag}} && make)
+        run: |
+          mkdir build
+          cd build
+          cmake .. -DCMAKE_CXX_COMPILER="${{ matrix.compiler }}" ${{matrix.extra_check_flag}}
+          make
 
       - name: Test 
         if: matrix.extra_check == ''

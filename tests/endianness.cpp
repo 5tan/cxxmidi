@@ -1,5 +1,5 @@
 /* *****************************************************************************
-Copyright (c) 2018 5tan 
+Copyright (c) 2018 5tan
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,16 +24,11 @@ SOFTWARE.
 
 #include <cxxmidi/guts/endianness.hpp>
 
-TEST(Endianness, Swap) {
-  std::ifstream ifs("music/chopin.mid");
-  uint32_t data;
-  ifs.read(reinterpret_cast<char *>(&data), 4);
+TEST(Endianness, ReadBe) {
+  std::ifstream ifs("music/chopin.mid", std::ios::binary);
+  ASSERT_TRUE(ifs.is_open());
 
-  if (cxxmidi::guts::endianness::MachineIsLittleEndian()) {
-    ASSERT_EQ(data, 0x6468544d);  // "dhTM" (fix needed)
-    ASSERT_EQ(cxxmidi::guts::endianness::Swap(data), 0x4d546864);  // "MThd"
-  } else {
-    ASSERT_EQ(data, 0x4d546864);  // "MThd" (no fix needed)
-    ASSERT_EQ(cxxmidi::guts::endianness::Swap(data), 0x6468544d);  // "dhTM"
-  }
+  // MIDI files are big-endian and start with "MThd" (0x4d546864)
+  uint32_t header = cxxmidi::guts::endianness::ReadBe<uint32_t>(ifs);
+  ASSERT_EQ(header, 0x4d546864);  // "MThd"
 }

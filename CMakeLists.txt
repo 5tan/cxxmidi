@@ -7,6 +7,8 @@ include(CTest)
 add_library(CxxMidi INTERFACE)
 add_library(CxxMidi::CxxMidi ALIAS CxxMidi)
 
+target_compile_features(CxxMidi INTERFACE cxx_std_17)
+
 target_include_directories(CxxMidi
   INTERFACE
     $<INSTALL_INTERFACE:include>
