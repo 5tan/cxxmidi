@@ -37,8 +37,9 @@ int main(int, char**) {
 
   cxxmidi::File file("music/chopin.mid");
   player.SetFile(&file);
+  player.SetCallbackHeartbeat([]() { std::cout << "beep!" << std::endl; });
 
   player.Play();
-  std::this_thread::sleep_for(std::chrono::seconds(3));
+  std::this_thread::sleep_for(std::chrono::seconds(10));
   player.Pause();
 }
