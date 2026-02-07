@@ -20,14 +20,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***************************************************************************** */
 
-#ifndef INCLUDE_CXXMIDI_GUTS_ENDIANNESS_HPP_
-#define INCLUDE_CXXMIDI_GUTS_ENDIANNESS_HPP_
+#ifndef INCLUDE_CXXMIDI_INTERNAL_ENDIANNESS_HPP_
+#define INCLUDE_CXXMIDI_INTERNAL_ENDIANNESS_HPP_
 
 #include <cstdint>
 #include <fstream>
 
 namespace cxxmidi {
-namespace guts {
+namespace internal {
 namespace endianness {
 
 #ifdef CXXMIDI_LIL_ENDIAN
@@ -98,7 +98,7 @@ size_t WriteBe(std::ofstream& file, T val) {
 }
 
 }  // namespace endianness
-}  // namespace guts
+}  // namespace internal
 }  // namespace cxxmidi
 
-#endif  // INCLUDE_CXXMIDI_GUTS_ENDIANNESS_HPP_
+#endif  // INCLUDE_CXXMIDI_INTERNAL_ENDIANNESS_HPP_

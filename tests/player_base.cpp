@@ -1,5 +1,5 @@
 /* *****************************************************************************
-Copyright (c) 2018 5tan 
+Copyright (c) 2018 5tan
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,16 +22,16 @@ SOFTWARE.
 
 #include <gtest/gtest.h>
 
-#include <cxxmidi/guts/player_base.hpp>
+#include <cxxmidi/internal/player_base.hpp>
 
 TEST(PlayerBase, InitialState) {
-  cxxmidi::guts::PlayerBase player_base;
+  cxxmidi::internal::PlayerBase player_base;
   ASSERT_EQ(player_base.CurrentTimePos(), std::chrono::microseconds(0));
   ASSERT_EQ(player_base.GetSpeed(), 1.0);
 }
 
 TEST(PlayerBase, SetGetSpeed) {
-  cxxmidi::guts::PlayerBase player_base;
+  cxxmidi::internal::PlayerBase player_base;
   player_base.SetSpeed(2.0);
   ASSERT_EQ(player_base.GetSpeed(), 2.0);
 }

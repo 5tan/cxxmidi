@@ -20,26 +20,26 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***************************************************************************** */
 
-#ifndef INCLUDE_CXXMIDI_GUTS_SIMULATOR_HPP_
-#define INCLUDE_CXXMIDI_GUTS_SIMULATOR_HPP_
+#ifndef INCLUDE_CXXMIDI_INTERNAL_SIMULATOR_HPP_
+#define INCLUDE_CXXMIDI_INTERNAL_SIMULATOR_HPP_
 
-#include <cxxmidi/guts/player_base.hpp>
+#include <cxxmidi/internal/player_base.hpp>
 
 namespace cxxmidi {
-namespace guts {
+namespace internal {
 
 class Simulator : protected PlayerBase {
  public:
   inline std::chrono::microseconds Duration(const File& file);
 };
 
-}  // namespace guts
+}  // namespace internal
 }  // namespace cxxmidi
 
 #include <cxxmidi/converters.hpp>
 
 namespace cxxmidi {
-namespace guts {
+namespace internal {
 
 std::chrono::microseconds Simulator::Duration(const File& file) {
   auto r = std::chrono::microseconds::zero();
@@ -60,7 +60,7 @@ std::chrono::microseconds Simulator::Duration(const File& file) {
   return r;
 }
 
-}  // namespace guts
+}  // namespace internal
 }  // namespace cxxmidi
 
-#endif  // INCLUDE_CXXMIDI_GUTS_SIMULATOR_HPP_
+#endif  // INCLUDE_CXXMIDI_INTERNAL_SIMULATOR_HPP_

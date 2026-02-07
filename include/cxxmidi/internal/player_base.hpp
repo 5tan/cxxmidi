@@ -20,8 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***************************************************************************** */
 
-#ifndef INCLUDE_CXXMIDI_GUTS_PLAYER_BASE_HPP_
-#define INCLUDE_CXXMIDI_GUTS_PLAYER_BASE_HPP_
+#ifndef INCLUDE_CXXMIDI_INTERNAL_PLAYER_BASE_HPP_
+#define INCLUDE_CXXMIDI_INTERNAL_PLAYER_BASE_HPP_
 
 #ifdef WIN32
 #include <Windows.h>
@@ -40,7 +40,7 @@ class Abstract;
 }  // namespace output
 class File;
 class Event;
-namespace guts {
+namespace internal {
 
 class PlayerBase {
  public:
@@ -99,17 +99,17 @@ class PlayerBase {
   static inline void SetupWindowsTimers();
 };
 
-}  // namespace guts
+}  // namespace internal
 }  // namespace cxxmidi
 
 #include <cxxmidi/converters.hpp>
 #include <cxxmidi/event.hpp>
 #include <cxxmidi/file.hpp>
-#include <cxxmidi/guts/utils.hpp>
+#include <cxxmidi/internal/utils.hpp>
 #include <cxxmidi/output/abstract.hpp>
 
 namespace cxxmidi {
-namespace guts {
+namespace internal {
 
 PlayerBase::PlayerBase()
     : tempo_(500000),
@@ -261,7 +261,7 @@ void PlayerBase::ExecEvent(const Event& event) {
   if (output_) output_->SendMessage(&event);
 }
 
-}  // namespace guts
+}  // namespace internal
 }  // namespace cxxmidi
 
-#endif  // INCLUDE_CXXMIDI_GUTS_PLAYER_BASE_HPP_
+#endif  // INCLUDE_CXXMIDI_INTERNAL_PLAYER_BASE_HPP_
