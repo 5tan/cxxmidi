@@ -1,3 +1,5 @@
+set(THIS_TARGET "qtmidieditor")
+
 find_package(Threads REQUIRED)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
@@ -12,7 +14,7 @@ elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
   find_library(AUDIOTOOLBOX_LIBRARY AudioToolbox REQUIRED)
 endif()
 
-add_executable(qtmidieditor
+add_executable(${THIS_TARGET}
   filemodel.cpp
   fileview.cpp
   main.cpp
@@ -21,26 +23,41 @@ add_executable(qtmidieditor
   trackmodel.cpp
   trackview.cpp)
 
-target_compile_options(qtmidieditor PRIVATE -Wall -pedantic -Wextra)
-target_compile_features(qtmidieditor PRIVATE cxx_std_17)
+if(MSVC)
+  target_compile_options(${THIS_TARGET} PRIVATE /W4)
+else()
+  target_compile_options(${THIS_TARGET} PRIVATE -Wall -pedantic -Wextra)
+endif()
+target_compile_features(${THIS_TARGET} PRIVATE cxx_std_17)
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
-  target_include_directories(qtmidieditor PRIVATE ${ALSA_INCLUDE_DIRS})
+  target_link_libraries(${THIS_TARGET} ${ALSA_LIBRARIES})
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
-  # todo
+  target_link_libraries(${THIS_TARGET}
+    ${COREMIDI_LIBRARY}
+    ${COREAUDIO_LIBRARY}
+    ${COREFOUNDATION_LIBRARY}
+    ${AUDIOTOOLBOX_LIBRARY})
+elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Windows"
+  OR CMAKE_SYSTEM_NAME MATCHES "CYGWIN")
+  target_link_libraries(${THIS_TARGET} winmm)
 endif()
 
-target_link_libraries(qtmidieditor
+target_link_libraries(${THIS_TARGET}
   CxxMidi::CxxMidi
   Threads::Threads
   Qt6::Widgets)
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
-  target_link_libraries(qtmidieditor ${ALSA_LIBRARIES})
+  target_link_libraries(${THIS_TARGET} ${ALSA_LIBRARIES})
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
-  target_link_libraries(qtmidieditor
+  target_link_libraries(${THIS_TARGET}
     ${COREMIDI_LIBRARY}
     ${COREAUDIO_LIBRARY}
     ${COREFOUNDATION_LIBRARY}
     ${AUDIOTOOLBOX_LIBRARY})
+  # todo
+elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Windows"
+  OR CMAKE_SYSTEM_NAME MATCHES "CYGWIN")
+  target_link_libraries(${THIS_TARGET} winmm)
 endif()

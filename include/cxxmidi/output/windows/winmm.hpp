@@ -26,8 +26,8 @@ CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ***************************************************************************** */
 
-#ifndef INCLUDE_CXXMIDI_OUTPUT_WINDOWS_HPP_
-#define INCLUDE_CXXMIDI_OUTPUT_WINDOWS_HPP_
+#ifndef INCLUDE_CXXMIDI_OUTPUT_WINDOWS_WINMM_HPP_
+#define INCLUDE_CXXMIDI_OUTPUT_WINDOWS_WINMM_HPP_
 
 #include <mmsystem.h>
 #include <windows.h>
@@ -42,8 +42,9 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace cxxmidi {
 namespace output {
+namespace windows {
 
-class Windows : public Output::Abstract {
+class WinMM : public output::Abstract {
   static const int RT_SYSEX_BUFFER_SIZE = 1024;
   static const int RT_SYSEX_BUFFER_COUNT = 4;
 
@@ -57,12 +58,12 @@ class Windows : public Output::Abstract {
   };
 
  public:
-  inline Windows();
-  inline explicit Windows(unsigned int initialPort_);
-  inline virtual ~Windows();
+  inline WinMM();
+  inline explicit WinMM(unsigned int initialPort_);
+  inline virtual ~WinMM();
 
-  Windows(const Windows&);             // non-copyable
-  Windows& operator=(const Windows&);  // non-copyable (assignment)
+  WinMM(const WinMM&);             // non-copyable
+  WinMM& operator=(const WinMM&);  // non-copyable (assignment)
 
   inline void OpenPort(unsigned int portNumber_ = 0) override;
   inline void ClosePort() override;
@@ -70,7 +71,7 @@ class Windows : public Output::Abstract {
       const std::string& portName_ = std::string("CxxMidi Output"));
   inline size_t GetPortCount() override;
   inline std::string GetPortName(unsigned int portNumber_ = 0) override;
-  inline void SendMessage(const std::vector<uint8_t>* msg_) override;
+  inline void SendMessage(const std::vector<std::uint8_t>* msg_) override;
 
  protected:
   inline void Initialize() override;
@@ -79,20 +80,22 @@ class Windows : public Output::Abstract {
   void* api_data_;
 };
 
+}  // namespace windows
 }  // namespace output
 }  // namespace cxxmidi
 
 namespace cxxmidi {
-namespace Output {
+namespace output {
+namespace windows {
 
-Windows::Windows() { Initialize(); }
+WinMM::WinMM() { Initialize(); }
 
-Windows::Windows(unsigned int initialPort_) {
+WinMM::WinMM(unsigned int initialPort_) {
   Initialize();
   OpenPort(initialPort_);
 }
 
-Windows::~Windows() {
+WinMM::~WinMM() {
   // Close a connection if it exists.
   ClosePort();
 
@@ -101,9 +104,9 @@ Windows::~Windows() {
   delete data;
 }
 
-size_t Windows::GetPortCount() { return midiOutGetNumDevs(); }
+size_t WinMM::GetPortCount() { return midiOutGetNumDevs(); }
 
-std::string Windows::GetPortName(unsigned int portNumber_) {
+std::string WinMM::GetPortName(unsigned int portNumber_) {
   std::string stringName;
   unsigned int nDevices = midiOutGetNumDevs();
   if (portNumber_ >= nDevices) {
@@ -127,7 +130,7 @@ std::string Windows::GetPortName(unsigned int portNumber_) {
   return stringName;
 }
 
-void Windows::Initialize() {
+void WinMM::Initialize() {
   // We'll issue a warning here if no devices are available but not
   // throw an error since the user can plug something in later.
   size_t nDevices = GetPortCount();
@@ -140,8 +143,8 @@ void Windows::Initialize() {
   api_data_ = reinterpret_cast<void*>(data);
 }
 
-void Windows::OpenPort(unsigned int portNumber_) {
-  if (_connected) {
+void WinMM::OpenPort(unsigned int portNumber_) {
+  if (connected_) {
 #ifndef CXXMIDI_QUIET
     std::cerr << "CxxMidi: a valid connection already exists" << std::endl;
 #endif
@@ -164,19 +167,19 @@ void Windows::OpenPort(unsigned int portNumber_) {
     std::cerr << "CxxMidi: Windows MM output port init error" << std::endl;
 #endif
 
-  _connected = true;
+  connected_ = true;
 }
 
-void Windows::ClosePort() {
-  if (_connected) {
+void WinMM::ClosePort() {
+  if (connected_) {
     WinMidiData* data = static_cast<WinMidiData*>(api_data_);
     midiOutReset(data->outHandle);
     midiOutClose(data->outHandle);
-    _connected = false;
+    connected_ = false;
   }
 }
 
-void Windows::OpenVirtualPort(const std::string& /*portName_ */) {
+void WinMM::OpenVirtualPort(const std::string& /*portName_ */) {
   // This function cannot be implemented for the Windows MM MIDI API
 
 #ifndef CXXMIDI_QUIET
@@ -185,7 +188,7 @@ void Windows::OpenVirtualPort(const std::string& /*portName_ */) {
 #endif
 }
 
-void Windows::SendMessage(const std::vector<uint8_t>* msg_) {
+void WinMM::SendMessage(const std::vector<std::uint8_t>* msg_) {
   unsigned int nBytes = static_cast<unsigned int>(msg_->size());
   if (nBytes == 0) {
 #ifndef CXXMIDI_QUIET
@@ -262,7 +265,8 @@ void Windows::SendMessage(const std::vector<uint8_t>* msg_) {
   }
 }
 
-}  // namespace Output
+}  // namespace windows
+}  // namespace output
 }  // namespace cxxmidi
 
-#endif  // INCLUDE_CXXMIDI_OUTPUT_WINDOWS_HPP_
+#endif  // INCLUDE_CXXMIDI_OUTPUT_WINDOWS_WINMM_HPP_
