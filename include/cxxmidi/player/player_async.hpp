@@ -34,6 +34,8 @@ namespace cxxmidi {
 class File;
 namespace player {
 
+constexpr unsigned int kHeartbeatIntervalUs = 10000;
+
 class PlayerAsync : public internal::PlayerBase {
  public:
   inline explicit PlayerAsync(output::Abstract* output);
@@ -173,8 +175,8 @@ void PlayerAsync::PlayerLoop() {
     // Note that the _heartbeatHelper is not protected by the _mutex.
     // It should be used only in Acynchronous::PlayerAsync::playerLoop()
     // and in PlayerImpl::goTo() (these two are exclusive).
-    while ((heartbeat_helper_ + us.count()) >= 10000) {
-      unsigned int partial = 10000 - heartbeat_helper_;
+    while ((heartbeat_helper_ + us.count()) >= kHeartbeatIntervalUs) {
+      unsigned int partial = kHeartbeatIntervalUs - heartbeat_helper_;
       heartbeat_helper_ = 0;
       us -= std::chrono::microseconds(partial);
 
