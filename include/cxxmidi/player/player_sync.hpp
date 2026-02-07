@@ -33,6 +33,8 @@ namespace cxxmidi {
 class File;
 namespace player {
 
+constexpr unsigned int kHeartbeatIntervalUs = 10000;
+
 class PlayerSync : public internal::PlayerBase {
  public:
   inline explicit PlayerSync(output::Abstract* output);
@@ -69,8 +71,8 @@ void PlayerSync::PlayerLoop() {
     uint32_t dt = player_state_[track_num].track_dt_;
     auto us = converters::Dt2us(dt, tempo_, file_->TimeDivision());
 
-    while ((heartbeat_helper_ + us.count()) >= 10000) {
-      unsigned int partial = 10000 - heartbeat_helper_;
+    while ((heartbeat_helper_ + us.count()) >= kHeartbeatIntervalUs) {
+      unsigned int partial = kHeartbeatIntervalUs - heartbeat_helper_;
       heartbeat_helper_ = 0;
       us -= std::chrono::microseconds(partial);
 
