@@ -134,6 +134,7 @@ void PlayerAsync::PlayerLoop() {
   uint32_t dt = 0;
   auto us = std::chrono::microseconds::zero();
   float speed = 0;
+  unsigned int heartbeat_interval_us = 0;
 
   std::function<void()> clbk_fun_heartbeat;
   std::function<void()> clbk_fun_finished;
@@ -151,6 +152,7 @@ void PlayerAsync::PlayerLoop() {
           dt = player_state_[track_num].track_dt_;
           us = converters::Dt2us(dt, tempo_, file_->TimeDivision());
           speed = speed_;
+          heartbeat_interval_us = heartbeat_interval_us_;
 
           clbk_fun_heartbeat = clbk_fun_heartbeat_;
           clbk_fun_finished = clbk_fun_finished_;
@@ -176,8 +178,8 @@ void PlayerAsync::PlayerLoop() {
     // Note that the _heartbeatHelper is not protected by the _mutex.
     // It should be used only in Acynchronous::PlayerAsync::playerLoop()
     // and in PlayerImpl::goTo() (these two are exclusive).
-    while ((heartbeat_helper_ + us.count()) >= heartbeat_interval_us_) {
-      unsigned int partial = heartbeat_interval_us_ - heartbeat_helper_;
+    while ((heartbeat_helper_ + us.count()) >= heartbeat_interval_us) {
+      unsigned int partial = heartbeat_interval_us - heartbeat_helper_;
       heartbeat_helper_ = 0;
       us -= std::chrono::microseconds(partial);
 
