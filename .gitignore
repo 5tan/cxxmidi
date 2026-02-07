@@ -1,0 +1,5 @@
+# CMake test discovery files
+cmake_test_discovery_*.json
+
+# Build directory
+build/
