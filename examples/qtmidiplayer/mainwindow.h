@@ -60,6 +60,7 @@ class MainWindow : public QMainWindow {
 
  private:
   void CreateMenuBar();
+  QString FormatTimeCode(std::chrono::microseconds time);
 
   QActionGroup* outputs_action_group_;
   Ui::MainWindow* ui_;
