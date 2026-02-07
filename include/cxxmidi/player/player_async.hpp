@@ -64,7 +64,7 @@ class PlayerAsync : public internal::PlayerBase {
  private:
   bool pause_request_;
 
-  inline static void* PlayerLoop(void* caller);
+  inline void PlayerLoop();
 
   std::mutex mutex_;
   std::thread* thread_;
@@ -109,7 +109,7 @@ void PlayerAsync::Play() {
     if (thread_->joinable()) thread_->join();
     delete thread_;
   }  //! @FIXME
-  thread_ = new std::thread(PlayerAsync::PlayerLoop, this);
+  thread_ = new std::thread([this]() { PlayerLoop(); });
 }
 
 void PlayerAsync::Pause() {
@@ -126,9 +126,7 @@ void PlayerAsync::Pause() {
   thread_ = 0;
 }
 
-void* PlayerAsync::PlayerLoop(void* caller) {
-  PlayerAsync* that = reinterpret_cast<PlayerAsync*>(caller);
-
+void PlayerAsync::PlayerLoop() {
   bool finished = false;
   unsigned int track_num = 0;
   unsigned int event_num = 0;
@@ -144,17 +142,17 @@ void* PlayerAsync::PlayerLoop(void* caller) {
     // copy player data
     {
       // cppcheck-suppress unreadVariable RAII
-      std::scoped_lock lock(that->mutex_);
-      if (!(pause_request = that->pause_request_)) {
-        if (!(finished = that->PlayerBase::Finished())) {
-          track_num = that->PlayerBase::TrackPending();
-          event_num = that->player_state_[track_num].track_pointer_;
-          dt = that->player_state_[track_num].track_dt_;
-          us = converters::Dt2us(dt, that->tempo_, that->file_->TimeDivision());
-          speed = that->speed_;
+      std::scoped_lock lock(mutex_);
+      if (!(pause_request = pause_request_)) {
+        if (!(finished = PlayerBase::Finished())) {
+          track_num = PlayerBase::TrackPending();
+          event_num = player_state_[track_num].track_pointer_;
+          dt = player_state_[track_num].track_dt_;
+          us = converters::Dt2us(dt, tempo_, file_->TimeDivision());
+          speed = speed_;
 
-          clbk_fun_heartbeat = that->clbk_fun_heartbeat_;
-          clbk_fun_finished = that->clbk_fun_finished_;
+          clbk_fun_heartbeat = clbk_fun_heartbeat_;
+          clbk_fun_finished = clbk_fun_finished_;
         }
       }
     }
@@ -162,53 +160,53 @@ void* PlayerAsync::PlayerLoop(void* caller) {
     if (pause_request || finished) {
       {
         // cppcheck-suppress unreadVariable RAII
-        std::scoped_lock lock(that->mutex_);
-        that->pause_request_ = false;
-        that->is_playing_ = false;
+        std::scoped_lock lock(mutex_);
+        pause_request_ = false;
+        is_playing_ = false;
       }
 
       if (finished) {
         if (clbk_fun_finished) clbk_fun_finished();
       }
 
-      return 0;
+      return;
     }
 
     // Note that the _heartbeatHelper is not protected by the _mutex.
     // It should be used only in Acynchronous::PlayerAsync::playerLoop()
     // and in PlayerImpl::goTo() (these two are exclusive).
-    while ((that->heartbeat_helper_ + us.count()) >= 10000) {
-      unsigned int partial = 10000 - that->heartbeat_helper_;
-      that->heartbeat_helper_ = 0;
+    while ((heartbeat_helper_ + us.count()) >= 10000) {
+      unsigned int partial = 10000 - heartbeat_helper_;
+      heartbeat_helper_ = 0;
       us -= std::chrono::microseconds(partial);
 
       // update player data before sleep
       {
         // cppcheck-suppress unreadVariable RAII
-        std::scoped_lock lock(that->mutex_);
-        pause_request = that->pause_request_;
-        speed = that->speed_;
+        std::scoped_lock lock(mutex_);
+        pause_request = pause_request_;
+        speed = speed_;
 
-        clbk_fun_heartbeat = that->clbk_fun_heartbeat_;
-        clbk_fun_finished = that->clbk_fun_finished_;
+        clbk_fun_heartbeat = clbk_fun_heartbeat_;
+        clbk_fun_finished = clbk_fun_finished_;
       }
 
       if (pause_request) {
         {
           // cppcheck-suppress unreadVariable RAII
-          std::scoped_lock lock(that->mutex_);
-          that->pause_request_ = false;
-          that->is_playing_ = false;
+          std::scoped_lock lock(mutex_);
+          pause_request_ = false;
+          is_playing_ = false;
         }
-        return 0;
+        return;
       }
 
       unsigned int wait = partial / speed;
       std::this_thread::sleep_for(std::chrono::microseconds(wait));
       {
         // cppcheck-suppress unreadVariable RAII
-        std::scoped_lock lock(that->mutex_);
-        that->played_us_ += std::chrono::microseconds(partial);
+        std::scoped_lock lock(mutex_);
+        played_us_ += std::chrono::microseconds(partial);
       }
 
       if (clbk_fun_heartbeat) clbk_fun_heartbeat();
@@ -216,18 +214,16 @@ void* PlayerAsync::PlayerLoop(void* caller) {
 
     unsigned int wait = us.count() / speed;
     std::this_thread::sleep_for(std::chrono::microseconds(wait));
-    that->heartbeat_helper_ += us.count();
+    heartbeat_helper_ += us.count();
 
     {
       // cppcheck-suppress unreadVariable RAII
-      std::scoped_lock lock(that->mutex_);
-      that->played_us_ += std::chrono::microseconds(us);
-      that->ExecEvent((*that->file_)[track_num][event_num]);
-      that->UpdatePlayerState(track_num, dt);
+      std::scoped_lock lock(mutex_);
+      played_us_ += std::chrono::microseconds(us);
+      ExecEvent((*file_)[track_num][event_num]);
+      UpdatePlayerState(track_num, dt);
     }
   }
-
-  return 0;
 }
 
 void PlayerAsync::GoTo(const std::chrono::microseconds& pos) {

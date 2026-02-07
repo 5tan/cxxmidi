@@ -20,12 +20,19 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ***************************************************************************** */
 
+#include <iostream>
+
 #include <cxxmidi/file.hpp>
 #include <cxxmidi/output/default.hpp>
 #include <cxxmidi/player/player_async.hpp>
 
 int main(int, char**) {
-  cxxmidi::output::Default output(1);
+  cxxmidi::output::Default output;
+  for (size_t i = 0; i < output.GetPortCount(); ++i) {
+    std::cout << "Port " << i << ": " << output.GetPortName(i) << std::endl;
+  }
+  output.OpenPort(0);
+
   cxxmidi::player::PlayerAsync player(&output);
 
   cxxmidi::File file("music/chopin.mid");
