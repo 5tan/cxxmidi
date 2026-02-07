@@ -116,6 +116,18 @@ void MainWindow::CreateMenuBar() {
           &MainWindow::OnOutputSelected);
 }
 
+QString MainWindow::FormatTimeCode(std::chrono::microseconds time) {
+  auto total_seconds = time.count() / 1000000;
+  auto hours = total_seconds / 3600;
+  auto minutes = (total_seconds % 3600) / 60;
+  auto seconds = total_seconds % 60;
+
+  return QString("%1:%2:%3")
+      .arg(hours, 2, 10, QChar('0'))
+      .arg(minutes, 2, 10, QChar('0'))
+      .arg(seconds, 2, 10, QChar('0'));
+}
+
 void MainWindow::OnOutputSelected(QAction* action) {
   int num = action->text().split(".")[0].toInt();
   SetOutput(num);
@@ -150,7 +162,7 @@ void MainWindow::OpenFile(const QString& path) {
   midi_player_->SetFile(midi_file_);
 
   total_us_ = midi_file_->Duration();
-  ui_->labelTotal->setText(std::to_string(total_us_.count()).c_str());
+  ui_->labelTotal->setText(FormatTimeCode(total_us_));
 
   centralWidget()->setDisabled(false);
 }
@@ -166,7 +178,7 @@ void MainWindow::OnPlayerFinished() {
 
 void MainWindow::UpdateTimeCode(std::chrono::microseconds time) {
   played_us_ = time;
-  ui_->labelTime->setText(std::to_string(time.count()).c_str());
+  ui_->labelTime->setText(FormatTimeCode(time));
 
   if (!slider_locked_) {
     auto norm_pos = static_cast<double>(played_us_.count()) / total_us_.count();
