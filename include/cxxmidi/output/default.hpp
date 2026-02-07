@@ -23,11 +23,11 @@ SOFTWARE.
 #ifndef INCLUDE_CXXMIDI_OUTPUT_DEFAULT_HPP_
 #define INCLUDE_CXXMIDI_OUTPUT_DEFAULT_HPP_
 
-#ifdef _WIN32  // Windows 32-bit and 64-bit
-#include <cxxmidi/output/windows.hpp>
+#if defined(_WIN32) || defined(__CYGWIN__)  // Windows 32-bit and 64-bit
+#include <cxxmidi/output/windows/winmm.hpp>
 namespace cxxmidi {
 namespace output {
-typedef output::windows Default;
+typedef output::windows::WinMM Default;
 }  // namespace output
 }  // namespace cxxmidi
 #elif __APPLE__  // Mac OS X

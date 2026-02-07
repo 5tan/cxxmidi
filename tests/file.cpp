@@ -23,6 +23,7 @@ SOFTWARE.
 #include <gtest/gtest.h>
 #include <string>
 
+#include <array>
 #include <cxxmidi/file.hpp>
 #include <cxxmidi/note.hpp>
 
@@ -91,12 +92,13 @@ TEST_F(FileTestFixture, ReadWrite) {
   cxxmidi::File file;
   for (auto const& f : test_files) {
     file.Load(f.c_str());
-    file.SaveAs("/tmp/test.mid");
+    file.SaveAs("test.mid");
 
     // copmpare original and saved file
-    EXPECT_TRUE(CompareFiles(f, "/tmp/test.mid")) << f;
+    EXPECT_TRUE(CompareFiles(f, "test.mid")) << f;
   }
-  // Note: This test will work only for files that were generatated optimally.
+  // Note: This test will work only for files that were generated "optimally"
+  // (running status).
 }
 
 TEST_F(FileTestFixture, SetGetTimeDivision) {
