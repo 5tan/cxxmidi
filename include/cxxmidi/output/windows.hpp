@@ -61,22 +61,22 @@ class Windows : public Output::Abstract {
   inline explicit Windows(unsigned int initialPort_);
   inline virtual ~Windows();
 
-  Windows(const Windows &);             // non-copyable
-  Windows &operator=(const Windows &);  // non-copyable (assignment)
+  Windows(const Windows&);             // non-copyable
+  Windows& operator=(const Windows&);  // non-copyable (assignment)
 
   inline void OpenPort(unsigned int portNumber_ = 0) override;
   inline void ClosePort() override;
   inline void OpenVirtualPort(
-      const std::string &portName_ = std::string("CxxMidi Output"));
+      const std::string& portName_ = std::string("CxxMidi Output"));
   inline size_t GetPortCount() override;
   inline std::string GetPortName(unsigned int portNumber_ = 0) override;
-  inline void SendMessage(const std::vector<uint8_t> *msg_) override;
+  inline void SendMessage(const std::vector<uint8_t>* msg_) override;
 
  protected:
   inline void Initialize() override;
 
  private:
-  void *api_data_;
+  void* api_data_;
 };
 
 }  // namespace output
@@ -97,7 +97,7 @@ Windows::~Windows() {
   ClosePort();
 
   // Cleanup
-  WinMidiData *data = static_cast<WinMidiData *>(api_data_);
+  WinMidiData* data = static_cast<WinMidiData*>(api_data_);
   delete data;
 }
 
@@ -136,8 +136,8 @@ void Windows::Initialize() {
 #endif
 
   // Save our api-specific connection information.
-  WinMidiData *data = new WinMidiData;
-  api_data_ = reinterpret_cast<void *>(data);
+  WinMidiData* data = new WinMidiData;
+  api_data_ = reinterpret_cast<void*>(data);
 }
 
 void Windows::OpenPort(unsigned int portNumber_) {
@@ -156,7 +156,7 @@ void Windows::OpenPort(unsigned int portNumber_) {
     std::cerr << "CxxMidi: invalid port number " << portNumber_ << std::endl;
 #endif
 
-  WinMidiData *data = static_cast<WinMidiData *>(api_data_);
+  WinMidiData* data = static_cast<WinMidiData*>(api_data_);
   MMRESULT result = midiOutOpen(&data->outHandle, portNumber_, (DWORD)NULL,
                                 (DWORD)NULL, CALLBACK_NULL);
 #ifndef CXXMIDI_QUIET
@@ -169,14 +169,14 @@ void Windows::OpenPort(unsigned int portNumber_) {
 
 void Windows::ClosePort() {
   if (_connected) {
-    WinMidiData *data = static_cast<WinMidiData *>(api_data_);
+    WinMidiData* data = static_cast<WinMidiData*>(api_data_);
     midiOutReset(data->outHandle);
     midiOutClose(data->outHandle);
     _connected = false;
   }
 }
 
-void Windows::OpenVirtualPort(const std::string & /*portName_ */) {
+void Windows::OpenVirtualPort(const std::string& /*portName_ */) {
   // This function cannot be implemented for the Windows MM MIDI API
 
 #ifndef CXXMIDI_QUIET
@@ -185,7 +185,7 @@ void Windows::OpenVirtualPort(const std::string & /*portName_ */) {
 #endif
 }
 
-void Windows::SendMessage(const std::vector<uint8_t> *msg_) {
+void Windows::SendMessage(const std::vector<uint8_t>* msg_) {
   unsigned int nBytes = static_cast<unsigned int>(msg_->size());
   if (nBytes == 0) {
 #ifndef CXXMIDI_QUIET
@@ -195,10 +195,10 @@ void Windows::SendMessage(const std::vector<uint8_t> *msg_) {
   }
 
   MMRESULT result;
-  WinMidiData *data = static_cast<WinMidiData *>(api_data_);
+  WinMidiData* data = static_cast<WinMidiData*>(api_data_);
   if (msg_->at(0) == 0xF0) {  // Sysex message
     // Allocate buffer for sysex data.
-    char *buffer = reinterpret_cast<char *>(malloc(nBytes));
+    char* buffer = reinterpret_cast<char*>(malloc(nBytes));
 #ifndef CXXMIDI_QUIET
     if (buffer == NULL)
       std::cerr << "CxxMidi: message malloc error " << std::endl;
@@ -247,7 +247,7 @@ void Windows::SendMessage(const std::vector<uint8_t> *msg_) {
 
     // Pack MIDI bytes into double word
     DWORD packet;
-    unsigned char *ptr = (unsigned char *)&packet;
+    unsigned char* ptr = (unsigned char*)&packet;
     for (unsigned int i = 0; i < nBytes; ++i) {
       *ptr = msg_->at(i);
       ++ptr;

@@ -1,5 +1,5 @@
 /* *****************************************************************************
-Copyright (c) 2018 5tan 
+Copyright (c) 2018 5tan
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +30,7 @@ namespace guts {
 
 class Simulator : protected PlayerBase {
  public:
-  inline std::chrono::microseconds Duration(const File &file);
+  inline std::chrono::microseconds Duration(const File& file);
 };
 
 }  // namespace guts
@@ -41,7 +41,7 @@ class Simulator : protected PlayerBase {
 namespace cxxmidi {
 namespace guts {
 
-std::chrono::microseconds Simulator::Duration(const File &file) {
+std::chrono::microseconds Simulator::Duration(const File& file) {
   auto r = std::chrono::microseconds::zero();
 
   tempo_ = 500000;  // default tempo

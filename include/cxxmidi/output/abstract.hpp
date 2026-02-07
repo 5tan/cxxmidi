@@ -41,16 +41,16 @@ class Abstract {
   inline Abstract();
   virtual ~Abstract() = default;
 
-  Abstract(const Abstract &);             // non-copyable
-  Abstract &operator=(const Abstract &);  // non-copyable (assignment)
+  Abstract(const Abstract&);             // non-copyable
+  Abstract& operator=(const Abstract&);  // non-copyable (assignment)
 
   virtual void OpenPort(unsigned int port_num = 0) = 0;
   virtual void ClosePort() = 0;
   virtual void OpenVirtualPort(
-      const std::string &port_name = std::string("RtMidi Virtual Output")) = 0;
+      const std::string& port_name = std::string("RtMidi Virtual Output")) = 0;
   virtual size_t GetPortCount() = 0;
   virtual std::string GetPortName(unsigned int port_num = 0) = 0;
-  virtual void SendMessage(const std::vector<uint8_t> *msg) = 0;
+  virtual void SendMessage(const std::vector<uint8_t>* msg) = 0;
   inline void Reset();
 
  protected:

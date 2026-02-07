@@ -1,5 +1,5 @@
 /* *****************************************************************************
-Copyright (c) 2018 5tan 
+Copyright (c) 2018 5tan
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,17 +22,17 @@ SOFTWARE.
 
 #include "filemodel.h"  // NOLINT(build/include_subdir) INCLUDE_NO_DIR
 
-FileModel::FileModel(QObject *parent)
+FileModel::FileModel(QObject* parent)
     : QAbstractListModel(parent), file_(nullptr) {}
 
 // cppcheck-suppress unusedFunction LIB_FUNC
-int FileModel::rowCount(const QModelIndex & /* index */) const {
+int FileModel::rowCount(const QModelIndex& /* index */) const {
   if (file_) return static_cast<int>(file_->Tracks());
 
   return 0;
 }
 
-void FileModel::SetFile(cxxmidi::File *file) {
+void FileModel::SetFile(cxxmidi::File* file) {
   file_ = file;
   layoutChanged();
 }
@@ -50,13 +50,13 @@ void FileModel::AddTrack(int num) {
   endInsertRows();
 }
 
-QVariant FileModel::data(const QModelIndex &index, int role) const {
+QVariant FileModel::data(const QModelIndex& index, int role) const {
   if (!index.isValid()) return QVariant();
 
   int row = index.row();
 
   if (role == Qt::DisplayRole) {
-    cxxmidi::Track *track = &file_->at(row);
+    cxxmidi::Track* track = &file_->at(row);
     return QVariant(QString("%1. %2").arg(row).arg(track->GetName().c_str()));
   }
 

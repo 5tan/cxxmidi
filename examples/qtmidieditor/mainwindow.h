@@ -1,5 +1,5 @@
 /* *****************************************************************************
-Copyright (c) 2018 5tan 
+Copyright (c) 2018 5tan
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -40,7 +40,7 @@ class MainWindow : public QMainWindow {
   Q_OBJECT
 
  public:
-  explicit MainWindow(QWidget *parent = 0);
+  explicit MainWindow(QWidget* parent = 0);
   ~MainWindow();
 
  private slots:  // NOLINT(whitespace/indent) SIGNAL_SLOT_SPECIFIER
@@ -55,7 +55,7 @@ class MainWindow : public QMainWindow {
  private:
   void CreateMenu();
 
-  Ui::MainWindow *ui_;
+  Ui::MainWindow* ui_;
 
   FileModel file_model_;
   FileView file_view_;

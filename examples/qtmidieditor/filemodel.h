@@ -1,5 +1,5 @@
 /* *****************************************************************************
-Copyright (c) 2018 5tan 
+Copyright (c) 2018 5tan
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -32,20 +32,20 @@ class FileModel : public QAbstractListModel {
   Q_OBJECT
 
  public:
-  explicit FileModel(QObject *parent = 0);
+  explicit FileModel(QObject* parent = 0);
   virtual ~FileModel() = default;
 
-  int rowCount(const QModelIndex &index) const override;
-  QVariant data(const QModelIndex &index,
+  int rowCount(const QModelIndex& index) const override;
+  QVariant data(const QModelIndex& index,
                 int role = Qt::DisplayRole) const override;
 
-  void SetFile(cxxmidi::File *file);
+  void SetFile(cxxmidi::File* file);
 
   void RemoveTrack(int num);
   void AddTrack(int num);
 
  private:
-  cxxmidi::File *file_;
+  cxxmidi::File* file_;
 };
 
 #endif  // EXAMPLES_QTMIDIEDITOR_FILEMODEL_H_
