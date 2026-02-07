@@ -1,5 +1,5 @@
 /* *****************************************************************************
-Copyright (c) 2018 5tan 
+Copyright (c) 2018 5tan
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -33,7 +33,7 @@ class Event : public Message {
  public:
   inline Event() = default;
   inline explicit Event(uint32_t dt);
-  inline explicit Event(uint32_t dt, const Message &message);
+  inline explicit Event(uint32_t dt, const Message& message);
   inline explicit Event(uint32_t dt, uint8_t b1);
   inline explicit Event(uint32_t dt, uint8_t b1, uint8_t b2);
   inline explicit Event(uint32_t dt, uint8_t b1, uint8_t b2, uint8_t b3);
@@ -51,7 +51,7 @@ namespace cxxmidi {
 
 Event::Event(uint32_t dt) : dt_(dt) {}
 
-Event::Event(uint32_t dt, const Message &message) : Message(message), dt_(dt) {}
+Event::Event(uint32_t dt, const Message& message) : Message(message), dt_(dt) {}
 
 Event::Event(uint32_t dt, uint8_t b1) : dt_(dt) { push_back(b1); }
 

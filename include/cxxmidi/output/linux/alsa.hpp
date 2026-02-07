@@ -47,12 +47,12 @@ namespace linuxo {
 
 class Alsa : public output::Abstract {
   struct AlsaMidiData {
-    snd_seq_t *seq;
+    snd_seq_t* seq;
     int vport;
-    snd_seq_port_subscribe_t *subscription;
-    snd_midi_event_t *coder;
+    snd_seq_port_subscribe_t* subscription;
+    snd_midi_event_t* coder;
     unsigned int bufferSize;
-    unsigned char *buffer;
+    unsigned char* buffer;
     pthread_t thread;
     // unsigned long long lastTime;
     uint64_t lastTime;
@@ -64,24 +64,24 @@ class Alsa : public output::Abstract {
   inline explicit Alsa(unsigned int initial_port);
   inline virtual ~Alsa();
 
-  Alsa(const Alsa &);             // non-copyable
-  Alsa &operator=(const Alsa &);  // non-copyable (assignment)
+  Alsa(const Alsa&);             // non-copyable
+  Alsa& operator=(const Alsa&);  // non-copyable (assignment)
 
   inline void OpenPort(unsigned int port_num = 0) override;
   inline void ClosePort() override;
   inline void OpenVirtualPort(
-      const std::string &port_name = std::string("RtMidi Output")) override;
+      const std::string& port_name = std::string("RtMidi Output")) override;
   inline size_t GetPortCount() override;
   inline std::string GetPortName(unsigned int port_num = 0) override;
-  inline void SendMessage(const std::vector<uint8_t> *msg) override;
+  inline void SendMessage(const std::vector<uint8_t>* msg) override;
 
  protected:
   inline void Initialize() override;
 
  private:
-  inline static size_t portInfo(snd_seq_t *seq, snd_seq_port_info_t *pinfo,
+  inline static size_t portInfo(snd_seq_t* seq, snd_seq_port_info_t* pinfo,
                                 unsigned int type, int portNumber);
-  AlsaMidiData *_apiData;
+  AlsaMidiData* _apiData;
 };
 
 }  // namespace linuxo
@@ -113,9 +113,9 @@ Alsa::~Alsa() {
 
 // This function is used to count or get the pinfo structure for a given port
 // number.
-size_t Alsa::portInfo(snd_seq_t *seq, snd_seq_port_info_t *pinfo,
+size_t Alsa::portInfo(snd_seq_t* seq, snd_seq_port_info_t* pinfo,
                       unsigned int type, int portNumber) {
-  snd_seq_client_info_t *cinfo;
+  snd_seq_client_info_t* cinfo;
   size_t count = 0;
   snd_seq_client_info_alloca(&cinfo);
 
@@ -142,7 +142,7 @@ size_t Alsa::portInfo(snd_seq_t *seq, snd_seq_port_info_t *pinfo,
 }
 
 size_t Alsa::GetPortCount() {
-  snd_seq_port_info_t *pinfo;
+  snd_seq_port_info_t* pinfo;
   snd_seq_port_info_alloca(&pinfo);
 
   return portInfo(_apiData->seq, pinfo,
@@ -150,8 +150,8 @@ size_t Alsa::GetPortCount() {
 }
 
 std::string Alsa::GetPortName(unsigned int port_num) {
-  snd_seq_client_info_t *cinfo;
-  snd_seq_port_info_t *pinfo;
+  snd_seq_client_info_t* cinfo;
+  snd_seq_port_info_t* pinfo;
   snd_seq_client_info_alloca(&cinfo);
   snd_seq_port_info_alloca(&pinfo);
 
@@ -177,7 +177,7 @@ std::string Alsa::GetPortName(unsigned int port_num) {
 
 void Alsa::Initialize() {
   // Set up the ALSA sequencer client
-  snd_seq_t *seq;
+  snd_seq_t* seq;
   int result =
       snd_seq_open(&seq, "default", SND_SEQ_OPEN_OUTPUT, SND_SEQ_NONBLOCK);
 #ifndef CXXMIDI_QUIET
@@ -203,7 +203,7 @@ void Alsa::Initialize() {
 #endif
     return;
   }
-  _apiData->buffer = (unsigned char *)malloc(_apiData->bufferSize);
+  _apiData->buffer = (unsigned char*)malloc(_apiData->bufferSize);
   if (_apiData->buffer == NULL) {
     delete _apiData;
 #ifndef CXXMIDI_QUIET
@@ -221,7 +221,7 @@ void Alsa::OpenPort(unsigned int port_num) {
   if (nSrc < 1) std::cerr << "CxxMidi: no MIDI output sources" << std::endl;
 #endif
 
-  snd_seq_port_info_t *pinfo;
+  snd_seq_port_info_t* pinfo;
   snd_seq_port_info_alloca(&pinfo);
 
   if (portInfo(_apiData->seq, pinfo,
@@ -275,7 +275,7 @@ void Alsa::ClosePort() {
 }
 
 // cppcheck-suppress unusedFunction LIB_FUNC
-void Alsa::OpenVirtualPort(const std::string &port_name) {
+void Alsa::OpenVirtualPort(const std::string& port_name) {
   if (_apiData->vport < 0) {
     _apiData->vport = snd_seq_create_simple_port(
         _apiData->seq, port_name.c_str(),
@@ -289,7 +289,7 @@ void Alsa::OpenVirtualPort(const std::string &port_name) {
   }
 }
 
-void Alsa::SendMessage(const std::vector<uint8_t> *msg) {
+void Alsa::SendMessage(const std::vector<uint8_t>* msg) {
   int result;
   unsigned int nBytes = msg->size();
   if (nBytes > _apiData->bufferSize) {
@@ -300,7 +300,7 @@ void Alsa::SendMessage(const std::vector<uint8_t> *msg) {
       std::cerr << "CxxMidi: ALSA resizee buffer error" << std::endl;
 #endif
     free(_apiData->buffer);
-    _apiData->buffer = (unsigned char *)malloc(_apiData->bufferSize);
+    _apiData->buffer = (unsigned char*)malloc(_apiData->bufferSize);
     if (_apiData->buffer == NULL) {
 #ifndef CXXMIDI_QUIET
       std::cerr << "CxxMidi: error allocating buffer memory" << std::endl;

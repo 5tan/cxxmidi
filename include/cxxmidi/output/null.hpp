@@ -42,18 +42,17 @@ class Null : public output::Abstract {
   inline Null() {}
   explicit Null(size_t) {}
 
-  Null(const Null &) = delete;             // non-copyable
-  Null &operator=(const Null &) = delete;  // non-copyable (assignment)
+  Null(const Null&) = delete;             // non-copyable
+  Null& operator=(const Null&) = delete;  // non-copyable (assignment)
 
   inline void OpenPort(unsigned int /*port_num*/) override {}
   inline void ClosePort() override {}
-  inline void OpenVirtualPort(
-      const std::string & /*port_name*/) override {}
+  inline void OpenVirtualPort(const std::string& /*port_name*/) override {}
   inline size_t GetPortCount() override { return 1; }
   inline std::string GetPortName(unsigned int /* port_num */) override {
     return "null";
   }
-  inline void SendMessage(const std::vector<uint8_t> * /* msg */) override {}
+  inline void SendMessage(const std::vector<uint8_t>* /* msg */) override {}
 
  protected:
   inline void Initialize() override {}

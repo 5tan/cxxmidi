@@ -1,5 +1,5 @@
 /* *****************************************************************************
-Copyright (c) 2018 5tan 
+Copyright (c) 2018 5tan
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,7 @@ SOFTWARE.
 #include "mainwindow.h"     // NOLINT(build/include_subdir) INCLUDE_NO_DIR
 #include "ui_mainwindow.h"  // NOLINT(build/include_subdir) INCLUDE_NO_DIR
 
-MainWindow::MainWindow(QWidget *parent_)
+MainWindow::MainWindow(QWidget* parent_)
     : QMainWindow(parent_), ui_(new Ui::MainWindow) {
   ui_->setupUi(this);
 
@@ -55,7 +55,7 @@ MainWindow::MainWindow(QWidget *parent_)
   track_model_.SetTrack(0);
   track_view_.setModel(&track_model_);
 
-  QSplitter *splitter = new QSplitter;
+  QSplitter* splitter = new QSplitter;
   splitter->addWidget(&file_view_);
   splitter->addWidget(&track_view_);
   splitter->setStretchFactor(1, 2);
@@ -66,9 +66,9 @@ MainWindow::MainWindow(QWidget *parent_)
 }
 
 void MainWindow::CreateMenu() {
-  QMenu *file_menu = menuBar()->addMenu(tr("&File"));
+  QMenu* file_menu = menuBar()->addMenu(tr("&File"));
 
-  QAction *action = file_menu->addAction(tr("&Open"));
+  QAction* action = file_menu->addAction(tr("&Open"));
   connect(action, &QAction::triggered, this, &MainWindow::OnOpenFile);
 
   action = file_menu->addAction(tr("&Save as"));

@@ -1,5 +1,5 @@
 /* *****************************************************************************
-Copyright (c) 2018 5tan 
+Copyright (c) 2018 5tan
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,7 @@ SOFTWARE.
 #include <cxxmidi/output/default.hpp>
 #include <cxxmidi/player/player_sync.hpp>
 
-int main(int, char **) {
+int main(int, char**) {
   uint32_t dt;  // quartenote deltatime [ticks]
   // What value should dt be, if we want quarter notes to last 0.5s?
 
@@ -37,7 +37,7 @@ int main(int, char **) {
                                   500);    // time division [us/quarternote]
 
   cxxmidi::File my_file;
-  cxxmidi::Track &track = my_file.AddTrack();
+  cxxmidi::Track& track = my_file.AddTrack();
 
   // Chromatic scale starting on C4
   for (int i = 0; i < 13; i++) {
