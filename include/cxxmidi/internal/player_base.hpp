@@ -44,6 +44,8 @@ namespace internal {
 
 class PlayerBase {
  public:
+  static constexpr unsigned int kDefaultHeartbeatIntervalUs = 100000;
+
   inline PlayerBase();
   inline explicit PlayerBase(output::Abstract* output);
   // no virtual destructor: non-poymorphic class
@@ -127,7 +129,7 @@ PlayerBase::PlayerBase()
       played_us_(std::chrono::microseconds(0)),
       output_(0),
       heartbeat_helper_(0),
-      heartbeat_interval_us_(10000) {
+      heartbeat_interval_us_(kDefaultHeartbeatIntervalUs) {
   PlayerBase::SetupWindowsTimers();
 }
 
@@ -139,7 +141,7 @@ PlayerBase::PlayerBase(output::Abstract* output)
       played_us_(std::chrono::microseconds(0)),
       output_(output),
       heartbeat_helper_(0),
-      heartbeat_interval_us_(10000) {
+      heartbeat_interval_us_(kDefaultHeartbeatIntervalUs) {
   PlayerBase::SetupWindowsTimers();
 }
 
