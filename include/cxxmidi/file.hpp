@@ -70,9 +70,9 @@ class File : public std::vector<Track> {
 
 }  // namespace cxxmidi
 
-#include <cxxmidi/guts/endianness.hpp>
-#include <cxxmidi/guts/simulator.hpp>
-#include <cxxmidi/guts/utils.hpp>
+#include <cxxmidi/internal/endianness.hpp>
+#include <cxxmidi/internal/simulator.hpp>
+#include <cxxmidi/internal/utils.hpp>
 
 namespace cxxmidi {
 
@@ -108,11 +108,11 @@ void File::SaveAs(const char* path) const {
 void File::SaveTrackChunk(std::ofstream& output_file,
                           const Track& track) const {
   // save chunk id
-  guts::endianness::WriteBe<uint32_t>(output_file, 0x4D54726B);  // "MTrk"
+  internal::endianness::WriteBe<uint32_t>(output_file, 0x4D54726B);  // "MTrk"
 
   // write dummy chunk size (we will get back here)
   auto size_pos = output_file.tellp();
-  guts::endianness::WriteBe<uint32_t>(output_file, 0);
+  internal::endianness::WriteBe<uint32_t>(output_file, 0);
 
   uint32_t chunk_size = 0;  // chunk size
   uint8_t last_cmd = 0;
@@ -123,7 +123,7 @@ void File::SaveTrackChunk(std::ofstream& output_file,
   // go back to chunk size
   output_file.seekp(size_pos);
   // save chunk size
-  guts::endianness::WriteBe<uint32_t>(output_file, chunk_size);
+  internal::endianness::WriteBe<uint32_t>(output_file, chunk_size);
 
   // go to end of file
   output_file.seekp(0, std::ios_base::end);
@@ -163,25 +163,25 @@ uint32_t File::SaveEvent(std::ofstream& output_file, const Event& event,
 
 void File::SaveHeaderChunk(std::ofstream& output_file) const {
   // save chunk id
-  guts::endianness::WriteBe<uint32_t>(output_file, 0x4D546864);  // "MThd"
+  internal::endianness::WriteBe<uint32_t>(output_file, 0x4D546864);  // "MThd"
 
   // save header size
-  guts::endianness::WriteBe<uint32_t>(output_file, 6);
+  internal::endianness::WriteBe<uint32_t>(output_file, 6);
 
   // save file type
   uint16_t fileType = (Tracks() > 1) ? 1 : 0;
-  guts::endianness::WriteBe<uint16_t>(output_file, fileType);
+  internal::endianness::WriteBe<uint16_t>(output_file, fileType);
 
   // save tracks numer
-  guts::endianness::WriteBe<uint16_t>(output_file,
-                                      static_cast<uint16_t>(Tracks()));
+  internal::endianness::WriteBe<uint16_t>(output_file,
+                                          static_cast<uint16_t>(Tracks()));
 
   // save time division
-  guts::endianness::WriteBe<uint16_t>(output_file, time_division_);
+  internal::endianness::WriteBe<uint16_t>(output_file, time_division_);
 }
 
 std::chrono::microseconds File::Duration() const {
-  guts::Simulator simulator;
+  internal::Simulator simulator;
   return simulator.Duration(*this);
 }
 
@@ -222,7 +222,7 @@ void File::Load(const char* path) {
 
   // loop over chunks while data still in buffer
   while (file.good() && (fileLength - file.tellg())) {
-    uint32_t chunk_id = guts::endianness::ReadBe<uint32_t>(file);
+    uint32_t chunk_id = internal::endianness::ReadBe<uint32_t>(file);
 
     switch (chunk_id) {
       case 0x4D546864:  // "MThd"
@@ -256,14 +256,14 @@ void File::Load(const char* path) {
 
 void File::ReadHeaderChunk(std::ifstream& file) {
   // read and check header size
-  if (guts::endianness::ReadBe<uint32_t>(file) != 6) {
+  if (internal::endianness::ReadBe<uint32_t>(file) != 6) {
 #ifndef CXXMIDI_QUIET
     std::cerr << "CxxMidi: warning: unsupported MIDI file type" << std::endl;
 #endif
   }
 
   // read file type
-  uint16_t type = guts::endianness::ReadBe<uint16_t>(file);
+  uint16_t type = internal::endianness::ReadBe<uint16_t>(file);
 
 #ifndef CXXMIDI_QUIET
   // check file type
@@ -275,13 +275,13 @@ void File::ReadHeaderChunk(std::ifstream& file) {
   // type 1: multi track
 
   // read tracks number
-  uint16_t tracks_num = guts::endianness::ReadBe<uint16_t>(file);
+  uint16_t tracks_num = internal::endianness::ReadBe<uint16_t>(file);
 
   // reserve vector capacity
   reserve(tracks_num);
 
   // read time division
-  time_division_ = guts::endianness::ReadBe<uint16_t>(file);
+  time_division_ = internal::endianness::ReadBe<uint16_t>(file);
 
 #ifndef CXXMIDI_QUIET
   // check time division
@@ -293,7 +293,7 @@ void File::ReadHeaderChunk(std::ifstream& file) {
 
 void File::ReadUnknownChunk(std::ifstream& file) {
   // get chunk size
-  uint32_t chunk_size = guts::endianness::ReadBe<uint32_t>(file);
+  uint32_t chunk_size = internal::endianness::ReadBe<uint32_t>(file);
 
   // skip chunk data
   file.seekg(chunk_size, std::ifstream::cur);
@@ -304,7 +304,7 @@ void File::ReadTrackChunk(std::ifstream& file) {
   Track& track = AddTrack();
 
   // read track chunk size
-  uint32_t chunk_size = guts::endianness::ReadBe<uint32_t>(file);
+  uint32_t chunk_size = internal::endianness::ReadBe<uint32_t>(file);
   // we will not use this size to read data (we wait for end event)
 
   uint8_t running_status = 0;  // start with no running status

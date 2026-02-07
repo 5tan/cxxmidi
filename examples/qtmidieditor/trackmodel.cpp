@@ -26,7 +26,7 @@ SOFTWARE.
 
 #include <iostream>
 
-#include <cxxmidi/guts/utils.hpp>
+#include <cxxmidi/internal/utils.hpp>
 #include <cxxmidi/instrument.hpp>
 #include <cxxmidi/note.hpp>
 

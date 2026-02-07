@@ -27,13 +27,13 @@ SOFTWARE.
 #include <mutex>   // NOLINT() CPP11_INCLUDES
 #include <thread>  // NOLINT() CPP11_INCLUDES
 
-#include <cxxmidi/guts/player_base.hpp>
+#include <cxxmidi/internal/player_base.hpp>
 
 namespace cxxmidi {
 class File;
 namespace player {
 
-class PlayerAsync : public guts::PlayerBase {
+class PlayerAsync : public internal::PlayerBase {
  public:
   inline explicit PlayerAsync(output::Abstract* output);
   inline ~PlayerAsync();
@@ -75,7 +75,7 @@ class PlayerAsync : public guts::PlayerBase {
 
 #include <cxxmidi/converters.hpp>
 #include <cxxmidi/file.hpp>
-#include <cxxmidi/guts/utils.hpp>
+#include <cxxmidi/internal/utils.hpp>
 
 namespace cxxmidi {
 namespace player {
@@ -278,7 +278,7 @@ output::Abstract* PlayerAsync::output() {
 bool PlayerAsync::Finished() {
   // cppcheck-suppress unreadVariable RAII
   std::scoped_lock lock(mutex_);
-  return guts::PlayerBase::Finished();
+  return internal::PlayerBase::Finished();
 }
 
 bool PlayerAsync::IsPlaying() {

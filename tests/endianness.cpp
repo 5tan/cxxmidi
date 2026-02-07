@@ -22,13 +22,13 @@ SOFTWARE.
 
 #include <gtest/gtest.h>
 
-#include <cxxmidi/guts/endianness.hpp>
+#include <cxxmidi/internal/endianness.hpp>
 
 TEST(Endianness, ReadBe) {
   std::ifstream ifs("music/chopin.mid", std::ios::binary);
   ASSERT_TRUE(ifs.is_open());
 
   // MIDI files are big-endian and start with "MThd" (0x4d546864)
-  uint32_t header = cxxmidi::guts::endianness::ReadBe<uint32_t>(ifs);
+  uint32_t header = cxxmidi::internal::endianness::ReadBe<uint32_t>(ifs);
   ASSERT_EQ(header, 0x4d546864);  // "MThd"
 }
