@@ -62,6 +62,13 @@ class PlayerBase {
   inline void SetSpeed(float speed) { speed_ = speed; }
   inline float GetSpeed() const { return speed_; }
 
+  inline void SetHeartbeatInterval(unsigned int interval_us) {
+    heartbeat_interval_us_ = interval_us;
+  }
+  inline unsigned int GetHeartbeatInterval() const {
+    return heartbeat_interval_us_;
+  }
+
   inline void SetCallbackHeartbeat(const std::function<void()>& callback);
   inline void SetCallbackFinished(const std::function<void()>& callback);
 
@@ -91,6 +98,7 @@ class PlayerBase {
   output::Abstract* output_;
 
   int heartbeat_helper_;
+  unsigned int heartbeat_interval_us_;
 
   std::function<void()> clbk_fun_heartbeat_;
   std::function<void()> clbk_fun_finished_;
@@ -118,7 +126,8 @@ PlayerBase::PlayerBase()
       file_(nullptr),
       played_us_(std::chrono::microseconds(0)),
       output_(0),
-      heartbeat_helper_(0) {
+      heartbeat_helper_(0),
+      heartbeat_interval_us_(10000) {
   PlayerBase::SetupWindowsTimers();
 }
 
@@ -129,7 +138,8 @@ PlayerBase::PlayerBase(output::Abstract* output)
       file_(nullptr),
       played_us_(std::chrono::microseconds(0)),
       output_(output),
-      heartbeat_helper_(0) {
+      heartbeat_helper_(0),
+      heartbeat_interval_us_(10000) {
   PlayerBase::SetupWindowsTimers();
 }
 

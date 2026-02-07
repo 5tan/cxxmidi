@@ -34,8 +34,6 @@ namespace cxxmidi {
 class File;
 namespace player {
 
-constexpr unsigned int kHeartbeatIntervalUs = 10000;
-
 class PlayerAsync : public internal::PlayerBase {
  public:
   inline explicit PlayerAsync(output::Abstract* output);
@@ -60,6 +58,9 @@ class PlayerAsync : public internal::PlayerBase {
 
   inline void SetSpeed(float speed);
   inline float Speed();
+
+  inline void SetHeartbeatInterval(unsigned int interval_us);
+  inline unsigned int HeartbeatInterval();
 
   inline void SetCallbackHeartbeat(const std::function<void()>& callback);
   inline void SetCallbackFinished(const std::function<void()>& callback);
@@ -175,8 +176,8 @@ void PlayerAsync::PlayerLoop() {
     // Note that the _heartbeatHelper is not protected by the _mutex.
     // It should be used only in Acynchronous::PlayerAsync::playerLoop()
     // and in PlayerImpl::goTo() (these two are exclusive).
-    while ((heartbeat_helper_ + us.count()) >= kHeartbeatIntervalUs) {
-      unsigned int partial = kHeartbeatIntervalUs - heartbeat_helper_;
+    while ((heartbeat_helper_ + us.count()) >= heartbeat_interval_us_) {
+      unsigned int partial = heartbeat_interval_us_ - heartbeat_helper_;
       heartbeat_helper_ = 0;
       us -= std::chrono::microseconds(partial);
 
@@ -293,6 +294,18 @@ float PlayerAsync::Speed() {
   // cppcheck-suppress unreadVariable RAII
   std::scoped_lock lock(mutex_);
   return speed_;
+}
+
+void PlayerAsync::SetHeartbeatInterval(unsigned int interval_us) {
+  // cppcheck-suppress unreadVariable RAII
+  std::scoped_lock lock(mutex_);
+  heartbeat_interval_us_ = interval_us;
+}
+
+unsigned int PlayerAsync::HeartbeatInterval() {
+  // cppcheck-suppress unreadVariable RAII
+  std::scoped_lock lock(mutex_);
+  return heartbeat_interval_us_;
 }
 
 void PlayerAsync::SetCallbackHeartbeat(const std::function<void()>& callback) {
