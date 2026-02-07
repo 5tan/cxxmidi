@@ -24,8 +24,9 @@ SOFTWARE.
 #define INCLUDE_CXXMIDI_PLAYER_PLAYER_ASYNC_HPP_
 
 #include <assert.h>
-#include <mutex>   // NOLINT() CPP11_INCLUDES
-#include <thread>  // NOLINT() CPP11_INCLUDES
+#include <mutex>     // NOLINT() CPP11_INCLUDES
+#include <optional>  // NOLINT() CPP11_INCLUDES
+#include <thread>    // NOLINT() CPP11_INCLUDES
 
 #include <cxxmidi/internal/player_base.hpp>
 
@@ -67,7 +68,7 @@ class PlayerAsync : public internal::PlayerBase {
   inline void PlayerLoop();
 
   std::mutex mutex_;
-  std::thread* thread_;
+  std::optional<std::thread> thread_;
 };
 
 }  // namespace player
@@ -81,13 +82,12 @@ namespace cxxmidi {
 namespace player {
 
 PlayerAsync::PlayerAsync(output::Abstract* output)
-    : PlayerBase(output), pause_request_(false), thread_(0) {}
+    : PlayerBase(output), pause_request_(false) {}
 
 PlayerAsync::~PlayerAsync() {
-  if (thread_) {
-    if (thread_->joinable()) thread_->join();
-    delete thread_;
-  }  //! @FIXME
+  if (thread_ && thread_->joinable()) {
+    thread_->join();
+  }
 }
 
 void PlayerAsync::Play() {
@@ -105,11 +105,10 @@ void PlayerAsync::Play() {
 
   if (reject) return;
 
-  if (thread_) {
-    if (thread_->joinable()) thread_->join();
-    delete thread_;
-  }  //! @FIXME
-  thread_ = new std::thread([this]() { PlayerLoop(); });
+  if (thread_ && thread_->joinable()) {
+    thread_->join();
+  }
+  thread_.emplace([this]() { PlayerLoop(); });
 }
 
 void PlayerAsync::Pause() {
@@ -119,11 +118,10 @@ void PlayerAsync::Pause() {
     pause_request_ = true;
   }
 
-  if (thread_) {
-    if (thread_->joinable()) thread_->join();  //! @FIXME
-    delete thread_;
+  if (thread_ && thread_->joinable()) {
+    thread_->join();
   }
-  thread_ = 0;
+  thread_.reset();
 }
 
 void PlayerAsync::PlayerLoop() {
